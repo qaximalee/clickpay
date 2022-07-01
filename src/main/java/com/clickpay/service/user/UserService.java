@@ -1,0 +1,77 @@
+package com.clickpay.service.user;
+
+import com.clickpay.dto.LoginResponse;
+import com.clickpay.errors.general.EntityNotFoundException;
+import com.clickpay.errors.user.UserNotActiveException;
+import com.clickpay.model.user.User;
+import com.clickpay.repository.user.IUserRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+@Slf4j
+@Service
+public class UserService implements IUserService, UserDetailsService {
+
+    private static final String ADMIN = "ADMIN";
+    private static final String DEALER = "DEALER";
+    private static final String OFFICER = "OFFICER";
+
+    private final IUserRepository repo;
+
+    @Autowired
+    public UserService(final IUserRepository repo) {
+        this.repo = repo;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = repo.findByUsername(username);
+        if (user == null) {
+            log.error("Username: "+username+" is not found.");
+            throw new UsernameNotFoundException("Authentication error username or password is incorrect.");
+        }
+        if (!user.isActive()) {
+            log.error("Username: "+username+" is not active.");
+            throw new UserNotActiveException("User is not verified. Please verify your account.");
+        }
+
+        return new LoginResponse(
+                user.getUsername(),
+                user.getPassword(),
+                user.isActive(),
+                true, true,
+                true, getAuthorities(),
+                "added string"
+                );
+    }
+
+    public Collection<GrantedAuthority> getAuthorities() {
+        Collection<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
+
+        GrantedAuthority adminAuthority = () -> "ADMIN";
+        grantedAuthorities.add(adminAuthority);
+        GrantedAuthority officerAuthority = () -> "OFFICER";
+        grantedAuthorities.add(officerAuthority);
+        GrantedAuthority dealerAuthority = () -> "DEALER";
+        grantedAuthorities.add(dealerAuthority);
+        return grantedAuthorities;
+    }
+
+    @Override
+    public User findByUsername(String username) throws EntityNotFoundException {
+        User user = repo.findByUsername(username);
+        if (user == null) {
+            log.error("User not found with username: "+username);
+            throw new EntityNotFoundException("User not found with provided username.");
+        }
+        return user;
+    }
+}

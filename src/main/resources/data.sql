@@ -1,0 +1,28 @@
+--
+------ Creating below USERS first
+------ Password is password
+--INSERT INTO users (first_name, last_name, password, email, username, verified, active)
+--VALUES ('Muhammad', 'Asif', '$2a$12$wx4lDphOSYxnWtXvvBJ1n.a8A8HswN6nisl9NvSxJLDgBCG3iK3Ma', 'superadmin@mailinator.com', 'superadmin', 1, 1);
+--INSERT INTO users (first_name, last_name, password, email, username, verified, active)
+--VALUES ('Niaz', 'Ali', '$2a$12$wx4lDphOSYxnWtXvvBJ1n.a8A8HswN6nisl9NvSxJLDgBCG3iK3Ma', 'admin@mailinator.com', 'admin', 1, 1);
+--INSERT INTO users (first_name, last_name, password, email, username, verified, active)
+--VALUES ('Azan', 'Ali', '$2a$12$wx4lDphOSYxnWtXvvBJ1n.a8A8HswN6nisl9NvSxJLDgBCG3iK3Ma', 'officer@mailinator.com', 'officer', 1, 1);
+--
+------ Populate the country's data
+--INSERT INTO country (name) VALUES ('Pakistan')
+--
+------ Populate the city's data
+--INSERT INTO city (name, user_id, created_date, created_by, country_id)
+--VALUES ('Karachi', 2, GETDATE(), 2, 1)
+--
+------ Populate the locality's data
+--INSERT INTO locality (name, city_id, user_id, created_date, created_by)
+--VALUES ('Sector I Manzoor Colony', 1, 2, GETDATE(), 2)
+--
+------ Populate the sub_locality's data
+--INSERT INTO sub_locality (name, locality_id, user_id, created_date, created_by)
+--VALUES ('Street # 12', 1, 2, GETDATE(), 2)
+--INSERT INTO sub_locality (name, locality_id, user_id, created_date, created_by)
+--VALUES ('Street # 9', 1, 2, GETDATE(), 2)
+--
+SELECT 1
