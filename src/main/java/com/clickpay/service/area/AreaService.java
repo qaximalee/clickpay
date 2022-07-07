@@ -4,12 +4,9 @@ import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.general.EntityNotSavedException;
 import com.clickpay.model.area.City;
+import com.clickpay.model.area.Locality;
+import com.clickpay.model.area.SubLocality;
 import com.clickpay.model.user.User;
-import com.clickpay.repository.area.CityRepository;
-import com.clickpay.repository.area.CountryRepository;
-import com.clickpay.repository.area.LocalityRepository;
-import com.clickpay.repository.area.SubLocalityRepository;
-import com.clickpay.service.area.city.CityService;
 import com.clickpay.service.area.city.ICityService;
 import com.clickpay.service.area.country.ICountryService;
 import com.clickpay.service.area.locality.ILocalityService;
@@ -22,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.util.Date;
 
 @Slf4j
@@ -48,12 +44,13 @@ public class AreaService implements IAreaService{
         this.userService = userService;
     }
 
+    /**
+     * CRUD operations for city
+     *
+     * */
     @Override
-    public Message createCity(String name, Long countryId, Principal principal) throws EntityNotFoundException, EntityNotSavedException, BadRequestException {
+    public Message createCity(String name, Long countryId, User user) throws EntityNotFoundException, EntityNotSavedException, BadRequestException {
         log.info("City creation is started.");
-
-        // Fetched User form principal
-        User user = userService.findByUsername(principal.getName());
 
         City city = new City();
         city.setName(name);
@@ -73,32 +70,177 @@ public class AreaService implements IAreaService{
     }
 
     @Override
-    public Message findCityById(Long id, Principal principal) throws BadRequestException, EntityNotFoundException {
+    public Message findCityById(Long id) throws BadRequestException, EntityNotFoundException {
         log.debug("City fetching by id: " + id);
         return new Message()
                 .setData(cityService.findById(id))
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("City"+ Constant.FETCHED_MESSAGE_SUCCESS);
+                .setMessage("City "+ Constant.FETCHED_MESSAGE_SUCCESS);
     }
 
     @Override
-    public Message findLocalityById(Long id) {
-        return null;
+    public Message findAllCity() throws EntityNotFoundException {
+        log.debug("City list is fetching.");
+        return new Message()
+                .setData(cityService.findAllCity())
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("City list "+ Constant.FETCHED_MESSAGE_SUCCESS);
     }
 
     @Override
-    public Message createLocality(String name, String cityId, Principal principal) {
-        return null;
+    public Message updateCity(Long id, String name, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+        log.debug("City updating with name: " + name);
+
+        City city = cityService.findById(id);
+        city.setModifiedBy(user.getId());
+        city.setLastModifiedDate(new Date());
+        city.setName(name);
+
+        city = cityService.save(city);
+
+        log.debug("City: " + name + " is successfully upadted for user id: "+user.getId());
+        return new Message()
+                .setData(city)
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("City "+Constant.UPDATED_MESSAGE_SUCCESS);
+    }
+
+
+    /**
+     * CRUD operations for locality
+     *
+     * */
+    @Override
+    public Message createLocality(String name, Long cityId, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+        log.info("Locality creation is started.");
+
+        City city = cityService.findById(cityId);
+
+        Locality locality = new Locality();
+        locality.setName(name);
+        locality.setCity(city);
+        locality.setCreationDate(new Date());
+        locality.setUser(user);
+        locality.setCreatedBy(user.getId());
+
+        locality = localityService.save(locality);
+
+        log.debug("Locality: " + name + " is successfully created for user id: " + user.getId());
+        return new Message<Locality>()
+                .setStatus(HttpStatus.CREATED.value())
+                .setCode(HttpStatus.CREATED.toString())
+                .setMessage("Locality: " + name + " is successfully created.")
+                .setData(locality);
     }
 
     @Override
-    public Message createSubLocality(String name, String localityId, Principal principal) {
-        return null;
+    public Message findLocalityById(Long id) throws BadRequestException, EntityNotFoundException {
+        log.debug("Locality fetching by id: " + id);
+        return new Message()
+                .setData(localityService.findById(id))
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("Locality "+ Constant.FETCHED_MESSAGE_SUCCESS);
     }
 
     @Override
-    public Message findSubLocalityById(Long id) {
-        return null;
+    public Message findAllLocality() throws EntityNotFoundException {
+        log.debug("Locality list is fetching.");
+        return new Message()
+                .setData(localityService.findAllLocality())
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("Locality list "+ Constant.FETCHED_MESSAGE_SUCCESS);
+    }
+
+    @Override
+    public Message updateLocality(Long id, String name, Long cityId, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+        log.debug("Locality updating with name: " + name);
+
+        Locality locality = localityService.findById(id);
+        locality.setCity(cityService.findById(cityId));
+        locality.setName(name);
+        locality.setModifiedBy(user.getId());
+        locality.setLastModifiedDate(new Date());
+
+        locality = localityService.save(locality);
+
+        log.debug("Locality: " + name + " is successfully upadted for user id: "+user.getId());
+        return new Message()
+                .setData(locality)
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("Locality "+Constant.UPDATED_MESSAGE_SUCCESS);
+    }
+
+
+    /**
+     * CRUD operations for sub locality
+     *
+     * */
+    @Override
+    public Message createSubLocality(String name, Long localityId, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+        log.info("Locality creation is started.");
+
+        Locality locality = localityService.findById(localityId);
+
+        SubLocality subLocality = new SubLocality();
+        subLocality.setName(name);
+        subLocality.setLocality(locality);
+        subLocality.setUser(user);
+        subLocality.setCreationDate(new Date());
+        subLocality.setCreatedBy(user.getId());
+
+        subLocality = subLocalityService.save(subLocality);
+
+        log.debug("Sub locality: " + name + " is successfully created for user id: " + user.getId());
+        return new Message<SubLocality>()
+                .setStatus(HttpStatus.CREATED.value())
+                .setCode(HttpStatus.CREATED.toString())
+                .setMessage("Sub locality: " + name + " is successfully created.")
+                .setData(subLocality);
+    }
+
+    @Override
+    public Message findSubLocalityById(Long id) throws BadRequestException, EntityNotFoundException {
+        log.debug("Sub locality fetching by id: " + id);
+        return new Message()
+                .setData(subLocalityService.findById(id))
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("Sub locality "+ Constant.FETCHED_MESSAGE_SUCCESS);
+    }
+
+    @Override
+    public Message findAllSubLocality() throws EntityNotFoundException {
+        log.debug("Sub locality list is fetching.");
+        return new Message()
+                .setData(subLocalityService.findAllLocality())
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("Sub locality list "+ Constant.FETCHED_MESSAGE_SUCCESS);
+    }
+
+    @Override
+    public Message updateSubLocality(Long id, String name, Long localityId, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+        log.debug("Sub locality updating with name: " + name);
+
+        SubLocality subLocality = subLocalityService.findById(id);
+        subLocality.setLocality(localityService.findById(localityId));
+        subLocality.setName(name);
+        subLocality.setModifiedBy(user.getId());
+        subLocality.setLastModifiedDate(new Date());
+
+        subLocality = subLocalityService.save(subLocality);
+
+        log.debug("Sub locality: " + name + " is successfully upadted for user id: "+user.getId());
+        return new Message()
+                .setData(subLocality)
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("Sub locality "+Constant.UPDATED_MESSAGE_SUCCESS);
     }
 }

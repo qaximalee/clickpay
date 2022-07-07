@@ -1,10 +1,9 @@
 package com.clickpay.service.user;
 
-import com.clickpay.dto.LoginResponse;
 import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.user.UserNotActiveException;
 import com.clickpay.model.user.User;
-import com.clickpay.repository.user.IUserRepository;
+import com.clickpay.repository.user.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,10 +23,10 @@ public class UserService implements IUserService, UserDetailsService {
     private static final String DEALER = "DEALER";
     private static final String OFFICER = "OFFICER";
 
-    private final IUserRepository repo;
+    private final UserRepository repo;
 
     @Autowired
-    public UserService(final IUserRepository repo) {
+    public UserService(final UserRepository repo) {
         this.repo = repo;
     }
 
@@ -43,13 +42,12 @@ public class UserService implements IUserService, UserDetailsService {
             throw new UserNotActiveException("User is not verified. Please verify your account.");
         }
 
-        return new LoginResponse(
+        return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
                 user.isActive(),
                 true, true,
-                true, getAuthorities(),
-                "added string"
+                true, getAuthorities()
                 );
     }
 

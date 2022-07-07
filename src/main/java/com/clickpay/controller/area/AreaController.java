@@ -3,14 +3,19 @@ package com.clickpay.controller.area;
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.general.EntityNotSavedException;
+import com.clickpay.errors.general.PermissionException;
 import com.clickpay.model.area.City;
 import com.clickpay.model.area.Locality;
 import com.clickpay.model.area.SubLocality;
+import com.clickpay.model.user.User;
 import com.clickpay.service.area.IAreaService;
+import com.clickpay.service.auth.IAuthService;
 import com.clickpay.utils.Constant;
 import com.clickpay.utils.EnvironmentVariables;
 import com.clickpay.utils.Message;
+import com.clickpay.utils.ControllerConstants;
 import com.sun.istack.NotNull;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,14 +24,18 @@ import java.net.URI;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("api/v1/area")
+@RequestMapping(ControllerConstants.AREA)
+@SecurityRequirement(name = "calcerts")
 public class AreaController {
 
     private final IAreaService service;
+    private final IAuthService authService;
 
     @Autowired
-    public AreaController(final IAreaService service) {
+    public AreaController(final IAreaService service,
+                          final IAuthService authService) {
         this.service = service;
+        this.authService = authService;
     }
 
     /**
@@ -34,18 +43,40 @@ public class AreaController {
      * */
     @PostMapping("/city")
     public ResponseEntity createCity(@NotNull @RequestParam("cityName") String name,
-                                     Principal principal) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
-        Message<City> m = service.createCity(name, Constant.COUNTRY_ID,  principal);
+                                     Principal principal)
+            throws BadRequestException, EntityNotFoundException, EntityNotSavedException, PermissionException {
+        User user = authService.hasPermission(ControllerConstants.CITY, principal);
+        Message<City> m = service.createCity(name, Constant.COUNTRY_ID, user);
         return ResponseEntity
                 .created(
-                        URI.create(EnvironmentVariables.SERVER_DOMAIN+"/api/v1/area/city/"+m.getData().getId())
+                        URI.create(EnvironmentVariables.SERVER_DOMAIN+"/"+ControllerConstants.AREA+"/city/"+m.getData().getId())
                 ).body(m);
     }
 
     @GetMapping("/city/{id}")
     public ResponseEntity getCity(@NotNull @PathVariable("id") Long id,
-                                     Principal principal) throws BadRequestException, EntityNotFoundException {
-        Message m = service.findCityById(id, principal);
+                                     Principal principal)
+            throws BadRequestException, EntityNotFoundException, PermissionException {
+        authService.hasPermission(ControllerConstants.CITY, principal);
+        Message m = service.findCityById(id);
+        return ResponseEntity.ok().body(m);
+    }
+
+    @GetMapping("/city")
+    public ResponseEntity getAllCity(Principal principal)
+            throws BadRequestException, EntityNotFoundException, PermissionException {
+        authService.hasPermission(ControllerConstants.CITY, principal);
+        Message m = service.findAllCity();
+        return ResponseEntity.ok().body(m);
+    }
+
+    @PutMapping("/city")
+    public ResponseEntity updateCity(@NotNull @RequestParam("cityName") String cityName,
+                                     @NotNull @RequestParam("cityId") Long cityId,
+                                     Principal principal)
+            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
+        User user = authService.hasPermission(ControllerConstants.CITY, principal);
+        Message m = service.updateCity(cityId, cityName, user);
         return ResponseEntity.ok().body(m);
     }
 
@@ -55,9 +86,11 @@ public class AreaController {
      * */
     @PostMapping("/locality")
     public ResponseEntity createLocality(@NotNull @RequestParam("localityName") String name,
-                                     @NotNull @RequestParam("cityId") String cityId,
-                                     Principal principal) {
-        Message<Locality> m = service.createLocality(name, cityId,  principal);
+                                     @NotNull @RequestParam("cityId") Long cityId,
+                                     Principal principal)
+            throws PermissionException, BadRequestException, EntityNotFoundException, EntityNotSavedException {
+        User user = authService.hasPermission(ControllerConstants.LOCALITY, principal);
+        Message<Locality> m = service.createLocality(name, cityId,  user);
         return ResponseEntity
                 .created(
                         URI.create(EnvironmentVariables.SERVER_DOMAIN+"/locality/"+m.getData().getId())
@@ -66,8 +99,29 @@ public class AreaController {
 
     @GetMapping("/locality/{id}")
     public ResponseEntity getLocality(@NotNull @PathVariable("id") Long id,
-                                     Principal principal) {
+                                     Principal principal)
+            throws PermissionException, BadRequestException, EntityNotFoundException {
+        authService.hasPermission(ControllerConstants.LOCALITY, principal);
         Message m = service.findLocalityById(id);
+        return ResponseEntity.ok().body(m);
+    }
+
+    @GetMapping("/locality")
+    public ResponseEntity getAllLocality(Principal principal)
+            throws BadRequestException, EntityNotFoundException, PermissionException {
+        authService.hasPermission(ControllerConstants.LOCALITY, principal);
+        Message m = service.findAllLocality();
+        return ResponseEntity.ok().body(m);
+    }
+
+    @PutMapping("/locality")
+    public ResponseEntity updateLocality(@NotNull @RequestParam("localityName") String localityName,
+                                     @NotNull @RequestParam("localityId") Long localityId,
+                                     @NotNull @RequestParam("cityId") Long cityId,
+                                     Principal principal)
+            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
+        User user = authService.hasPermission(ControllerConstants.LOCALITY, principal);
+        Message m = service.updateLocality(localityId, localityName, cityId, user);
         return ResponseEntity.ok().body(m);
     }
 
@@ -77,9 +131,11 @@ public class AreaController {
      * */
     @PostMapping("/sub-locality")
     public ResponseEntity createSubLocality(@NotNull @RequestParam("subLocalityName") String name,
-                                     @NotNull @RequestParam("localityId") String localityId,
-                                     Principal principal) {
-        Message<SubLocality> m = service.createSubLocality(name, localityId,  principal);
+                                     @NotNull @RequestParam("localityId") Long localityId,
+                                     Principal principal)
+            throws PermissionException, BadRequestException, EntityNotFoundException, EntityNotSavedException {
+        User user = authService.hasPermission(ControllerConstants.SUB_LOCALITY, principal);
+        Message<SubLocality> m = service.createSubLocality(name, localityId,  user);
         return ResponseEntity
                 .created(
                         URI.create(EnvironmentVariables.SERVER_DOMAIN+"/sub-locality/"+m.getData().getId())
@@ -88,8 +144,29 @@ public class AreaController {
 
     @GetMapping("/sub-locality/{id}")
     public ResponseEntity getSubLocality(@NotNull @PathVariable("id") Long id,
-                                     Principal principal) {
+                                     Principal principal)
+            throws PermissionException, BadRequestException, EntityNotFoundException {
+        authService.hasPermission(ControllerConstants.SUB_LOCALITY, principal);
         Message m = service.findSubLocalityById(id);
+        return ResponseEntity.ok().body(m);
+    }
+
+    @GetMapping("/sub-locality")
+    public ResponseEntity getAllSubLocality(Principal principal)
+            throws BadRequestException, EntityNotFoundException, PermissionException {
+        authService.hasPermission(ControllerConstants.SUB_LOCALITY, principal);
+        Message m = service.findAllSubLocality();
+        return ResponseEntity.ok().body(m);
+    }
+
+    @PutMapping("/sub-locality")
+    public ResponseEntity updateSubLocality(@NotNull @RequestParam("subLocalityName") String subLocalityName,
+                                     @NotNull @RequestParam("subLocalityId") Long subLocalityId,
+                                     @NotNull @RequestParam("localityId") Long localityId,
+                                     Principal principal)
+            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
+        User user = authService.hasPermission(ControllerConstants.SUB_LOCALITY, principal);
+        Message m = service.updateSubLocality(subLocalityId, subLocalityName, localityId, user);
         return ResponseEntity.ok().body(m);
     }
 }

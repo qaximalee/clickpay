@@ -44,6 +44,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .anonymous().disable()
                 .requestMatcher(new BasicRequestMatcher())
                 .authorizeRequests()
+                .antMatchers("/swagger-ui/**", "/javainuse-openapi/**", "/v3/api-docs/**").permitAll()
                 .antMatchers("/oauth/token").permitAll()
                 .anyRequest().authenticated()
                 .and()

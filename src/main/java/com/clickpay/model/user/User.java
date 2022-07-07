@@ -32,6 +32,13 @@ public class User {
     @Column(name = "username")
     private String username;
 
+    @Column(name = "is_custom_permission")
+    private Boolean isCustomPermission = Boolean.FALSE;
+
+    @ManyToOne
+    @JoinColumn(name = "user_type_id")
+    private UserType userType;
+
     @Column(name = "verified")
     private boolean verified;
 

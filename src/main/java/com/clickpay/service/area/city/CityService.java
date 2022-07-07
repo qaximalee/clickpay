@@ -3,13 +3,13 @@ package com.clickpay.service.area.city;
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.general.EntityNotSavedException;
-import com.clickpay.errors.general.InternalServerException;
 import com.clickpay.model.area.City;
 import com.clickpay.repository.area.CityRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -39,9 +39,10 @@ public class CityService implements ICityService{
     }
 
     @Override
-    public City save(City city) throws EntityNotSavedException {
+    public City save(City city) throws EntityNotSavedException, BadRequestException {
         if (city == null) {
             log.error("City should not be null.");
+            throw new BadRequestException("City should not be null.");
         }
 
         try {
@@ -52,5 +53,15 @@ public class CityService implements ICityService{
             log.error("City can not be saved.");
             throw new EntityNotSavedException("City can not be saved.");
         }
+    }
+
+    @Override
+    public List<City> findAllCity() throws EntityNotFoundException {
+        List<City> cityList = repo.findAll();
+        if (cityList == null || cityList.isEmpty()) {
+            log.debug("No city data found.");
+            throw new EntityNotFoundException("City list not found.");
+        }
+        return cityList;
     }
 }

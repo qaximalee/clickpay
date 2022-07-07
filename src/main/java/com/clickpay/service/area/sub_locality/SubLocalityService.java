@@ -2,12 +2,15 @@ package com.clickpay.service.area.sub_locality;
 
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityNotFoundException;
+import com.clickpay.errors.general.EntityNotSavedException;
+import com.clickpay.model.area.City;
 import com.clickpay.model.area.SubLocality;
 import com.clickpay.repository.area.SubLocalityRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -34,5 +37,32 @@ public class SubLocalityService implements ISubLocalityService {
             throw new EntityNotFoundException("No sub locality found with provided city id.");
         }
         return subLocality.get();
+    }
+
+    @Override
+    public SubLocality save(SubLocality subLocality) throws BadRequestException, EntityNotSavedException {
+        if (subLocality == null) {
+            log.error("Sub locality should not be null.");
+            throw new BadRequestException("Sub locality should not be null.");
+        }
+
+        try {
+            subLocality = repo.save(subLocality);
+            log.debug("Sub locality with locality id: "+subLocality.getId()+ " created successfully.");
+            return subLocality;
+        } catch (Exception e) {
+            log.error("Sub locality can not be saved.");
+            throw new EntityNotSavedException("Sub locality can not be saved.");
+        }
+    }
+
+    @Override
+    public List<SubLocality> findAllLocality() throws EntityNotFoundException {
+        List<SubLocality> subLocalities = repo.findAll();
+        if (subLocalities == null || subLocalities.isEmpty()) {
+            log.debug("No sub locality data found.");
+            throw new EntityNotFoundException("Sub locality list not found.");
+        }
+        return subLocalities;
     }
 }

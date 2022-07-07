@@ -1,9 +1,6 @@
 package com.clickpay.errors;
 
-import com.clickpay.errors.general.BadRequestException;
-import com.clickpay.errors.general.EntityNotFoundException;
-import com.clickpay.errors.general.EntityNotSavedException;
-import com.clickpay.errors.general.EntityNotUpdateException;
+import com.clickpay.errors.general.*;
 import com.clickpay.utils.Message;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -54,6 +51,14 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
         Message m = new Message();
         log.info("ERROR: " + ex.getMessage());
         m.setMessage(ex.getMessage()).setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value()).setCode(HttpStatus.INTERNAL_SERVER_ERROR.toString());
+        return ResponseEntity.status(m.getStatus()).body(m);
+    }
+
+    @ExceptionHandler(PermissionException.class)
+    protected ResponseEntity<Object> handleEntityNotUpdate(PermissionException ex){
+        Message m = new Message();
+        log.info("ERROR: " + ex.getMessage());
+        m.setMessage(ex.getMessage()).setStatus(HttpStatus.UNAUTHORIZED.value()).setCode(HttpStatus.UNAUTHORIZED.toString());
         return ResponseEntity.status(m.getStatus()).body(m);
     }
 
