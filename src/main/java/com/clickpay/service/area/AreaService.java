@@ -55,7 +55,6 @@ public class AreaService implements IAreaService{
         City city = new City();
         city.setName(name);
         city.setCountry(countryService.findById(countryId));
-        city.setUser(user);
         city.setCreationDate(new Date());
         city.setCreatedBy(user.getId());
 
@@ -65,13 +64,13 @@ public class AreaService implements IAreaService{
         return new Message<City>()
                 .setStatus(HttpStatus.CREATED.value())
                 .setCode(HttpStatus.CREATED.toString())
-                .setMessage("City: " + name + " is successfully created.")
+                .setMessage("City: " + name + Constant.CREATED_MESSAGE_SUCCESS)
                 .setData(city);
     }
 
     @Override
     public Message findCityById(Long id) throws BadRequestException, EntityNotFoundException {
-        log.debug("City fetching by id: " + id);
+        log.info("City fetching by id: " + id);
         return new Message()
                 .setData(cityService.findById(id))
                 .setStatus(HttpStatus.OK.value())
@@ -80,10 +79,10 @@ public class AreaService implements IAreaService{
     }
 
     @Override
-    public Message findAllCity() throws EntityNotFoundException {
-        log.debug("City list is fetching.");
+    public Message findAllCityByUserId(Long userId) throws EntityNotFoundException {
+        log.info("City list is fetching.");
         return new Message()
-                .setData(cityService.findAllCity())
+                .setData(cityService.findAllCityByUserId(userId))
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
                 .setMessage("City list "+ Constant.FETCHED_MESSAGE_SUCCESS);
@@ -91,7 +90,7 @@ public class AreaService implements IAreaService{
 
     @Override
     public Message updateCity(Long id, String name, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
-        log.debug("City updating with name: " + name);
+        log.info("City updating with name: " + name);
 
         City city = cityService.findById(id);
         city.setModifiedBy(user.getId());
@@ -123,7 +122,6 @@ public class AreaService implements IAreaService{
         locality.setName(name);
         locality.setCity(city);
         locality.setCreationDate(new Date());
-        locality.setUser(user);
         locality.setCreatedBy(user.getId());
 
         locality = localityService.save(locality);
@@ -132,13 +130,13 @@ public class AreaService implements IAreaService{
         return new Message<Locality>()
                 .setStatus(HttpStatus.CREATED.value())
                 .setCode(HttpStatus.CREATED.toString())
-                .setMessage("Locality: " + name + " is successfully created.")
+                .setMessage("Locality: " + name + Constant.CREATED_MESSAGE_SUCCESS)
                 .setData(locality);
     }
 
     @Override
     public Message findLocalityById(Long id) throws BadRequestException, EntityNotFoundException {
-        log.debug("Locality fetching by id: " + id);
+        log.info("Locality fetching by id: " + id);
         return new Message()
                 .setData(localityService.findById(id))
                 .setStatus(HttpStatus.OK.value())
@@ -147,10 +145,10 @@ public class AreaService implements IAreaService{
     }
 
     @Override
-    public Message findAllLocality() throws EntityNotFoundException {
-        log.debug("Locality list is fetching.");
+    public Message findAllLocalityByUserId(Long userId) throws EntityNotFoundException {
+        log.info("Locality list is fetching.");
         return new Message()
-                .setData(localityService.findAllLocality())
+                .setData(localityService.findAllLocalityByUserId(userId))
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
                 .setMessage("Locality list "+ Constant.FETCHED_MESSAGE_SUCCESS);
@@ -158,7 +156,7 @@ public class AreaService implements IAreaService{
 
     @Override
     public Message updateLocality(Long id, String name, Long cityId, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
-        log.debug("Locality updating with name: " + name);
+        log.info("Locality updating with name: " + name);
 
         Locality locality = localityService.findById(id);
         locality.setCity(cityService.findById(cityId));
@@ -190,7 +188,6 @@ public class AreaService implements IAreaService{
         SubLocality subLocality = new SubLocality();
         subLocality.setName(name);
         subLocality.setLocality(locality);
-        subLocality.setUser(user);
         subLocality.setCreationDate(new Date());
         subLocality.setCreatedBy(user.getId());
 
@@ -200,13 +197,13 @@ public class AreaService implements IAreaService{
         return new Message<SubLocality>()
                 .setStatus(HttpStatus.CREATED.value())
                 .setCode(HttpStatus.CREATED.toString())
-                .setMessage("Sub locality: " + name + " is successfully created.")
+                .setMessage("Sub locality: " + name + Constant.CREATED_MESSAGE_SUCCESS)
                 .setData(subLocality);
     }
 
     @Override
     public Message findSubLocalityById(Long id) throws BadRequestException, EntityNotFoundException {
-        log.debug("Sub locality fetching by id: " + id);
+        log.info("Sub locality fetching by id: " + id);
         return new Message()
                 .setData(subLocalityService.findById(id))
                 .setStatus(HttpStatus.OK.value())
@@ -215,10 +212,10 @@ public class AreaService implements IAreaService{
     }
 
     @Override
-    public Message findAllSubLocality() throws EntityNotFoundException {
-        log.debug("Sub locality list is fetching.");
+    public Message findAllSubLocalityByUserId(Long userId) throws EntityNotFoundException {
+        log.info("Sub locality list is fetching.");
         return new Message()
-                .setData(subLocalityService.findAllLocality())
+                .setData(subLocalityService.findAllLocalityByUserId(userId))
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
                 .setMessage("Sub locality list "+ Constant.FETCHED_MESSAGE_SUCCESS);
@@ -226,7 +223,7 @@ public class AreaService implements IAreaService{
 
     @Override
     public Message updateSubLocality(Long id, String name, Long localityId, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
-        log.debug("Sub locality updating with name: " + name);
+        log.info("Sub locality updating with name: " + name);
 
         SubLocality subLocality = subLocalityService.findById(id);
         subLocality.setLocality(localityService.findById(localityId));

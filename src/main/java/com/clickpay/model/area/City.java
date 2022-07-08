@@ -25,7 +25,4 @@ public class City extends Auditable<Long> {
     @JoinColumn(name = "country_id")
     private Country country;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
 }

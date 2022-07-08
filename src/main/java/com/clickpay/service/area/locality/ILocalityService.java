@@ -12,5 +12,5 @@ public interface ILocalityService {
 
     Locality save(Locality locality) throws BadRequestException, EntityNotSavedException;
 
-    List<Locality> findAllLocality() throws EntityNotFoundException;
+    List<Locality> findAllLocalityByUserId(Long userId) throws EntityNotFoundException;
 }

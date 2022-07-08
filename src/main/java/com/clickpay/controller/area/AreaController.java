@@ -75,8 +75,8 @@ public class AreaController {
     @GetMapping("/city")
     public ResponseEntity getAllCity(Principal principal)
             throws BadRequestException, EntityNotFoundException, PermissionException {
-        authService.hasPermission(ControllerConstants.CITY, principal);
-        Message m = service.findAllCity();
+        User user = authService.hasPermission(ControllerConstants.CITY, principal);
+        Message m = service.findAllCityByUserId(user.getId());
         return ResponseEntity.ok().body(m);
     }
 
@@ -119,8 +119,8 @@ public class AreaController {
     @GetMapping("/locality")
     public ResponseEntity getAllLocality(Principal principal)
             throws BadRequestException, EntityNotFoundException, PermissionException {
-        authService.hasPermission(ControllerConstants.LOCALITY, principal);
-        Message m = service.findAllLocality();
+        User user = authService.hasPermission(ControllerConstants.LOCALITY, principal);
+        Message m = service.findAllLocalityByUserId(user.getId());
         return ResponseEntity.ok().body(m);
     }
 
@@ -164,8 +164,8 @@ public class AreaController {
     @GetMapping("/sub-locality")
     public ResponseEntity getAllSubLocality(Principal principal)
             throws BadRequestException, EntityNotFoundException, PermissionException {
-        authService.hasPermission(ControllerConstants.SUB_LOCALITY, principal);
-        Message m = service.findAllSubLocality();
+        User user = authService.hasPermission(ControllerConstants.SUB_LOCALITY, principal);
+        Message m = service.findAllSubLocalityByUserId(user.getId());
         return ResponseEntity.ok().body(m);
     }
 

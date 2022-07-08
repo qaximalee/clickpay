@@ -56,10 +56,10 @@ public class CityService implements ICityService{
     }
 
     @Override
-    public List<City> findAllCity() throws EntityNotFoundException {
-        List<City> cityList = repo.findAll();
+    public List<City> findAllCityByUserId(Long userId) throws EntityNotFoundException {
+        List<City> cityList = repo.findAllByCreatedBy(userId);
         if (cityList == null || cityList.isEmpty()) {
-            log.debug("No city data found.");
+            log.error("No city data found.");
             throw new EntityNotFoundException("City list not found.");
         }
         return cityList;

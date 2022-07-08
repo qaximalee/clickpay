@@ -6,8 +6,6 @@ import com.clickpay.errors.general.EntityNotSavedException;
 import com.clickpay.model.user.User;
 import com.clickpay.utils.Message;
 
-import java.security.Principal;
-
 public interface IAreaService {
 
     /**
@@ -22,7 +20,7 @@ public interface IAreaService {
      * */
     Message findLocalityById(Long id) throws BadRequestException, EntityNotFoundException;
 
-    Message findAllCity() throws BadRequestException, EntityNotFoundException;
+    Message findAllCityByUserId(Long userId) throws BadRequestException, EntityNotFoundException;
 
     Message updateCity(Long id, String name, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException;
 
@@ -31,7 +29,7 @@ public interface IAreaService {
 
     Message updateLocality(Long id, String name, Long cityId, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException;
 
-    Message findAllLocality() throws EntityNotFoundException;
+    Message findAllLocalityByUserId(Long userId) throws EntityNotFoundException;
 
     /**
      * For CRUD operations of sub locality
@@ -40,7 +38,7 @@ public interface IAreaService {
 
     Message findSubLocalityById(Long id) throws BadRequestException, EntityNotFoundException;
 
-    Message findAllSubLocality() throws EntityNotFoundException;
+    Message findAllSubLocalityByUserId(Long userId) throws EntityNotFoundException;
 
     Message updateSubLocality(Long id, String name, Long localityId, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException;
 }

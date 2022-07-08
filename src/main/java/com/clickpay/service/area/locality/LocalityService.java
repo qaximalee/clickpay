@@ -56,8 +56,8 @@ public class LocalityService implements ILocalityService{
     }
 
     @Override
-    public List<Locality> findAllLocality() throws EntityNotFoundException {
-        List<Locality> localityList = repo.findAll();
+    public List<Locality> findAllLocalityByUserId(Long userId) throws EntityNotFoundException {
+        List<Locality> localityList = repo.findAllByCreatedBy(userId);
         if (localityList == null || localityList.isEmpty()) {
             log.debug("No locality data found.");
             throw new EntityNotFoundException("Locality list not found.");

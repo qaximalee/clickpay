@@ -12,5 +12,5 @@ public interface ICityService {
 
     City save(City city) throws EntityNotSavedException, BadRequestException;
 
-    List<City> findAllCity() throws EntityNotFoundException;
+    List<City> findAllCityByUserId(Long userId) throws EntityNotFoundException;
 }

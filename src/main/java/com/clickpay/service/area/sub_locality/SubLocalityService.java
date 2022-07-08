@@ -57,8 +57,8 @@ public class SubLocalityService implements ISubLocalityService {
     }
 
     @Override
-    public List<SubLocality> findAllLocality() throws EntityNotFoundException {
-        List<SubLocality> subLocalities = repo.findAll();
+    public List<SubLocality> findAllLocalityByUserId(Long userId) throws EntityNotFoundException {
+        List<SubLocality> subLocalities = repo.findAllByCreatedBy(userId);
         if (subLocalities == null || subLocalities.isEmpty()) {
             log.debug("No sub locality data found.");
             throw new EntityNotFoundException("Sub locality list not found.");
