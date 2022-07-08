@@ -47,8 +47,7 @@ public class OAuth2ServerConfiguration {
                     .rememberMe().userDetailsService(userDetailsService)
                     .and()
                     .authorizeRequests()
-                    .antMatchers("/swagger-ui/**", "/javainuse-openapi/**", "/v3/api-docs/**").permitAll()
-                    .antMatchers("/api/v1/test/").hasAnyRole()
+                    .antMatchers("/api/v1/test/").permitAll()
                     .antMatchers("/oauth/**").permitAll()
                     .antMatchers("/**")
                     .authenticated();
