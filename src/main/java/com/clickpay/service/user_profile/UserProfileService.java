@@ -1,17 +1,21 @@
 package com.clickpay.service.user_profile;
 
-import com.clickpay.dto.packages.PackageRequest;
+import com.clickpay.dto.user_profile.customer.CreateCustomerRequest;
+import com.clickpay.dto.user_profile.packages.PackageRequest;
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.general.EntityNotSavedException;
+import com.clickpay.errors.general.PermissionException;
 import com.clickpay.model.company.Company;
 import com.clickpay.model.connection_type.ConnectionType;
 import com.clickpay.model.user.User;
 import com.clickpay.model.user_profile.BoxMedia;
+import com.clickpay.model.user_profile.Customer;
 import com.clickpay.service.company.ICompanyService;
 import com.clickpay.service.connection_type.IConnectionTypeService;
 import com.clickpay.service.user.IUserService;
 import com.clickpay.service.user_profile.box_media.IBoxMediaService;
+import com.clickpay.service.user_profile.customer.ICustomerService;
 import com.clickpay.service.user_profile.packages.IPackageService;
 import com.clickpay.utils.Constant;
 import com.clickpay.utils.Message;
@@ -30,17 +34,20 @@ public class UserProfileService implements IUserProfileService{
     private final IBoxMediaService boxMediaService;
     private final IConnectionTypeService connectionTypeService;
     private final IPackageService packageService;
+    private final ICustomerService customerService;
     private final IUserService userService;
 
     public UserProfileService(final ICompanyService companyService,
                               final IBoxMediaService boxMediaService,
                               final IConnectionTypeService connectionTypeService,
                               final IPackageService packageService,
+                              final ICustomerService customerService,
                               final IUserService userService) {
         this.boxMediaService = boxMediaService;
         this.companyService = companyService;
         this.connectionTypeService = connectionTypeService;
         this.packageService = packageService;
+        this.customerService = customerService;
         this.userService = userService;
     }
 
@@ -78,6 +85,36 @@ public class UserProfileService implements IUserProfileService{
                 .setData(company);
     }
 
+    @Override
+    public Message findAllCompaniesByUserId(Long userId) throws EntityNotFoundException {
+        return new Message()
+                .setData(companyService.findAllCompanyByUserId(userId))
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("Company list "+ Constant.FETCHED_MESSAGE_SUCCESS);
+    }
+
+    @Override
+    public Message updateCompany(Long id, String name, User user)
+            throws BadRequestException, EntityNotSavedException, EntityNotFoundException {
+        log.info("Company updating with company name: " + name);
+
+        Company company = companyService.findById(id);
+        company.setName(name);
+
+        company.setModifiedBy(user.getId());
+        company.setLastModifiedDate(new Date());
+
+        company = companyService.save(company);
+
+        log.debug("Company: " + name + " is successfully updated for user id: "+user.getId());
+        return new Message()
+                .setData(company)
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("Company "+Constant.UPDATED_MESSAGE_SUCCESS);
+    }
+
 
     /**
      * CRUB for box media
@@ -113,6 +150,37 @@ public class UserProfileService implements IUserProfileService{
                 .setData(boxMedia);
     }
 
+    @Override
+    public Message findAllBoxMediaByUserId(Long userId) throws EntityNotFoundException {
+        return new Message()
+                .setData(boxMediaService.findAllBoxMediaByUserId(userId))
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("Box media list "+ Constant.FETCHED_MESSAGE_SUCCESS);
+    }
+
+    @Override
+    public Message updateBoxMedia(Long id, String boxNumber, String nearbyLocation, User user)
+            throws BadRequestException, EntityNotSavedException, EntityNotFoundException {
+        log.info("Box media updating with box number: " + boxNumber);
+
+        BoxMedia boxMedia = boxMediaService.findById(id);
+        boxMedia.setBoxNumber(boxNumber);
+        boxMedia.setNearbyLocation(nearbyLocation);
+
+        boxMedia.setModifiedBy(user.getId());
+        boxMedia.setLastModifiedDate(new Date());
+
+        boxMedia = boxMediaService.save(boxMedia);
+
+        log.debug("Box media: " + boxNumber + " is successfully updated for user id: "+user.getId());
+        return new Message()
+                .setData(boxMedia)
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("Box media "+Constant.UPDATED_MESSAGE_SUCCESS);
+    }
+
 
     /**
      * CRUB for connection type
@@ -145,6 +213,36 @@ public class UserProfileService implements IUserProfileService{
                 .setCode(HttpStatus.CREATED.toString())
                 .setMessage("Connection type: " + type + " is successfully created.")
                 .setData(connectionType);
+    }
+
+    @Override
+    public Message findAllConnectionTypeByUserId(Long userId) throws EntityNotFoundException {
+        return new Message()
+                .setData(connectionTypeService.findAllConnectionTypeByUserId(userId))
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("Connection type list "+ Constant.FETCHED_MESSAGE_SUCCESS);
+    }
+
+    @Override
+    public Message updateConnectionType(Long id, String type, User user)
+            throws BadRequestException, EntityNotSavedException, EntityNotFoundException {
+        log.info("Connection type updating with connection type: " + type);
+
+        ConnectionType connectionType = connectionTypeService.findById(id);
+        connectionType.setType(type);
+
+        connectionType.setModifiedBy(user.getId());
+        connectionType.setLastModifiedDate(new Date());
+
+        connectionType = connectionTypeService.save(connectionType);
+
+        log.debug("Connection type: " + type + " is successfully updated for user id: "+user.getId());
+        return new Message()
+                .setData(connectionType)
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("Connection type "+Constant.UPDATED_MESSAGE_SUCCESS);
     }
 
 
@@ -187,5 +285,59 @@ public class UserProfileService implements IUserProfileService{
                 .setCode(HttpStatus.CREATED.toString())
                 .setMessage("Package: " + packageRequest.getPackageName() + Constant.CREATED_MESSAGE_SUCCESS)
                 .setData(pack);
+    }
+
+    @Override
+    public Message findAllPackageByUserId(Long userId) throws EntityNotFoundException {
+        return new Message()
+                .setData(packageService.findAllPackageByUserId(userId))
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("Package list "+ Constant.FETCHED_MESSAGE_SUCCESS);
+    }
+
+    @Override
+    public Message updatePackage(PackageRequest packageRequest, User user)
+            throws BadRequestException, EntityNotSavedException, EntityNotFoundException {
+        log.info("Connection type updating with package name: " + packageRequest.getPackageName());
+
+        Package packageData = packageService.findById(packageRequest.getId());
+
+        Company company = companyService.findById(packageRequest.getCompanyId());
+        ConnectionType connectionType = connectionTypeService.findById(packageRequest.getConnectionTypeId());
+
+        packageData.setPackageName(packageRequest.getPackageName());
+        packageData.setSalePrice(packageRequest.getSalePrice());
+        packageData.setPurchasePrice(packageRequest.getPurchasePrice());
+        packageData.setCompany(company);
+        packageData.setConnectionType(connectionType);
+
+        packageData.setModifiedBy(user.getId());
+        packageData.setLastModifiedDate(new Date());
+
+        packageData = packageService.save(packageData);
+
+        log.debug("Package : " + packageRequest.getPackageName() + " is successfully updated for user id: "+user.getId());
+        return new Message()
+                .setData(packageData)
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("Package "+Constant.UPDATED_MESSAGE_SUCCESS);
+    }
+
+
+    /**
+     * CRUD for customer
+     */
+
+    @Override
+    public Message createCustomer(CreateCustomerRequest dto, User user)
+            throws PermissionException, BadRequestException, EntityNotFoundException, EntityNotSavedException {
+        log.debug("Customer: " + dto.getName() + " is successfully created");
+        return new Message<Customer>()
+                .setStatus(HttpStatus.CREATED.value())
+                .setCode(HttpStatus.CREATED.toString())
+                .setMessage("Customer: " + dto.getName() + Constant.CREATED_MESSAGE_SUCCESS)
+                .setData(customerService.createCustomer(dto, user));
     }
 }

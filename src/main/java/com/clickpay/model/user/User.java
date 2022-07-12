@@ -41,9 +41,9 @@ public class User extends Auditable<Long> {
     private UserType userType;
 
     @Column(name = "verified")
-    private boolean verified;
+    private boolean verified = false;
 
     @Column(name = "active")
-    private boolean active;
+    private boolean active = true;
 
 }

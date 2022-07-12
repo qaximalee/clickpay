@@ -1,30 +1,26 @@
-package com.clickpay.dto.packages;
+package com.clickpay.dto.user_profile.packages;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 @Getter
 @Setter
 public class PackageRequest {
 
-    @NotNull
+    private Long id;
+
     @NotBlank
     private String packageName;
 
     private double purchasePrice;
 
-    @Size(min = 0, message = "Sale price should not be 0")
+    @Range(min = 0, message = "Sale price should not be 0")
     private double salePrice;
 
-    @NotNull
-    @Size(min = 1)
     private Long connectionTypeId;
-
-    @NotNull
-    @Size(min = 1)
     private Long companyId;
 }

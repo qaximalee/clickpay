@@ -28,7 +28,7 @@ public class ConnectionTypeService implements IConnectionTypeService{
             log.error("Connection type id " + id + " is invalid.");
             throw new BadRequestException("Provided connection type id should be a valid and non null value.");
         }
-        Optional<ConnectionType> data = repo.findById(id);
+        Optional<ConnectionType> data = repo.findByIdAndActive(id, true);
         if (!data.isPresent()) {
             log.error("No connection type found with id: "+id);
             throw new EntityNotFoundException("No connection type found with provided connection type id.");
@@ -57,7 +57,7 @@ public class ConnectionTypeService implements IConnectionTypeService{
     @Override
     public List<ConnectionType> findAllConnectionTypeByUserId(Long userId) throws EntityNotFoundException {
         log.info("Fetching all connection type for user id: "+userId);
-        List<ConnectionType> connectionTypeList = repo.findAllByCreatedBy(userId);
+        List<ConnectionType> connectionTypeList = repo.findAllByCreatedByAndActive(userId, true);
         if (connectionTypeList == null || connectionTypeList.isEmpty()) {
             log.error("No connection type data found.");
             throw new EntityNotFoundException("Connection type not found.");

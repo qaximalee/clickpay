@@ -99,7 +99,7 @@ public class AreaService implements IAreaService{
 
         city = cityService.save(city);
 
-        log.debug("City: " + name + " is successfully upadted for user id: "+user.getId());
+        log.debug("City: " + name + " is successfully updated for user id: "+user.getId());
         return new Message()
                 .setData(city)
                 .setStatus(HttpStatus.OK.value())
@@ -166,7 +166,7 @@ public class AreaService implements IAreaService{
 
         locality = localityService.save(locality);
 
-        log.debug("Locality: " + name + " is successfully upadted for user id: "+user.getId());
+        log.debug("Locality: " + name + " is successfully updated for user id: "+user.getId());
         return new Message()
                 .setData(locality)
                 .setStatus(HttpStatus.OK.value())
@@ -233,7 +233,7 @@ public class AreaService implements IAreaService{
 
         subLocality = subLocalityService.save(subLocality);
 
-        log.debug("Sub locality: " + name + " is successfully upadted for user id: "+user.getId());
+        log.debug("Sub locality: " + name + " is successfully updated for user id: "+user.getId());
         return new Message()
                 .setData(subLocality)
                 .setStatus(HttpStatus.OK.value())

@@ -1,6 +1,6 @@
 package com.clickpay.errors.general;
 
-public class BadRequestException extends Exception{
+public class BadRequestException extends Exception {
 
     public BadRequestException(){}
 

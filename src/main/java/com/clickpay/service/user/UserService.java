@@ -1,11 +1,15 @@
 package com.clickpay.service.user;
 
+import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityNotFoundException;
+import com.clickpay.errors.general.EntityNotSavedException;
 import com.clickpay.errors.user.UserNotActiveException;
 import com.clickpay.model.user.User;
 import com.clickpay.repository.user.UserRepository;
+import com.clickpay.utils.Message;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -32,7 +36,7 @@ public class UserService implements IUserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = repo.findByUsername(username);
+        User user = repo.findByUsernameIgnoreCase(username.trim());
         if (user == null) {
             log.error("Username: "+username+" is not found.");
             throw new UsernameNotFoundException("Authentication error username or password is incorrect.");
@@ -60,6 +64,8 @@ public class UserService implements IUserService, UserDetailsService {
         grantedAuthorities.add(officerAuthority);
         GrantedAuthority dealerAuthority = () -> "DEALER";
         grantedAuthorities.add(dealerAuthority);
+        GrantedAuthority userAuthority = () -> "USER";
+        grantedAuthorities.add(userAuthority);
         return grantedAuthorities;
     }
 
@@ -71,5 +77,23 @@ public class UserService implements IUserService, UserDetailsService {
             throw new EntityNotFoundException("User not found with provided username.");
         }
         return user;
+    }
+
+    @Override
+    public User save(User user) throws BadRequestException, EntityNotSavedException {
+        log.info("Creating user.");
+
+        if (user == null) {
+            log.error("User should not be null.");
+            throw new BadRequestException("User should not be null.");
+        }
+        try {
+            user = repo.save(user);
+            log.debug("User with user id: "+user.getId()+ " created successfully.");
+            return user;
+        } catch (Exception e) {
+            log.error("User can not be saved.");
+            throw new EntityNotSavedException("User can not be saved.");
+        }
     }
 }

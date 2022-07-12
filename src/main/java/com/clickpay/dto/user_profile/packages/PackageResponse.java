@@ -1,4 +1,4 @@
-package com.clickpay.dto.packages;
+package com.clickpay.dto.user_profile.packages;
 
 import com.clickpay.dto.company.CompanyResponse;
 import com.clickpay.dto.connection_type.ConnectionTypeResponse;
