@@ -51,11 +51,11 @@ public class CompanyController extends ConnectionTypeController{
             @NotBlank @RequestParam("name") String name,
             Principal principal)
             throws BadRequestException, EntityNotFoundException, EntityNotSavedException, PermissionException {
-        User user = authService.hasPermission(ControllerConstants.PACKAGE, principal);
+        User user = authService.hasPermission(ControllerConstants.USER_PROFILE, principal);
         Message<Company> m = userProfileService.createCompany(name,  user);
         return ResponseEntity
                 .created(
-                        URI.create(EnvironmentVariables.SERVER_DOMAIN + "/" + ControllerConstants.PACKAGE + "/company/" + m.getData().getId())
+                        URI.create(EnvironmentVariables.SERVER_DOMAIN + "/" + ControllerConstants.USER_PROFILE + "/company/" + m.getData().getId())
                 ).body(m);
     }
 

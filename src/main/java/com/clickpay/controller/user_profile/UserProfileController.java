@@ -78,7 +78,7 @@ public class UserProfileController extends CompanyController{
         Message<BoxMedia> m = userProfileService.createBoxMedia(boxNumber, nearbyLocation, user);
         return ResponseEntity
                 .created(
-                        URI.create(EnvironmentVariables.SERVER_DOMAIN + "/" + ControllerConstants.AREA + "/box-media/" + m.getData().getId())
+                        URI.create(EnvironmentVariables.SERVER_DOMAIN + "/" + ControllerConstants.USER_PROFILE + "/box-media/" + m.getData().getId())
                 ).body(m);
     }
 
@@ -129,7 +129,7 @@ public class UserProfileController extends CompanyController{
         Message<BoxMedia> m = userProfileService.createPackage(dto,  user);
         return ResponseEntity
                 .created(
-                        URI.create(EnvironmentVariables.SERVER_DOMAIN + "/" + ControllerConstants.AREA + "/package/" + m.getData().getId())
+                        URI.create(EnvironmentVariables.SERVER_DOMAIN + "/" + ControllerConstants.USER_PROFILE + "/package/" + m.getData().getId())
                 ).body(m);
     }
 
@@ -170,7 +170,7 @@ public class UserProfileController extends CompanyController{
         User user = authService.hasPermission(ControllerConstants.USER_DETAILS, principal);
         Message<Customer> m = userProfileService.createCustomer(dto, user);
         return ResponseEntity.created(
-                URI.create(EnvironmentVariables.SERVER_DOMAIN + "/" + ControllerConstants.AREA + "/user-details/" + m.getData().getId())
+                URI.create(EnvironmentVariables.SERVER_DOMAIN + "/" + ControllerConstants.USER_PROFILE + "/user-details/" + m.getData().getId())
         ).body(m);
     }
 }

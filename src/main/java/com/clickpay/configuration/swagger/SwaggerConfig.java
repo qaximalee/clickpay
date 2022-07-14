@@ -24,12 +24,12 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         ApiInfo apiInfo = new ApiInfo(
-                "My REST API",
-                "Some custom description of API.",
-                "API TOS",
-                "Terms of service",
-                "myeaddress@company.com",
-                "License of API",
+                "ClickPay APIs Collections",
+                "It is a internet/cable service providing management service's API.",
+                "API Version1",
+                "Software as a Service",
+                "qaximalee@gmail.com, annubali360@gmail.com",
+                "Powered by Axxemo Technology",
                 "API license URL");
         return apiInfo;
     }

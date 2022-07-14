@@ -48,11 +48,11 @@ public class ConnectionTypeController {
             @NotBlank @RequestParam("type") String type,
             Principal principal)
             throws BadRequestException, EntityNotFoundException, EntityNotSavedException, PermissionException {
-        User user = authService.hasPermission(ControllerConstants.PACKAGE, principal);
+        User user = authService.hasPermission(ControllerConstants.USER_PROFILE, principal);
         Message<ConnectionType> m = userProfileService.createConnectionType(type,  user);
         return ResponseEntity
                 .created(
-                        URI.create(EnvironmentVariables.SERVER_DOMAIN + "/" + ControllerConstants.PACKAGE + "/connection-type/" + m.getData().getId())
+                        URI.create(EnvironmentVariables.SERVER_DOMAIN + "/" + ControllerConstants.USER_PROFILE + "/connection-type/" + m.getData().getId())
                 ).body(m);
     }
 
