@@ -1,21 +1,18 @@
 package com.clickpay.controller.user_profile;
 
-import com.clickpay.dto.user_profile.customer.CreateCustomerRequest;
+import com.clickpay.dto.user_profile.customer.CustomerFilterDTO;
+import com.clickpay.dto.user_profile.customer.CustomerRequest;
 import com.clickpay.dto.user_profile.packages.PackageRequest;
-import com.clickpay.errors.general.BadRequestException;
-import com.clickpay.errors.general.EntityNotFoundException;
-import com.clickpay.errors.general.EntityNotSavedException;
-import com.clickpay.errors.general.PermissionException;
-import com.clickpay.model.area.City;
+import com.clickpay.errors.general.*;
 import com.clickpay.model.user.User;
 import com.clickpay.model.user_profile.BoxMedia;
 import com.clickpay.model.user_profile.Customer;
+import com.clickpay.model.user_profile.Package;
 import com.clickpay.service.auth.IAuthService;
 import com.clickpay.service.company.ICompanyService;
 import com.clickpay.service.connection_type.IConnectionTypeService;
 import com.clickpay.service.user_profile.IUserProfileService;
 import com.clickpay.service.user_profile.customer.ICustomerService;
-import com.clickpay.utils.Constant;
 import com.clickpay.utils.ControllerConstants;
 import com.clickpay.utils.EnvironmentVariables;
 import com.clickpay.utils.Message;
@@ -126,7 +123,7 @@ public class UserProfileController extends CompanyController{
             Principal principal)
             throws BadRequestException, EntityNotFoundException, EntityNotSavedException, PermissionException {
         User user = authService.hasPermission(ControllerConstants.PACKAGE, principal);
-        Message<BoxMedia> m = userProfileService.createPackage(dto,  user);
+        Message<Package> m = userProfileService.createPackage(dto,  user);
         return ResponseEntity
                 .created(
                         URI.create(EnvironmentVariables.SERVER_DOMAIN + "/" + ControllerConstants.USER_PROFILE + "/package/" + m.getData().getId())
@@ -165,12 +162,37 @@ public class UserProfileController extends CompanyController{
      * */
 
     @PostMapping("/user-details")
-    public ResponseEntity createCustomer(@Valid @RequestBody CreateCustomerRequest dto, Principal principal)
-            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
+    public ResponseEntity createCustomer(@Valid @RequestBody CustomerRequest dto, Principal principal)
+            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException, EntityAlreadyExistException {
         User user = authService.hasPermission(ControllerConstants.USER_DETAILS, principal);
         Message<Customer> m = userProfileService.createCustomer(dto, user);
         return ResponseEntity.created(
                 URI.create(EnvironmentVariables.SERVER_DOMAIN + "/" + ControllerConstants.USER_PROFILE + "/user-details/" + m.getData().getId())
         ).body(m);
+    }
+
+    @GetMapping("/user-details/{id}")
+    public ResponseEntity getCustomer(@NotNull @PathVariable("id") Long id,
+                                     Principal principal)
+            throws BadRequestException, EntityNotFoundException, PermissionException {
+        authService.hasPermission(ControllerConstants.USER_DETAILS, principal);
+        Message m = userProfileService.findCustomerById(id);
+        return ResponseEntity.ok().body(m);
+    }
+
+    @GetMapping("/user-details")
+    public ResponseEntity getAllCustomer(Principal principal)
+            throws BadRequestException, EntityNotFoundException, PermissionException {
+        User user = authService.hasPermission(ControllerConstants.USER_DETAILS, principal);
+        Message m = userProfileService.findAllCustomerByUserId(user.getId());
+        return ResponseEntity.ok().body(m);
+    }
+
+    @PostMapping("/user-details/filter")
+    public ResponseEntity getAllCustomerByFiltration(@RequestBody CustomerFilterDTO customerFilterDTO, Principal principal)
+            throws PermissionException, EntityNotFoundException {
+        User user = authService.hasPermission(ControllerConstants.USER_DETAILS, principal);
+        Message m = userProfileService.findCustomerByFilter(customerFilterDTO, user);
+        return ResponseEntity.ok().body(m);
     }
 }

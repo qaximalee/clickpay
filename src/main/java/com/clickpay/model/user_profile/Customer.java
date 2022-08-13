@@ -87,7 +87,7 @@ public class Customer extends Auditable<Long> {
     @Column(name = "status")
     private Status status;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
 

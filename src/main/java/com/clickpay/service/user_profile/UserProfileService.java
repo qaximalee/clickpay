@@ -1,11 +1,10 @@
 package com.clickpay.service.user_profile;
 
-import com.clickpay.dto.user_profile.customer.CreateCustomerRequest;
+import com.clickpay.dto.user_profile.customer.CustomerFilterDTO;
+import com.clickpay.dto.user_profile.customer.CustomerRequest;
+import com.clickpay.dto.user_profile.customer.CustomerResponse;
 import com.clickpay.dto.user_profile.packages.PackageRequest;
-import com.clickpay.errors.general.BadRequestException;
-import com.clickpay.errors.general.EntityNotFoundException;
-import com.clickpay.errors.general.EntityNotSavedException;
-import com.clickpay.errors.general.PermissionException;
+import com.clickpay.errors.general.*;
 import com.clickpay.model.company.Company;
 import com.clickpay.model.connection_type.ConnectionType;
 import com.clickpay.model.user.User;
@@ -25,6 +24,7 @@ import org.springframework.stereotype.Service;
 import com.clickpay.model.user_profile.Package;
 
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -331,13 +331,40 @@ public class UserProfileService implements IUserProfileService{
      */
 
     @Override
-    public Message createCustomer(CreateCustomerRequest dto, User user)
-            throws PermissionException, BadRequestException, EntityNotFoundException, EntityNotSavedException {
+    public Message createCustomer(CustomerRequest dto, User user)
+            throws PermissionException, BadRequestException, EntityNotFoundException, EntityNotSavedException, EntityAlreadyExistException {
         log.debug("Customer: " + dto.getName() + " is successfully created");
         return new Message<Customer>()
                 .setStatus(HttpStatus.CREATED.value())
                 .setCode(HttpStatus.CREATED.toString())
                 .setMessage("Customer: " + dto.getName() + Constant.CREATED_MESSAGE_SUCCESS)
                 .setData(customerService.createCustomer(dto, user));
+    }
+
+    @Override
+    public Message findCustomerById(Long id) throws BadRequestException, EntityNotFoundException {
+        return new Message<Customer>()
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setData(customerService.findById(id))
+                .setMessage("Customer " + Constant.FETCHED_MESSAGE_SUCCESS);
+    }
+
+    @Override
+    public Message findAllCustomerByUserId(Long userId) throws EntityNotFoundException {
+        return new Message()
+                .setData(customerService.findAllCustomerById(userId))
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("Customer list " + Constant.FETCHED_MESSAGE_SUCCESS);
+    }
+
+    @Override
+    public Message findCustomerByFilter(CustomerFilterDTO customerFilterDTO, User user) throws EntityNotFoundException {
+        return new Message()
+                .setData(customerService.findCustomerByFilter(customerFilterDTO, user))
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("Customer list by filtration " + Constant.FETCHED_MESSAGE_SUCCESS);
     }
 }

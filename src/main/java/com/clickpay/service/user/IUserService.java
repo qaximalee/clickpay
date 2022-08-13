@@ -9,4 +9,6 @@ public interface IUserService {
     User findByUsername(String username) throws EntityNotFoundException;
 
     User save(User user) throws BadRequestException, EntityNotSavedException;
+
+    boolean existsByUsernameOREmail(String internetId, String email);
 }

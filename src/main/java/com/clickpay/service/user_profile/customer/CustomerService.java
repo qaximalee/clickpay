@@ -1,10 +1,9 @@
 package com.clickpay.service.user_profile.customer;
 
-import com.clickpay.dto.user_profile.customer.CreateCustomerRequest;
-import com.clickpay.errors.general.BadRequestException;
-import com.clickpay.errors.general.EntityNotFoundException;
-import com.clickpay.errors.general.EntityNotSavedException;
-import com.clickpay.errors.general.PermissionException;
+import com.clickpay.dto.user_profile.customer.CustomerFilterDTO;
+import com.clickpay.dto.user_profile.customer.CustomerRequest;
+import com.clickpay.dto.user_profile.customer.CustomerResponse;
+import com.clickpay.errors.general.*;
 import com.clickpay.model.area.SubLocality;
 import com.clickpay.model.company.Company;
 import com.clickpay.model.connection_type.ConnectionType;
@@ -21,6 +20,8 @@ import com.clickpay.service.user.IUserService;
 import com.clickpay.service.user.user_type.IUserTypeService;
 import com.clickpay.service.user_profile.box_media.IBoxMediaService;
 import com.clickpay.service.user_profile.packages.IPackageService;
+import com.clickpay.utils.Constant;
+import com.clickpay.utils.StringUtil;
 import com.clickpay.utils.enums.Discount;
 import com.clickpay.utils.enums.Status;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +29,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.Random;
+import java.util.*;
+
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 
 @Slf4j
 @Service
@@ -55,7 +57,7 @@ public class CustomerService implements ICustomerService{
                            final IConnectionTypeService connectionTypeService,
                            final IPackageService packageService,
                            final IUserTypeService userTypeService,
-                           PasswordEncoder passwordEncoder) {
+                           final PasswordEncoder passwordEncoder) {
         this.repo = repo;
         this.userService = userService;
         this.boxMediaService = boxMediaService;
@@ -69,8 +71,12 @@ public class CustomerService implements ICustomerService{
 
     @Transactional
     @Override
-    public Customer createCustomer(CreateCustomerRequest dto, User user)
-            throws BadRequestException, EntityNotFoundException, EntityNotSavedException, PermissionException {
+    public Customer createCustomer(CustomerRequest dto, User user)
+            throws BadRequestException,
+            EntityNotFoundException,
+            EntityNotSavedException,
+            EntityAlreadyExistException {
+
         // Validate all IDs of existing entities
         Company company = companyService.findById(dto.getCompanyId());
         SubLocality subLocality = subLocalityService.findById(dto.getSubLocalityId());
@@ -86,6 +92,7 @@ public class CustomerService implements ICustomerService{
         // Register user first
         User createdUser = createUser(internetId, dto, user);
 
+        log.info("Populate customer data.");
         Customer customer = new Customer();
         customer.setInternetId(internetId);
         customer.setName(dto.getName());
@@ -129,10 +136,18 @@ public class CustomerService implements ICustomerService{
         return internetId;
     }
 
-    private User createUser(String internetId, CreateCustomerRequest dto, User createdByUser)
-            throws BadRequestException, EntityNotSavedException, EntityNotFoundException {
-        UserType userType = userTypeService.findByUserTypeName("user");
-        String firstAndLastName[] = extractFirstNameAndLastNameFromNameField(dto.getName());
+    private User createUser(String internetId, CustomerRequest dto, User createdByUser)
+            throws BadRequestException, EntityNotSavedException, EntityNotFoundException, EntityAlreadyExistException {
+        log.info("Creating user with customer data.");
+
+        // Is already user with username || email
+        if (userService.existsByUsernameOREmail(internetId, dto.getEmail())) {
+            log.error("User already exists with username or email.");
+            throw new EntityAlreadyExistException("User already exists with username or email.");
+        }
+
+        UserType userType = userTypeService.findByUserTypeName(Constant.USER);
+        String firstAndLastName[] = StringUtil.extractFirstNameAndLastNameFromNameField(dto.getName());
 
         User user = new User();
         user.setFirstName(firstAndLastName[0]);
@@ -144,37 +159,21 @@ public class CustomerService implements ICustomerService{
         user.setPassword(passwordEncoder.encode(internetId));
         user.setCreatedBy(user.getId());
         user.setCreationDate(new Date());
+        user.setVerified(true);
 
         return userService.save(user);
     }
 
-    private String[] extractFirstNameAndLastNameFromNameField(String name) {
-        String firstName = null;
-        String lastName = null;
-        if (name.trim().contains(" ")) {
-            String nameData[] = name.trim().split(" ");
-            if (nameData.length > 2) {
-                for (int i = 0; i < nameData.length-1; i++) {
-                    firstName = ""+ nameData[i];
-                }
-            } else if (nameData.length == 2) {
-                firstName = nameData[0];
-                lastName = nameData[1];
-            }else{
-                firstName = name;
-            }
-        }
-        return new String[]{firstName, lastName};
-    }
+
 
     @Transactional
     @Override
     public Customer save(Customer customer) throws BadRequestException, EntityNotSavedException {
-        log.info("Creating user.");
+        log.info("Creating customer.");
 
         if (customer == null) {
-            log.error("User should not be null.");
-            throw new BadRequestException("User should not be null.");
+            log.error("Customer should not be null.");
+            throw new BadRequestException("Customer should not be null.");
         }
         try {
             customer = repo.save(customer);
@@ -185,4 +184,67 @@ public class CustomerService implements ICustomerService{
             throw new EntityNotSavedException("Customer can not be saved.");
         }
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Customer findById(Long id) throws BadRequestException, EntityNotFoundException {
+        log.info("Finding customer by id: "+id);
+        if (id == null || id < 1) {
+            log.error("Customer id " + id + " is invalid.");
+            throw new BadRequestException("Provided customer id should be a valid and non null value.");
+        }
+        Optional<Customer> data = repo.findById(id);
+        if (!data.isPresent()) {
+            log.error("No customer found with id: "+id);
+            throw new EntityNotFoundException("No customer found with provided city id.");
+        }
+        return data.get();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<CustomerResponse> findAllCustomerById(Long userId) throws EntityNotFoundException {
+        log.info("Fetching all customer for user id: "+userId);
+        List<Customer> data = repo.findAllByCreatedBy(userId);
+        if (data == null || data.isEmpty()) {
+            log.error("No customer data found.");
+            throw new EntityNotFoundException("Customer not found.");
+        }
+
+        return CustomerResponse.mapListOfCustomer(data);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<CustomerResponse> findCustomerByFilter(CustomerFilterDTO customerFilterDTO, User user) throws EntityNotFoundException {
+        log.info("Fetching all customer by filtration data");
+        if(customerFilterDTO.getBoxMediaId() == null
+                && customerFilterDTO.getConnectionTypeId() == null
+                && customerFilterDTO.getPackageId() == null
+                && customerFilterDTO.getStatus() == null
+                && customerFilterDTO.getDiscount() == null
+        ) {
+            log.info("No filtration data selected.");
+            return findAllCustomerById(user.getId());
+        }
+
+        // TODO fetch filtration data from the customerRepo's filtration method and mapped them to customerResponse dto
+        log.info("Fetching data with filtration values.");
+        List<CustomerResponse> response = CustomerResponse.mapListOfCustomerDetail(
+                repo.getCustomerByFiltration(
+                    customerFilterDTO.getStatus(),
+                    customerFilterDTO.getConnectionTypeId(),
+                    customerFilterDTO.getBoxMediaId(),
+                    customerFilterDTO.getPackageId(),
+                    customerFilterDTO.getDiscount(),
+                    user.getId()
+                )
+        );
+        if (response == null || response.isEmpty()) {
+            log.info("No customers found with filtration.");
+            throw new EntityNotFoundException("No customers found with filtration data.");
+        }
+        return response;
+    }
+
 }

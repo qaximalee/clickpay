@@ -11,7 +11,9 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class CreateCustomerRequest {
+public class CustomerRequest {
+
+    private Long customerId;
 
     @NotBlank
     private String name;

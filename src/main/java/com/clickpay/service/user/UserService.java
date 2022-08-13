@@ -6,10 +6,8 @@ import com.clickpay.errors.general.EntityNotSavedException;
 import com.clickpay.errors.user.UserNotActiveException;
 import com.clickpay.model.user.User;
 import com.clickpay.repository.user.UserRepository;
-import com.clickpay.utils.Message;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -95,5 +93,10 @@ public class UserService implements IUserService, UserDetailsService {
             log.error("User can not be saved.");
             throw new EntityNotSavedException("User can not be saved.");
         }
+    }
+
+    @Override
+    public boolean existsByUsernameOREmail(String username, String email) {
+        return repo.existsByUsernameOrEmail(username, email);
     }
 }
