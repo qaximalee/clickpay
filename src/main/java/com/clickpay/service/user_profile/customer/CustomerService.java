@@ -20,7 +20,7 @@ import com.clickpay.service.user.IUserService;
 import com.clickpay.service.user.user_type.IUserTypeService;
 import com.clickpay.service.user_profile.box_media.IBoxMediaService;
 import com.clickpay.service.user_profile.packages.IPackageService;
-import com.clickpay.utils.Constant;
+import com.clickpay.utils.ResponseMessage;
 import com.clickpay.utils.StringUtil;
 import com.clickpay.utils.enums.Discount;
 import com.clickpay.utils.enums.Status;
@@ -146,7 +146,7 @@ public class CustomerService implements ICustomerService{
             throw new EntityAlreadyExistException("User already exists with username or email.");
         }
 
-        UserType userType = userTypeService.findByUserTypeName(Constant.USER);
+        UserType userType = userTypeService.findByUserTypeName(UserType.USER_TYPE);
         String firstAndLastName[] = StringUtil.extractFirstNameAndLastNameFromNameField(dto.getName());
 
         User user = new User();

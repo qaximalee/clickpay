@@ -12,7 +12,7 @@ import com.clickpay.model.user.UserType;
 import com.clickpay.repository.recovery_officer.OfficerRepository;
 import com.clickpay.service.user.IUserService;
 import com.clickpay.service.user.user_type.IUserTypeService;
-import com.clickpay.utils.Constant;
+import com.clickpay.utils.ResponseMessage;
 import com.clickpay.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -72,7 +72,7 @@ public class OfficerService implements IOfficerService{
     private User createUser(OfficerRequest request, User user)
             throws EntityNotFoundException, BadRequestException, EntityNotSavedException {
         log.info("Creating user with officer data.");
-        UserType userType = userTypeService.findByUserTypeName(Constant.OFFICER);
+        UserType userType = userTypeService.findByUserTypeName(UserType.OFFICER_TYPE);
         String firstAndLastName[] = StringUtil.extractFirstNameAndLastNameFromNameField(request.getName());
 
         User createUser = new User();

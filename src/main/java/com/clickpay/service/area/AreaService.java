@@ -12,7 +12,7 @@ import com.clickpay.service.area.country.ICountryService;
 import com.clickpay.service.area.locality.ILocalityService;
 import com.clickpay.service.area.sub_locality.ISubLocalityService;
 import com.clickpay.service.user.IUserService;
-import com.clickpay.utils.Constant;
+import com.clickpay.utils.ResponseMessage;
 import com.clickpay.utils.Message;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +64,7 @@ public class AreaService implements IAreaService{
         return new Message<City>()
                 .setStatus(HttpStatus.CREATED.value())
                 .setCode(HttpStatus.CREATED.toString())
-                .setMessage("City: " + name + Constant.CREATED_MESSAGE_SUCCESS)
+                .setMessage("City: " + name + ResponseMessage.CREATED_MESSAGE_SUCCESS)
                 .setData(city);
     }
 
@@ -75,7 +75,7 @@ public class AreaService implements IAreaService{
                 .setData(cityService.findById(id))
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("City "+ Constant.FETCHED_MESSAGE_SUCCESS);
+                .setMessage("City "+ ResponseMessage.FETCHED_MESSAGE_SUCCESS);
     }
 
     @Override
@@ -85,7 +85,7 @@ public class AreaService implements IAreaService{
                 .setData(cityService.findAllCityByUserId(userId))
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("City list "+ Constant.FETCHED_MESSAGE_SUCCESS);
+                .setMessage("City list "+ ResponseMessage.FETCHED_MESSAGE_SUCCESS);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class AreaService implements IAreaService{
                 .setData(city)
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("City "+Constant.UPDATED_MESSAGE_SUCCESS);
+                .setMessage("City "+ ResponseMessage.UPDATED_MESSAGE_SUCCESS);
     }
 
 
@@ -130,7 +130,7 @@ public class AreaService implements IAreaService{
         return new Message<Locality>()
                 .setStatus(HttpStatus.CREATED.value())
                 .setCode(HttpStatus.CREATED.toString())
-                .setMessage("Locality: " + name + Constant.CREATED_MESSAGE_SUCCESS)
+                .setMessage("Locality: " + name + ResponseMessage.CREATED_MESSAGE_SUCCESS)
                 .setData(locality);
     }
 
@@ -141,7 +141,7 @@ public class AreaService implements IAreaService{
                 .setData(localityService.findById(id))
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("Locality "+ Constant.FETCHED_MESSAGE_SUCCESS);
+                .setMessage("Locality "+ ResponseMessage.FETCHED_MESSAGE_SUCCESS);
     }
 
     @Override
@@ -151,7 +151,7 @@ public class AreaService implements IAreaService{
                 .setData(localityService.findAllLocalityByUserId(userId))
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("Locality list "+ Constant.FETCHED_MESSAGE_SUCCESS);
+                .setMessage("Locality list "+ ResponseMessage.FETCHED_MESSAGE_SUCCESS);
     }
 
     @Override
@@ -171,7 +171,7 @@ public class AreaService implements IAreaService{
                 .setData(locality)
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("Locality "+Constant.UPDATED_MESSAGE_SUCCESS);
+                .setMessage("Locality "+ ResponseMessage.UPDATED_MESSAGE_SUCCESS);
     }
 
 
@@ -197,7 +197,7 @@ public class AreaService implements IAreaService{
         return new Message<SubLocality>()
                 .setStatus(HttpStatus.CREATED.value())
                 .setCode(HttpStatus.CREATED.toString())
-                .setMessage("Sub locality: " + name + Constant.CREATED_MESSAGE_SUCCESS)
+                .setMessage("Sub locality: " + name + ResponseMessage.CREATED_MESSAGE_SUCCESS)
                 .setData(subLocality);
     }
 
@@ -208,7 +208,7 @@ public class AreaService implements IAreaService{
                 .setData(subLocalityService.findById(id))
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("Sub locality "+ Constant.FETCHED_MESSAGE_SUCCESS);
+                .setMessage("Sub locality "+ ResponseMessage.FETCHED_MESSAGE_SUCCESS);
     }
 
     @Override
@@ -218,7 +218,7 @@ public class AreaService implements IAreaService{
                 .setData(subLocalityService.findAllLocalityByUserId(userId))
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("Sub locality list "+ Constant.FETCHED_MESSAGE_SUCCESS);
+                .setMessage("Sub locality list "+ ResponseMessage.FETCHED_MESSAGE_SUCCESS);
     }
 
     @Override
@@ -238,6 +238,6 @@ public class AreaService implements IAreaService{
                 .setData(subLocality)
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("Sub locality "+Constant.UPDATED_MESSAGE_SUCCESS);
+                .setMessage("Sub locality "+ ResponseMessage.UPDATED_MESSAGE_SUCCESS);
     }
 }

@@ -14,7 +14,6 @@ import com.clickpay.service.connection_type.IConnectionTypeService;
 import com.clickpay.service.user_profile.IUserProfileService;
 import com.clickpay.service.user_profile.customer.ICustomerService;
 import com.clickpay.utils.ControllerConstants;
-import com.clickpay.utils.EnvironmentVariables;
 import com.clickpay.utils.Message;
 import com.sun.istack.NotNull;
 import io.swagger.annotations.ApiOperation;
@@ -75,7 +74,7 @@ public class UserProfileController extends CompanyController{
         Message<BoxMedia> m = userProfileService.createBoxMedia(boxNumber, nearbyLocation, user);
         return ResponseEntity
                 .created(
-                        URI.create(EnvironmentVariables.SERVER_DOMAIN + "/" + ControllerConstants.USER_PROFILE + "/box-media/" + m.getData().getId())
+                        URI.create(DOMAIN_URL + "/" + ControllerConstants.USER_PROFILE + "/box-media/" + m.getData().getId())
                 ).body(m);
     }
 
@@ -126,7 +125,7 @@ public class UserProfileController extends CompanyController{
         Message<Package> m = userProfileService.createPackage(dto,  user);
         return ResponseEntity
                 .created(
-                        URI.create(EnvironmentVariables.SERVER_DOMAIN + "/" + ControllerConstants.USER_PROFILE + "/package/" + m.getData().getId())
+                        URI.create(DOMAIN_URL + "/" + ControllerConstants.USER_PROFILE + "/package/" + m.getData().getId())
                 ).body(m);
     }
 
@@ -167,7 +166,7 @@ public class UserProfileController extends CompanyController{
         User user = authService.hasPermission(ControllerConstants.USER_DETAILS, principal);
         Message<Customer> m = userProfileService.createCustomer(dto, user);
         return ResponseEntity.created(
-                URI.create(EnvironmentVariables.SERVER_DOMAIN + "/" + ControllerConstants.USER_PROFILE + "/user-details/" + m.getData().getId())
+                URI.create(DOMAIN_URL + "/" + ControllerConstants.USER_PROFILE + "/user-details/" + m.getData().getId())
         ).body(m);
     }
 

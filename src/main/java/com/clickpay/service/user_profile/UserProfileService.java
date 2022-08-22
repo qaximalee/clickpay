@@ -2,7 +2,6 @@ package com.clickpay.service.user_profile;
 
 import com.clickpay.dto.user_profile.customer.CustomerFilterDTO;
 import com.clickpay.dto.user_profile.customer.CustomerRequest;
-import com.clickpay.dto.user_profile.customer.CustomerResponse;
 import com.clickpay.dto.user_profile.packages.PackageRequest;
 import com.clickpay.errors.general.*;
 import com.clickpay.model.company.Company;
@@ -16,7 +15,7 @@ import com.clickpay.service.user.IUserService;
 import com.clickpay.service.user_profile.box_media.IBoxMediaService;
 import com.clickpay.service.user_profile.customer.ICustomerService;
 import com.clickpay.service.user_profile.packages.IPackageService;
-import com.clickpay.utils.Constant;
+import com.clickpay.utils.ResponseMessage;
 import com.clickpay.utils.Message;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Service;
 import com.clickpay.model.user_profile.Package;
 
 import java.util.Date;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -62,7 +60,7 @@ public class UserProfileService implements IUserProfileService{
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
                 .setData(companyService.findById(id))
-                .setMessage("Company " + Constant.FETCHED_MESSAGE_SUCCESS);
+                .setMessage("Company " + ResponseMessage.FETCHED_MESSAGE_SUCCESS);
     }
 
     @Override
@@ -81,7 +79,7 @@ public class UserProfileService implements IUserProfileService{
         return new Message<Company>()
                 .setStatus(HttpStatus.CREATED.value())
                 .setCode(HttpStatus.CREATED.toString())
-                .setMessage("Company: " + name + Constant.CREATED_MESSAGE_SUCCESS)
+                .setMessage("Company: " + name + ResponseMessage.CREATED_MESSAGE_SUCCESS)
                 .setData(company);
     }
 
@@ -91,7 +89,7 @@ public class UserProfileService implements IUserProfileService{
                 .setData(companyService.findAllCompanyByUserId(userId))
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("Company list "+ Constant.FETCHED_MESSAGE_SUCCESS);
+                .setMessage("Company list "+ ResponseMessage.FETCHED_MESSAGE_SUCCESS);
     }
 
     @Override
@@ -112,7 +110,7 @@ public class UserProfileService implements IUserProfileService{
                 .setData(company)
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("Company "+Constant.UPDATED_MESSAGE_SUCCESS);
+                .setMessage("Company "+ ResponseMessage.UPDATED_MESSAGE_SUCCESS);
     }
 
 
@@ -126,7 +124,7 @@ public class UserProfileService implements IUserProfileService{
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
                 .setData(boxMediaService.findById(id))
-                .setMessage("Box media " + Constant.FETCHED_MESSAGE_SUCCESS);
+                .setMessage("Box media " + ResponseMessage.FETCHED_MESSAGE_SUCCESS);
     }
 
     @Override
@@ -146,7 +144,7 @@ public class UserProfileService implements IUserProfileService{
         return new Message<BoxMedia>()
                 .setStatus(HttpStatus.CREATED.value())
                 .setCode(HttpStatus.CREATED.toString())
-                .setMessage("Box media: " + boxNumber + Constant.CREATED_MESSAGE_SUCCESS)
+                .setMessage("Box media: " + boxNumber + ResponseMessage.CREATED_MESSAGE_SUCCESS)
                 .setData(boxMedia);
     }
 
@@ -156,7 +154,7 @@ public class UserProfileService implements IUserProfileService{
                 .setData(boxMediaService.findAllBoxMediaByUserId(userId))
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("Box media list "+ Constant.FETCHED_MESSAGE_SUCCESS);
+                .setMessage("Box media list "+ ResponseMessage.FETCHED_MESSAGE_SUCCESS);
     }
 
     @Override
@@ -178,7 +176,7 @@ public class UserProfileService implements IUserProfileService{
                 .setData(boxMedia)
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("Box media "+Constant.UPDATED_MESSAGE_SUCCESS);
+                .setMessage("Box media "+ ResponseMessage.UPDATED_MESSAGE_SUCCESS);
     }
 
 
@@ -192,7 +190,7 @@ public class UserProfileService implements IUserProfileService{
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
                 .setData(connectionTypeService.findById(id))
-                .setMessage("Connection type " + Constant.FETCHED_MESSAGE_SUCCESS);
+                .setMessage("Connection type " + ResponseMessage.FETCHED_MESSAGE_SUCCESS);
     }
 
     @Override
@@ -221,7 +219,7 @@ public class UserProfileService implements IUserProfileService{
                 .setData(connectionTypeService.findAllConnectionTypeByUserId(userId))
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("Connection type list "+ Constant.FETCHED_MESSAGE_SUCCESS);
+                .setMessage("Connection type list "+ ResponseMessage.FETCHED_MESSAGE_SUCCESS);
     }
 
     @Override
@@ -242,7 +240,7 @@ public class UserProfileService implements IUserProfileService{
                 .setData(connectionType)
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("Connection type "+Constant.UPDATED_MESSAGE_SUCCESS);
+                .setMessage("Connection type "+ ResponseMessage.UPDATED_MESSAGE_SUCCESS);
     }
 
 
@@ -256,7 +254,7 @@ public class UserProfileService implements IUserProfileService{
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
                 .setData(packageService.findById(id))
-                .setMessage("Package " + Constant.FETCHED_MESSAGE_SUCCESS);
+                .setMessage("Package " + ResponseMessage.FETCHED_MESSAGE_SUCCESS);
     }
 
     @Override
@@ -283,7 +281,7 @@ public class UserProfileService implements IUserProfileService{
         return new Message<Package>()
                 .setStatus(HttpStatus.CREATED.value())
                 .setCode(HttpStatus.CREATED.toString())
-                .setMessage("Package: " + packageRequest.getPackageName() + Constant.CREATED_MESSAGE_SUCCESS)
+                .setMessage("Package: " + packageRequest.getPackageName() + ResponseMessage.CREATED_MESSAGE_SUCCESS)
                 .setData(pack);
     }
 
@@ -293,7 +291,7 @@ public class UserProfileService implements IUserProfileService{
                 .setData(packageService.findAllPackageByUserId(userId))
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("Package list "+ Constant.FETCHED_MESSAGE_SUCCESS);
+                .setMessage("Package list "+ ResponseMessage.FETCHED_MESSAGE_SUCCESS);
     }
 
     @Override
@@ -322,7 +320,7 @@ public class UserProfileService implements IUserProfileService{
                 .setData(packageData)
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("Package "+Constant.UPDATED_MESSAGE_SUCCESS);
+                .setMessage("Package "+ ResponseMessage.UPDATED_MESSAGE_SUCCESS);
     }
 
 
@@ -337,7 +335,7 @@ public class UserProfileService implements IUserProfileService{
         return new Message<Customer>()
                 .setStatus(HttpStatus.CREATED.value())
                 .setCode(HttpStatus.CREATED.toString())
-                .setMessage("Customer: " + dto.getName() + Constant.CREATED_MESSAGE_SUCCESS)
+                .setMessage("Customer: " + dto.getName() + ResponseMessage.CREATED_MESSAGE_SUCCESS)
                 .setData(customerService.createCustomer(dto, user));
     }
 
@@ -347,7 +345,7 @@ public class UserProfileService implements IUserProfileService{
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
                 .setData(customerService.findById(id))
-                .setMessage("Customer " + Constant.FETCHED_MESSAGE_SUCCESS);
+                .setMessage("Customer " + ResponseMessage.FETCHED_MESSAGE_SUCCESS);
     }
 
     @Override
@@ -356,7 +354,7 @@ public class UserProfileService implements IUserProfileService{
                 .setData(customerService.findAllCustomerById(userId))
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("Customer list " + Constant.FETCHED_MESSAGE_SUCCESS);
+                .setMessage("Customer list " + ResponseMessage.FETCHED_MESSAGE_SUCCESS);
     }
 
     @Override
@@ -365,6 +363,6 @@ public class UserProfileService implements IUserProfileService{
                 .setData(customerService.findCustomerByFilter(customerFilterDTO, user))
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("Customer list by filtration " + Constant.FETCHED_MESSAGE_SUCCESS);
+                .setMessage("Customer list by filtration " + ResponseMessage.FETCHED_MESSAGE_SUCCESS);
     }
 }

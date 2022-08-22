@@ -10,14 +10,14 @@ import com.clickpay.model.area.SubLocality;
 import com.clickpay.model.user.User;
 import com.clickpay.service.area.IAreaService;
 import com.clickpay.service.auth.IAuthService;
-import com.clickpay.utils.Constant;
-import com.clickpay.utils.EnvironmentVariables;
+import com.clickpay.utils.ResponseMessage;
 import com.clickpay.utils.Message;
 import com.clickpay.utils.ControllerConstants;
 import com.sun.istack.NotNull;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +28,11 @@ import java.security.Principal;
 @RestController
 @RequestMapping(ControllerConstants.AREA)
 public class AreaController {
+
+    @Value("${full.domain.name}")
+    private String DOMAIN_URL;
+
+    private static final Long COUNTRY_ID = 1L;
 
     private final IAreaService service;
     private final IAuthService authService;
@@ -56,10 +61,10 @@ public class AreaController {
             Principal principal)
             throws BadRequestException, EntityNotFoundException, EntityNotSavedException, PermissionException {
         User user = authService.hasPermission(ControllerConstants.CITY, principal);
-        Message<City> m = service.createCity(name, Constant.COUNTRY_ID, user);
+        Message<City> m = service.createCity(name, COUNTRY_ID, user);
         return ResponseEntity
                 .created(
-                        URI.create(EnvironmentVariables.SERVER_DOMAIN + "/" + ControllerConstants.AREA + "/city/" + m.getData().getId())
+                        URI.create(DOMAIN_URL + "/" + ControllerConstants.AREA + "/city/" + m.getData().getId())
                 ).body(m);
     }
 
@@ -75,6 +80,7 @@ public class AreaController {
     @GetMapping("/city")
     public ResponseEntity getAllCity(Principal principal)
             throws BadRequestException, EntityNotFoundException, PermissionException {
+        System.out.println();
         User user = authService.hasPermission(ControllerConstants.CITY, principal);
         Message m = service.findAllCityByUserId(user.getId());
         return ResponseEntity.ok().body(m);
@@ -103,7 +109,7 @@ public class AreaController {
         Message<Locality> m = service.createLocality(name, cityId, user);
         return ResponseEntity
                 .created(
-                        URI.create(EnvironmentVariables.SERVER_DOMAIN + "/locality/" + m.getData().getId())
+                        URI.create(DOMAIN_URL + "/locality/" + m.getData().getId())
                 ).body(m);
     }
 
@@ -148,7 +154,7 @@ public class AreaController {
         Message<SubLocality> m = service.createSubLocality(name, localityId, user);
         return ResponseEntity
                 .created(
-                        URI.create(EnvironmentVariables.SERVER_DOMAIN + "/sub-locality/" + m.getData().getId())
+                        URI.create("${domain.name}" + "/sub-locality/" + m.getData().getId())
                 ).body(m);
     }
 

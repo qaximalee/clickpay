@@ -10,11 +10,11 @@ import com.clickpay.service.auth.IAuthService;
 import com.clickpay.service.connection_type.IConnectionTypeService;
 import com.clickpay.service.user_profile.IUserProfileService;
 import com.clickpay.utils.ControllerConstants;
-import com.clickpay.utils.EnvironmentVariables;
 import com.clickpay.utils.Message;
 import com.sun.istack.NotNull;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +25,9 @@ import java.security.Principal;
 @RestController("CONNECTION_TYPE")
 @RequestMapping("ct")
 public class ConnectionTypeController {
+
+    @Value("${full.domain.name}")
+    protected String DOMAIN_URL;
 
     private final IAuthService authService;
     private final IConnectionTypeService connectionTypeService;
@@ -52,7 +55,7 @@ public class ConnectionTypeController {
         Message<ConnectionType> m = userProfileService.createConnectionType(type,  user);
         return ResponseEntity
                 .created(
-                        URI.create(EnvironmentVariables.SERVER_DOMAIN + "/" + ControllerConstants.USER_PROFILE + "/connection-type/" + m.getData().getId())
+                        URI.create(DOMAIN_URL + "/" + ControllerConstants.USER_PROFILE + "/connection-type/" + m.getData().getId())
                 ).body(m);
     }
 

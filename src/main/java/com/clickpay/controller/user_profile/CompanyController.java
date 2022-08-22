@@ -11,7 +11,6 @@ import com.clickpay.service.company.ICompanyService;
 import com.clickpay.service.connection_type.IConnectionTypeService;
 import com.clickpay.service.user_profile.IUserProfileService;
 import com.clickpay.utils.ControllerConstants;
-import com.clickpay.utils.EnvironmentVariables;
 import com.clickpay.utils.Message;
 import com.sun.istack.NotNull;
 import io.swagger.annotations.ApiOperation;
@@ -55,7 +54,7 @@ public class CompanyController extends ConnectionTypeController{
         Message<Company> m = userProfileService.createCompany(name,  user);
         return ResponseEntity
                 .created(
-                        URI.create(EnvironmentVariables.SERVER_DOMAIN + "/" + ControllerConstants.USER_PROFILE + "/company/" + m.getData().getId())
+                        URI.create(DOMAIN_URL + "/" + ControllerConstants.USER_PROFILE + "/company/" + m.getData().getId())
                 ).body(m);
     }
 
