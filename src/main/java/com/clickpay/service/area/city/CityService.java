@@ -8,6 +8,7 @@ import com.clickpay.repository.area.CityRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,8 +24,10 @@ public class CityService implements ICityService{
         this.repo = repo;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public City findById(Long id) throws BadRequestException, EntityNotFoundException {
+        log.info("Finding city by id: "+id);
         if (id == null || id < 1) {
             log.error("City id "+id+ " is invalid.");
             throw new BadRequestException("Provided city id should be a valid and non null value.");
@@ -38,8 +41,10 @@ public class CityService implements ICityService{
         return city.get();
     }
 
+    @Transactional
     @Override
     public City save(City city) throws EntityNotSavedException, BadRequestException {
+        log.info("Saving city.");
         if (city == null) {
             log.error("City should not be null.");
             throw new BadRequestException("City should not be null.");
@@ -55,8 +60,10 @@ public class CityService implements ICityService{
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<City> findAllCityByUserId(Long userId) throws EntityNotFoundException {
+        log.info("Fetching city list by user id: "+userId);
         List<City> cityList = repo.findAllByCreatedBy(userId);
         if (cityList == null || cityList.isEmpty()) {
             log.error("No city data found.");

@@ -29,7 +29,7 @@ import java.security.Principal;
 
 @RestController("USER_PROFILE")
 @RequestMapping(ControllerConstants.USER_PROFILE)
-public class UserProfileController extends CompanyController{
+public class UserProfileController extends CompanyController {
 
     private final IAuthService authService;
     private final IUserProfileService userProfileService;
@@ -51,8 +51,7 @@ public class UserProfileController extends CompanyController{
 
     /**
      * CRUD for box media
-     *
-     * */
+     */
 
     @PostMapping("/box-media")
     @ApiOperation(
@@ -80,7 +79,7 @@ public class UserProfileController extends CompanyController{
 
     @GetMapping("/box-media/{id}")
     public ResponseEntity getBoxMedia(@NotNull @PathVariable("id") Long id,
-                                  Principal principal)
+                                      Principal principal)
             throws BadRequestException, EntityNotFoundException, PermissionException {
         authService.hasPermission(ControllerConstants.BOX_MEDIA, principal);
         Message m = userProfileService.findBoxMediaById(id);
@@ -97,9 +96,9 @@ public class UserProfileController extends CompanyController{
 
     @PutMapping("/box-media")
     public ResponseEntity updateBoxMedia(@NotNull @RequestParam("cityName") String boxNumber,
-                                     @RequestParam("nearbyLocation") String nearbyLocation,
-                                     @NotNull @RequestParam("boxMediaId") Long boxMediaId,
-                                     Principal principal)
+                                         @RequestParam("nearbyLocation") String nearbyLocation,
+                                         @NotNull @RequestParam("boxMediaId") Long boxMediaId,
+                                         Principal principal)
             throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
         User user = authService.hasPermission(ControllerConstants.BOX_MEDIA, principal);
         Message m = userProfileService.updateBoxMedia(boxMediaId, boxNumber, nearbyLocation, user);
@@ -107,10 +106,9 @@ public class UserProfileController extends CompanyController{
     }
 
 
-
     /**
      * CRUD for packages
-     * */
+     */
 
     @PostMapping("/package")
     @ApiOperation(
@@ -122,7 +120,7 @@ public class UserProfileController extends CompanyController{
             Principal principal)
             throws BadRequestException, EntityNotFoundException, EntityNotSavedException, PermissionException {
         User user = authService.hasPermission(ControllerConstants.PACKAGE, principal);
-        Message<Package> m = userProfileService.createPackage(dto,  user);
+        Message<Package> m = userProfileService.createPackage(dto, user);
         return ResponseEntity
                 .created(
                         URI.create(DOMAIN_URL + "/" + ControllerConstants.USER_PROFILE + "/package/" + m.getData().getId())
@@ -131,7 +129,7 @@ public class UserProfileController extends CompanyController{
 
     @GetMapping("/package/{id}")
     public ResponseEntity getPackage(@NotNull @PathVariable("id") Long id,
-                                      Principal principal)
+                                     Principal principal)
             throws BadRequestException, EntityNotFoundException, PermissionException {
         authService.hasPermission(ControllerConstants.PACKAGE, principal);
         Message m = userProfileService.findPackageById(id);
@@ -148,7 +146,7 @@ public class UserProfileController extends CompanyController{
 
     @PutMapping("/package")
     public ResponseEntity updatePackage(@Valid @RequestBody PackageRequest dto,
-                                         Principal principal)
+                                        Principal principal)
             throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
         User user = authService.hasPermission(ControllerConstants.PACKAGE, principal);
         Message m = userProfileService.updatePackage(dto, user);
@@ -158,7 +156,7 @@ public class UserProfileController extends CompanyController{
 
     /**
      * CRUD for customer
-     * */
+     */
 
     @PostMapping("/user-details")
     public ResponseEntity createCustomer(@Valid @RequestBody CustomerRequest dto, Principal principal)
@@ -172,7 +170,7 @@ public class UserProfileController extends CompanyController{
 
     @GetMapping("/user-details/{id}")
     public ResponseEntity getCustomer(@NotNull @PathVariable("id") Long id,
-                                     Principal principal)
+                                      Principal principal)
             throws BadRequestException, EntityNotFoundException, PermissionException {
         authService.hasPermission(ControllerConstants.USER_DETAILS, principal);
         Message m = userProfileService.findCustomerById(id);

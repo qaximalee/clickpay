@@ -1,4 +1,4 @@
-package com.clickpay.service.recovery_officer;
+package com.clickpay.service.recovery_officer.officer;
 
 import com.clickpay.dto.recovery_officer.officer.OfficerResponse;
 import com.clickpay.dto.recovery_officer.officer.OfficerRequest;
@@ -12,24 +12,28 @@ import com.clickpay.model.user.UserType;
 import com.clickpay.repository.recovery_officer.OfficerRepository;
 import com.clickpay.service.user.IUserService;
 import com.clickpay.service.user.user_type.IUserTypeService;
-import com.clickpay.utils.ResponseMessage;
 import com.clickpay.utils.StringUtil;
+import com.clickpay.utils.enums.Status;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
-public class OfficerService implements IOfficerService{
+public class OfficerService implements IOfficerService {
 
     private final OfficerRepository repo;
     private final IUserService userService;
     private final IUserTypeService userTypeService;
     private final PasswordEncoder passwordEncoder;
 
+    @Autowired
     public OfficerService(OfficerRepository repo, IUserService userService, IUserTypeService userTypeService, PasswordEncoder passwordEncoder) {
         this.repo = repo;
         this.userService = userService;
@@ -37,11 +41,10 @@ public class OfficerService implements IOfficerService{
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional
     @Override
     public OfficerResponse createOfficer(OfficerRequest request, User user)
             throws EntityAlreadyExistException, BadRequestException, EntityNotFoundException, EntityNotSavedException {
-        log.info("Creating officer with provided request body.");
-
         // Check if username or email already exists
         if (userService.existsByUsernameOREmail(request.getUserName(), request.getEmail())) {
             log.error("User already exists with username or email.");
@@ -71,7 +74,6 @@ public class OfficerService implements IOfficerService{
 
     private User createUser(OfficerRequest request, User user)
             throws EntityNotFoundException, BadRequestException, EntityNotSavedException {
-        log.info("Creating user with officer data.");
         UserType userType = userTypeService.findByUserTypeName(UserType.OFFICER_TYPE);
         String firstAndLastName[] = StringUtil.extractFirstNameAndLastNameFromNameField(request.getName());
 
@@ -90,22 +92,90 @@ public class OfficerService implements IOfficerService{
         return userService.save(createUser);
     }
 
-    @Transactional
-    @Override
-    public Officer save(Officer officer) throws BadRequestException, EntityNotSavedException {
-        log.info("Creating officer in database.");
-
+    private Officer save(Officer officer) throws BadRequestException, EntityNotSavedException {
         if (officer == null) {
             log.error("Officer should not be null.");
             throw new BadRequestException("Officer should not be null.");
         }
         try {
             officer = repo.save(officer);
-            log.debug("Officer with officer id: "+officer.getId()+ " created successfully.");
+            log.debug("Officer with officer id: " + officer.getId() + " created successfully.");
             return officer;
         } catch (Exception e) {
             log.error("Officer can not be saved.");
             throw new EntityNotSavedException("Officer can not be saved.");
         }
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public OfficerResponse findById(Long id) throws BadRequestException, EntityNotFoundException {
+        if (id == null || id < 1) {
+            log.error("Officer id " + id + " is invalid.");
+            throw new BadRequestException("Provided officer id should be a valid and non null value.");
+        }
+
+        Optional<Officer> officer = repo.findById(id);
+        if (officer == null || !officer.isPresent()) {
+            log.error("No officer found with officer id: " + id);
+            throw new EntityNotFoundException("No officer found with provided officer id.");
+        }
+        return OfficerResponse.fromOfficer(officer.get());
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<OfficerResponse> findAllOfficersByUserId(Long userId) throws EntityNotFoundException {
+        List<Officer> officers = repo.findAllByCreatedBy(userId);
+        if (officers == null || officers.isEmpty()) {
+            log.error("No officer data found.");
+            throw new EntityNotFoundException("Officer list not found.");
+        }
+        return OfficerResponse.fromListOfOfficer(officers);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public OfficerResponse updateOfficer(OfficerRequest request, User user)
+            throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+        if (request.getId() == null || request.getId() < 1) {
+            log.error("Officer id " + request.getId() + " is invalid.");
+            throw new BadRequestException("Provided officer id should be a valid and non null value.");
+        }
+
+        Optional<Officer> officer = repo.findById(request.getId());
+        if (officer == null || !officer.isPresent()) {
+            log.error("No officer found with officer id: " + request.getId());
+            throw new EntityNotFoundException("No officer found with provided officer id.");
+        }
+
+        String firstAndLastName[] = StringUtil.extractFirstNameAndLastNameFromNameField(request.getName());
+
+        User savingUser = officer.get().getUser();
+        savingUser.setFirstName(firstAndLastName[0]);
+        savingUser.setLastName(firstAndLastName[1]);
+        savingUser.setEmail(request.getEmail());
+
+        savingUser.setModifiedBy(user.getId());
+        savingUser.setLastModifiedDate(new Date());
+
+        userService.save(savingUser);
+
+        Officer updatingOfficer = officer.get();
+        updatingOfficer.setName(request.getName());
+        updatingOfficer.setSalary(request.getSalary());
+        updatingOfficer.setCnic(request.getCnic());
+        updatingOfficer.setEmail(request.getEmail());
+        updatingOfficer.setCellNo(request.getCellNo());
+        updatingOfficer.setAddress(request.getAddress());
+        updatingOfficer.setLeavingDate(request.getLeavingDate());
+        updatingOfficer.setStatus(Status.valueOf(request.getUpdatingStatus()));
+
+        updatingOfficer.setModifiedBy(user.getId());
+        updatingOfficer.setLastModifiedDate(new Date());
+
+        updatingOfficer = repo.save(updatingOfficer);
+
+        return OfficerResponse.fromOfficer(updatingOfficer);
     }
 }

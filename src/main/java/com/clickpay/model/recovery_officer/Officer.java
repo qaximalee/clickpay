@@ -38,6 +38,10 @@ public class Officer extends Auditable<Long> {
     @Temporal(TemporalType.TIMESTAMP)
     private Date joiningDate;
 
+    @Column(name = "leaving_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date leavingDate;
+
     @Column(name = "salary")
     private double salary = 0;
 
