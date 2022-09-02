@@ -35,8 +35,8 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException ex){
         Message m = new Message();
         log.info("ERROR: " + ex.getMessage());
-        m.setMessage(ex.getMessage()).setStatus(HttpStatus.OK.value()).setCode(HttpStatus.OK.toString());
-        return ResponseEntity.status(m.getStatus()).body(m);
+        m.setMessage(ex.getMessage()).setStatus(HttpStatus.NOT_FOUND.value()).setCode(HttpStatus.NOT_FOUND.toString());
+        return ResponseEntity.status(HttpStatus.OK).body(m);
     }
 
     @ExceptionHandler(EntityNotSavedException.class)
