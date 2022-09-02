@@ -154,7 +154,7 @@ public class AreaController {
         Message<SubLocality> m = service.createSubLocality(name, localityId, user);
         return ResponseEntity
                 .created(
-                        URI.create("${domain.name}" + "/sub-locality/" + m.getData().getId())
+                        URI.create(DOMAIN_URL + "/sub-locality/" + m.getData().getId())
                 ).body(m);
     }
 
