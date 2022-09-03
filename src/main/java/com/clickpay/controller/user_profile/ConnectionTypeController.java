@@ -51,7 +51,7 @@ public class ConnectionTypeController {
             @NotBlank @RequestParam("type") String type,
             Principal principal)
             throws BadRequestException, EntityNotFoundException, EntityNotSavedException, PermissionException {
-        User user = authService.hasPermission(ControllerConstants.USER_PROFILE, principal);
+        User user = authService.hasPermission(ControllerConstants.PACKAGE, principal);
         Message<ConnectionType> m = userProfileService.createConnectionType(type,  user);
         return ResponseEntity
                 .created(
