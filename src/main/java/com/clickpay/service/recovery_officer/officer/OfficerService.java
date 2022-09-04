@@ -2,6 +2,7 @@ package com.clickpay.service.recovery_officer.officer;
 
 import com.clickpay.dto.recovery_officer.officer.OfficerResponse;
 import com.clickpay.dto.recovery_officer.officer.OfficerRequest;
+import com.clickpay.dto.recovery_officer.officer.OfficerUpdateRequest;
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
@@ -136,7 +137,7 @@ public class OfficerService implements IOfficerService {
 
     @Transactional(readOnly = true)
     @Override
-    public OfficerResponse updateOfficer(OfficerRequest request, User user)
+    public OfficerResponse updateOfficer(OfficerUpdateRequest request, User user)
             throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
         if (request.getId() == null || request.getId() < 1) {
             log.error("Officer id " + request.getId() + " is invalid.");

@@ -1,6 +1,7 @@
 package com.clickpay.service.recovery_officer;
 
 import com.clickpay.dto.recovery_officer.officer.OfficerRequest;
+import com.clickpay.dto.recovery_officer.officer.OfficerUpdateRequest;
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
@@ -20,5 +21,5 @@ public interface IRecoveryOfficerService {
 
     Message findAllOfficerByUserId(Long userId) throws EntityNotFoundException;
 
-    Message updateOfficer(OfficerRequest request, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException;
+    Message updateOfficer(OfficerUpdateRequest request, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException;
 }

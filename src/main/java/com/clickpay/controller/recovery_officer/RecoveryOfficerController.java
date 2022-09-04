@@ -2,6 +2,7 @@ package com.clickpay.controller.recovery_officer;
 
 import com.clickpay.dto.recovery_officer.officer.OfficerRequest;
 import com.clickpay.dto.recovery_officer.officer.OfficerResponse;
+import com.clickpay.dto.recovery_officer.officer.OfficerUpdateRequest;
 import com.clickpay.errors.general.*;
 import com.clickpay.model.area.City;
 import com.clickpay.model.user.User;
@@ -47,7 +48,7 @@ public class RecoveryOfficerController {
             @Valid @RequestBody OfficerRequest request,
             Principal principal)
             throws EntityAlreadyExistException, BadRequestException, EntityNotFoundException, EntityNotSavedException, PermissionException {
-        User user = authService.hasPermission(ControllerConstants.RECOVERY_OFFICER, principal);
+        User user = authService.hasPermission(ControllerConstants.RECOVERY_OFFICER_SUB, principal);
         Message<OfficerResponse> m = recoveryOfficerService.createOfficer(request, user);
         return ResponseEntity
                 .created(
@@ -59,7 +60,7 @@ public class RecoveryOfficerController {
     public ResponseEntity getOfficer(@NotNull @PathVariable("id") Long id,
                                   Principal principal)
             throws BadRequestException, EntityNotFoundException, PermissionException {
-        authService.hasPermission(ControllerConstants.RECOVERY_OFFICER, principal);
+        authService.hasPermission(ControllerConstants.RECOVERY_OFFICER_SUB, principal);
         Message m = recoveryOfficerService.findOfficerById(id);
         return ResponseEntity.ok().body(m);
     }
@@ -68,16 +69,16 @@ public class RecoveryOfficerController {
     public ResponseEntity getAllOfficer(Principal principal)
             throws EntityNotFoundException, PermissionException {
         System.out.println();
-        User user = authService.hasPermission(ControllerConstants.RECOVERY_OFFICER, principal);
+        User user = authService.hasPermission(ControllerConstants.RECOVERY_OFFICER_SUB, principal);
         Message m = recoveryOfficerService.findAllOfficerByUserId(user.getId());
         return ResponseEntity.ok().body(m);
     }
 
     @PutMapping("/officer")
-    public ResponseEntity updateOfficer(@Valid @RequestBody OfficerRequest request,
+    public ResponseEntity updateOfficer(@Valid @RequestBody OfficerUpdateRequest request,
                                      Principal principal)
             throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
-        User user = authService.hasPermission(ControllerConstants.RECOVERY_OFFICER, principal);
+        User user = authService.hasPermission(ControllerConstants.RECOVERY_OFFICER_SUB, principal);
         Message m = recoveryOfficerService.updateOfficer(request, user);
         return ResponseEntity.ok().body(m);
     }

@@ -14,14 +14,17 @@ public class OfficerResponse extends OfficerRequest{
 
     public static OfficerResponse fromOfficer(Officer officer) {
         OfficerResponse officerResponse = new OfficerResponse();
+        officerResponse.setId(officer.getId());
         officerResponse.setName(officer.getName());
         officerResponse.setEmail(officer.getEmail());
-        officerResponse.setAddress(officer.getEmail());
+        officerResponse.setAddress(officer.getAddress());
         officerResponse.setPassword(officer.getPassword());
         officerResponse.setUserName(officer.getUserName());
         officerResponse.setStatus(officer.getStatus());
         officerResponse.setCellNo(officer.getCellNo());
+        officerResponse.setSalary(officer.getSalary());
         officerResponse.setJoiningDate(officer.getJoiningDate());
+        officerResponse.setLeavingDate(officer.getLeavingDate());
         officerResponse.setCnic(officer.getCnic());
         return officerResponse;
     }
@@ -30,6 +33,7 @@ public class OfficerResponse extends OfficerRequest{
         List<OfficerResponse> officerResponseList = new ArrayList<>();
         officers.stream().forEach(officer -> {
             OfficerResponse officerResponse = new OfficerResponse();
+            officerResponse.setId(officer.getId());
             officerResponse.setName(officer.getName());
             officerResponse.setEmail(officer.getEmail());
             officerResponse.setAddress(officer.getEmail());
@@ -37,7 +41,9 @@ public class OfficerResponse extends OfficerRequest{
             officerResponse.setUserName(officer.getUserName());
             officerResponse.setStatus(officer.getStatus());
             officerResponse.setCellNo(officer.getCellNo());
+            officerResponse.setSalary(officer.getSalary());
             officerResponse.setJoiningDate(officer.getJoiningDate());
+            officerResponse.setLeavingDate(officer.getLeavingDate());
             officerResponse.setCnic(officer.getCnic());
             officerResponseList.add(officerResponse);
         });

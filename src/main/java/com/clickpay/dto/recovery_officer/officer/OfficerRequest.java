@@ -10,9 +10,7 @@ import java.util.Date;
 @Getter
 @Setter
 public class OfficerRequest {
-
     private Long id;
-
     @NotBlank
     private String name;
 
@@ -30,6 +28,7 @@ public class OfficerRequest {
     private Date joiningDate;
 
     private Date leavingDate;
+
     private double salary = 0;
 
     @NotBlank
@@ -37,6 +36,4 @@ public class OfficerRequest {
 
     @NotBlank
     private String password;
-
-    private String updatingStatus;
 }
