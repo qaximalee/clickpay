@@ -39,6 +39,14 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.OK).body(m);
     }
 
+    @ExceptionHandler(EntityAlreadyExistException.class)
+    protected ResponseEntity<Object> handleEntityAlreadyExist(EntityAlreadyExistException ex){
+        Message m = new Message();
+        log.info("ERROR: " + ex.getMessage());
+        m.setMessage(ex.getMessage()).setStatus(HttpStatus.FOUND.value()).setCode(HttpStatus.FOUND.toString());
+        return ResponseEntity.status(HttpStatus.OK).body(m);
+    }
+
     @ExceptionHandler(EntityNotSavedException.class)
     protected ResponseEntity<Object> handleEntityNotSaved(EntityNotSavedException ex){
         Message m = new Message();
@@ -60,6 +68,14 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
         Message m = new Message();
         log.info("ERROR: " + ex.getMessage());
         m.setMessage(ex.getMessage()).setStatus(HttpStatus.UNAUTHORIZED.value()).setCode(HttpStatus.UNAUTHORIZED.toString());
+        return ResponseEntity.status(m.getStatus()).body(m);
+    }
+
+    @ExceptionHandler(InternalServerException.class)
+    protected ResponseEntity<Object> handleInternalServer(InternalServerException ex){
+        Message m = new Message();
+        log.info("ERROR: " + ex.getMessage());
+        m.setMessage(ex.getMessage()).setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value()).setCode(HttpStatus.INTERNAL_SERVER_ERROR.toString());
         return ResponseEntity.status(m.getStatus()).body(m);
     }
 

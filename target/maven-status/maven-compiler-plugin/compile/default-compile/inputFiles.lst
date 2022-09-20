@@ -1,3 +1,4 @@
+D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\service\dealer_profile\dealer_detail\DealerDetailService.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\utils\ControllerConstants.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\service\user\UserService.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\service\auth\IAuthService.java
@@ -10,20 +11,26 @@ D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\service\user\user_type
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\repository\area\CityRepository.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\model\company\Company.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\service\recovery_officer\officer\IOfficerService.java
+D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\service\dealer_profile\DealerProfileService.java
+D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\dto\dealer_profile\dealer_detail\DealerDetailRequest.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\service\user\user_feature\UserFeatureService.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\service\user_profile\IUserProfileService.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\model\user_profile\Package.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\controller\user_profile\ConnectionTypeController.java
+D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\repository\dealer_profile\dealer_detail\DealerRepository.java
+D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\service\dealer_profile\IDealerProfileService.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\model\connection_type\ConnectionType.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\repository\user_profile\CustomerRepository.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\utils\DateTimeUtil.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\utils\Message.java
+D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\controller\file\CNICController.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\service\user\IUserService.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\errors\general\InternalServerException.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\controller\recovery_officer\RecoveryOfficerController.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\dto\recovery_officer\officer\OfficerRequest.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\repository\user_profile\BoxMediaRepository.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\dto\recovery_officer\officer\OfficerUpdateRequest.java
+D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\model\dealer_profile\dealer_detail\Dealer.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\controller\user_profile\UserProfileController.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\service\feature\IFeatureService.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\dto\user_profile\packages\PackageResponse.java
@@ -32,6 +39,7 @@ D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\errors\user\OTPNotFoun
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\errors\general\EntityNotSavedException.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\service\area\country\ICountryService.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\model\user\UserTypeFeature.java
+D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\service\dealer_profile\dealer_detail\IDealerDetailService.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\service\user_profile\packages\PackageService.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\errors\RestApiExceptionHandler.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\dto\user_profile\customer\CustomerRequest.java
@@ -78,6 +86,7 @@ D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\service\connection_typ
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\repository\user\UserRepository.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\repository\recovery_officer\OfficerRepository.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\service\recovery_officer\IRecoveryOfficerService.java
+D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\dto\dealer_profile\dealer_detail\DealerDetailResponse.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\errors\general\EntityNotFoundException.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\service\area\city\CityService.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\service\user\user_feature\IUserFeatureService.java
@@ -103,6 +112,7 @@ D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\service\recovery_offic
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\errors\general\EntityNotUpdateException.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\ClickPayApplication.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\service\area\locality\LocalityService.java
+D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\controller\dealer_profile\DealerProfileController.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\service\user_profile\packages\IPackageService.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\service\user_profile\customer\ICustomerService.java
 D:\IntelliJ Workspace\clickpay\src\main\java\com\clickpay\service\user_profile\customer\CustomerService.java

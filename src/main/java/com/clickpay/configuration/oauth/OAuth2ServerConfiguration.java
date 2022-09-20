@@ -1,5 +1,6 @@
 package com.clickpay.configuration.oauth;
 
+import com.clickpay.utils.ControllerConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -48,6 +49,7 @@ public class OAuth2ServerConfiguration {
                     .and()
                     .authorizeRequests()
                     .antMatchers("/api/v1/test/").permitAll()
+                    .antMatchers("/"+ ControllerConstants.CNIC_FILE +"/upload").permitAll()
                     .antMatchers("/oauth/**").permitAll()
                     .antMatchers("/**")
                     .authenticated();

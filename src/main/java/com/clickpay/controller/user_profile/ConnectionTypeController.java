@@ -17,11 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.constraints.NotBlank;
 import java.net.URI;
 import java.security.Principal;
 
+@ApiIgnore
 @RestController("CONNECTION_TYPE")
 @RequestMapping("ct")
 public class ConnectionTypeController {

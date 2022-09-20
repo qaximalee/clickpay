@@ -17,6 +17,8 @@ public class ControllerConstants {
     public static final String ACCOUNT_REPORT = "api/v1/account-report";
     public static final String SETTINGS = "api/v1/settings";
 
+    public static final String CNIC_FILE = "api/v1/cnic-file";
+
     // Values of the features
     public static final String CITY = "CITY";
     public static final String LOCALITY = "LOCALITY";
