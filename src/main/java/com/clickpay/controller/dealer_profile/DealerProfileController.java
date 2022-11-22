@@ -13,6 +13,7 @@ import com.clickpay.utils.ControllerConstants;
 import com.clickpay.utils.Message;
 import com.sun.istack.NotNull;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.security.Principal;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping(ControllerConstants.DEALERS)
 public class DealerProfileController {
@@ -30,11 +32,6 @@ public class DealerProfileController {
 
     private final IAuthService authService;
     private final IDealerProfileService service;
-
-    public DealerProfileController(IAuthService authService, IDealerProfileService service) {
-        this.authService = authService;
-        this.service = service;
-    }
 
     @PostMapping("/")
     @ApiOperation(
@@ -73,7 +70,7 @@ public class DealerProfileController {
     }
 
     @PutMapping("/")
-    public ResponseEntity updateOfficer(@Valid @RequestBody DealerDetailRequest request,
+    public ResponseEntity updateDealer(@Valid @RequestBody DealerDetailRequest request,
                                         Principal principal)
             throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
         User user = authService.hasPermission(ControllerConstants.DEALER_DETAILS, principal);

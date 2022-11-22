@@ -18,6 +18,7 @@ import com.clickpay.utils.Message;
 import com.sun.istack.NotNull;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,7 @@ import javax.validation.constraints.NotBlank;
 import java.net.URI;
 import java.security.Principal;
 
+
 @RestController("USER_PROFILE")
 @RequestMapping(ControllerConstants.USER_PROFILE)
 public class UserProfileController extends CompanyController {
@@ -34,8 +36,8 @@ public class UserProfileController extends CompanyController {
     private final IAuthService authService;
     private final IUserProfileService userProfileService;
     private final ICustomerService customerService;
-    ICompanyService companyService;
-    IConnectionTypeService connectionTypeService;
+    private ICompanyService companyService;
+    private IConnectionTypeService connectionTypeService;
 
     @Autowired
     public UserProfileController(final IAuthService authService,

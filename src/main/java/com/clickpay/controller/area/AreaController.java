@@ -16,6 +16,7 @@ import com.clickpay.utils.ControllerConstants;
 import com.sun.istack.NotNull;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ import javax.validation.constraints.NotBlank;
 import java.net.URI;
 import java.security.Principal;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping(ControllerConstants.AREA)
 public class AreaController {
@@ -36,13 +38,6 @@ public class AreaController {
 
     private final IAreaService service;
     private final IAuthService authService;
-
-    @Autowired
-    public AreaController(final IAreaService service,
-                          final IAuthService authService) {
-        this.service = service;
-        this.authService = authService;
-    }
 
     /**
      * For City CRUD
