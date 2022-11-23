@@ -54,4 +54,7 @@ public class Dealer extends Auditable<Long> {
 
     @Column(name = "status", nullable = false)
     private Status status;
+
+    @Column(name = "is_deleted")
+    private boolean isDeleted = false;
 }

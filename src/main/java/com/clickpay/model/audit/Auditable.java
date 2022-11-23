@@ -29,8 +29,7 @@ public abstract class Auditable<T> {
     @CreatedDate
     protected Date creationDate;
 
-
-    @Column(name = "last_modified_date")
+    @Column(name = "last_mod_date")
     @LastModifiedDate
     @Temporal(TIMESTAMP)
     protected Date lastModifiedDate;
@@ -42,7 +41,4 @@ public abstract class Auditable<T> {
     @LastModifiedBy
     @Column(name="modified_by")
     protected T modifiedBy;
-
-    @Column(name = "status")
-    private boolean status = true;
 }
