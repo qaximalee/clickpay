@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -77,9 +78,9 @@ public class DealerProfileService implements IDealerProfileService{
     }
 
     @Override
-    public Message findDealerById(Long id) throws BadRequestException, EntityNotFoundException {
+    public Message<Dealer> findDealerById(Long id) throws BadRequestException, EntityNotFoundException {
         log.info("Dealer fetching by id: " + id);
-        return new Message()
+        return new Message<Dealer>()
                 .setData(dealerDetailService.findById(id))
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
@@ -87,9 +88,9 @@ public class DealerProfileService implements IDealerProfileService{
     }
 
     @Override
-    public Message findAllDealerByUserId(Long userId) throws EntityNotFoundException {
+    public Message<List<Dealer>> findAllDealerByUserId(Long userId) throws EntityNotFoundException {
         log.info("Dealer list is fetching.");
-        return new Message()
+        return new Message<List<Dealer>>()
                 .setData(dealerDetailService.findAllDealerByUserId(userId))
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
@@ -97,7 +98,7 @@ public class DealerProfileService implements IDealerProfileService{
     }
 
     @Override
-    public Message updateDealer(DealerDetailRequest dealerDetailRequest, User user)
+    public Message<Dealer> updateDealer(DealerDetailRequest dealerDetailRequest, User user)
             throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
         log.info("Dealer updating with name: " + dealerDetailRequest.getName());
 
@@ -120,10 +121,52 @@ public class DealerProfileService implements IDealerProfileService{
         dealer = dealerDetailService.save(dealer);
 
         log.debug("Dealer: " + dealer.getName() + " is successfully updated for user id: "+user.getId());
-        return new Message()
+        return new Message<Dealer>()
                 .setData(dealer)
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
                 .setMessage("Dealer "+ ResponseMessage.UPDATED_MESSAGE_SUCCESS);
+    }
+
+    @Override
+    public Message<Dealer> updateDealerStatus(Long dealerId, String status, User user)
+            throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+        log.info("Dealer status updating.");
+
+        Dealer dealer = dealerDetailService.findById(dealerId);
+
+        dealer.setStatus(Status.INACTIVE);
+        dealer.setModifiedBy(user.getId());
+        dealer.setLastModifiedDate(new Date());
+
+        dealer = dealerDetailService.save(dealer);
+
+        log.debug("Dealer: " + dealer.getName() + " is successfully status updated by user id: "+user.getId());
+        return new Message<Dealer>()
+                .setData(dealer)
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("Dealer Status "+ ResponseMessage.UPDATED_MESSAGE_SUCCESS);
+    }
+
+    @Override
+    public Message<Dealer> deleteDealer(Long dealerId , User user)
+            throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+        log.info("Dealer status updating.");
+
+        Dealer dealer = dealerDetailService.findById(dealerId);
+
+        dealer.setDeleted(true);
+        dealer.setModifiedBy(user.getId());
+        dealer.setLastModifiedDate(new Date());
+
+        dealer = dealerDetailService.save(dealer);
+
+        log.debug("Dealer: " + dealer.getName() + " is successfully deleted by user id: "+user.getId());
+        return new Message<Dealer>()
+                .setData(dealer)
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("Dealer Status "+ ResponseMessage.DELETED_MESSAGE_SUCCESS);
     }
 }

@@ -5,6 +5,7 @@ import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.general.EntityNotSavedException;
+import com.clickpay.model.dealer_profile.dealer_detail.Dealer;
 import com.clickpay.model.user.User;
 import com.clickpay.utils.Message;
 
@@ -18,4 +19,10 @@ public interface IDealerProfileService {
     Message findAllDealerByUserId(Long userId) throws EntityNotFoundException;
 
     Message updateDealer(DealerDetailRequest dealerDetailRequest, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException;
+
+    Message<Dealer> updateDealerStatus(Long dealerId, String status, User user)
+            throws BadRequestException, EntityNotFoundException, EntityNotSavedException;
+
+    Message<Dealer> deleteDealer(Long dealerId, User user)
+            throws BadRequestException, EntityNotFoundException, EntityNotSavedException;
 }

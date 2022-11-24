@@ -32,7 +32,7 @@ public class DealerDetailService implements IDealerDetailService{
             throw new BadRequestException("Provided dealer id should be a valid and non null value.");
         }
 
-        Optional<Dealer> dealer = repo.findById(id);
+        Optional<Dealer> dealer = repo.findByIdAndIsDeleted(id,false);
         if (dealer == null || !dealer.isPresent()) {
             log.error("No dealer found with dealer id: "+id);
             throw new EntityNotFoundException("No dealer found with provided dealer id.");
@@ -43,7 +43,7 @@ public class DealerDetailService implements IDealerDetailService{
     @Transactional(readOnly = true)
     @Override
     public boolean isExistsByDealerID(String dealerId) throws EntityAlreadyExistException {
-        boolean isExists = repo.existsByDealerID(dealerId);
+        boolean isExists = repo.existsByDealerIDAndIsDeleted(dealerId,false);
         if (isExists) {
             log.error("Dealer with dealerID: "+dealerId+" already exists.");
             throw new EntityAlreadyExistException("Dealer with dealerID: "+dealerId+" already exists.");
@@ -71,7 +71,7 @@ public class DealerDetailService implements IDealerDetailService{
     @Override
     public List<Dealer> findAllDealerByUserId(Long userId) throws EntityNotFoundException {
         log.info("Fetching dealer list by user id: "+userId);
-        List<Dealer> dealerList = repo.findAllByCreatedBy(userId);
+        List<Dealer> dealerList = repo.findAllByCreatedByAndIsDeleted(userId,false);
         if (dealerList == null || dealerList.isEmpty()) {
             log.error("No dealer data found.");
             throw new EntityNotFoundException("Dealer list not found.");

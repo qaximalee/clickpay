@@ -33,7 +33,7 @@ public class DealerProfileController {
     private final IAuthService authService;
     private final IDealerProfileService service;
 
-    @PostMapping("/")
+    @PostMapping("/create")
     @ApiOperation(
             value = "Create dealer with requested parameters",
             produces = "application/json",
@@ -75,6 +75,25 @@ public class DealerProfileController {
             throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
         User user = authService.hasPermission(ControllerConstants.DEALER_DETAILS, principal);
         Message m = service.updateDealer(request, user);
+        return ResponseEntity.ok().body(m);
+    }
+
+    @PutMapping("/update-status")
+    public ResponseEntity<Message<Dealer>> updateDealerStatus(@Valid @RequestParam("dealerId") Long dealerId,
+                                             @Valid @RequestParam("status") String status,
+                                       Principal principal)
+            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
+        User user = authService.hasPermission(ControllerConstants.DEALER_DETAILS, principal);
+        Message<Dealer> m = service.updateDealerStatus(dealerId, status, user);
+        return ResponseEntity.ok().body(m);
+    }
+
+    @PutMapping("/delete")
+    public ResponseEntity<Message<Dealer>> deleteDealer(@Valid @RequestParam("dealerId") Long dealerId,
+                                                              Principal principal)
+            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
+        User user = authService.hasPermission(ControllerConstants.DEALER_DETAILS, principal);
+        Message<Dealer> m = service.deleteDealer(dealerId, user);
         return ResponseEntity.ok().body(m);
     }
 
