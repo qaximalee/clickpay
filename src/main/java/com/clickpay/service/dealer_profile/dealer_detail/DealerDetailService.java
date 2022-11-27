@@ -1,5 +1,6 @@
 package com.clickpay.service.dealer_profile.dealer_detail;
 
+import com.clickpay.dto.dealer_profile.dealer_detail.PaginatedDealerRequest;
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
@@ -7,10 +8,11 @@ import com.clickpay.errors.general.EntityNotSavedException;
 import com.clickpay.model.dealer_profile.dealer_detail.Dealer;
 import com.clickpay.repository.dealer_profile.dealer_detail.DealerRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -69,9 +71,22 @@ public class DealerDetailService implements IDealerDetailService{
 
     @Transactional(readOnly = true)
     @Override
-    public List<Dealer> findAllDealerByUserId(Long userId, Boolean isDeleted) throws EntityNotFoundException {
+    public Page<Dealer> findAllDealerByUserId(Long userId, Boolean isDeleted, Pageable pageable) throws EntityNotFoundException {
         log.info("Fetching dealer list by user id: "+userId);
-        List<Dealer> dealerList = repo.findAllByCreatedByAndIsDeleted(userId,isDeleted);
+        Page<Dealer> dealerList = repo.findAllByCreatedByAndIsDeleted(userId,isDeleted,pageable);
+        if (dealerList == null || dealerList.isEmpty()) {
+            log.error("No dealer data found.");
+            throw new EntityNotFoundException("Dealer list not found.");
+        }
+        return dealerList;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Page<Dealer> findAllDealerByUserIdWithFilter(PaginatedDealerRequest dto, Long userId, Boolean isDeleted, Pageable pageable) throws EntityNotFoundException {
+        log.info("Fetching dealer list by user id: "+userId);
+        Page<Dealer> dealerList = repo.findAllByCreatedByAndIsDeletedAndCompany_NameAndLocality_NameAndStatus(
+                userId,isDeleted,dto.getCompany(),dto.getLocality(),dto.getStatus(),pageable);
         if (dealerList == null || dealerList.isEmpty()) {
             log.error("No dealer data found.");
             throw new EntityNotFoundException("Dealer list not found.");

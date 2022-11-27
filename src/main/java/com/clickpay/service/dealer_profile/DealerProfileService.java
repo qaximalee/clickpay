@@ -1,6 +1,8 @@
 package com.clickpay.service.dealer_profile;
 
 import com.clickpay.dto.dealer_profile.dealer_detail.DealerDetailRequest;
+import com.clickpay.dto.dealer_profile.dealer_detail.PaginatedDealerRequest;
+import com.clickpay.dto.dealer_profile.dealer_detail.PaginatedDealerResponse;
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
@@ -16,11 +18,14 @@ import com.clickpay.utils.Message;
 import com.clickpay.utils.ResponseMessage;
 import com.clickpay.utils.enums.Status;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.List;
+
 
 @Slf4j
 @Service
@@ -88,13 +93,39 @@ public class DealerProfileService implements IDealerProfileService{
     }
 
     @Override
-    public Message<List<Dealer>> findAllDealerByUserId(Long userId) throws EntityNotFoundException {
+    public Message<PaginatedDealerResponse> findAllDealerByUserId(PaginatedDealerRequest dto , Long userId) throws EntityNotFoundException {
         log.info("Dealer list is fetching.");
-        return new Message<List<Dealer>>()
-                .setData(dealerDetailService.findAllDealerByUserId(userId,false))
+        Page<Dealer> resulting = null;
+        Pageable pageable = PageRequest.of(dto.getPageNo(), dto.getPageSize());
+        if (dto.getCompany() == null && dto.getLocality() == null && dto.getStatus() == null){
+            resulting = dealerDetailService.findAllDealerByUserId(userId,false,pageable);
+        }else {
+            populateSpecialCharWhenProvidedNullFilterValues(dto);
+            resulting = dealerDetailService.findAllDealerByUserIdWithFilter(dto,userId,false,pageable);
+        }
+
+        if (resulting.getContent() == null || resulting.getContent().isEmpty())
+            throw new EntityNotFoundException("No data found.");
+
+        PaginatedDealerResponse response = PaginatedDealerResponse.builder()
+                .dealers(resulting.getContent())
+                .pageNo(dto.getPageNo())
+                .pageSize(dto.getPageSize())
+                .noOfPages(resulting.getTotalPages())
+                .totalRows(resulting.getTotalElements())
+                .build();
+
+        return new Message<PaginatedDealerResponse>()
+                .setData(response)
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
                 .setMessage("Dealer list "+ ResponseMessage.FETCHED_MESSAGE_SUCCESS);
+    }
+
+    private void populateSpecialCharWhenProvidedNullFilterValues(PaginatedDealerRequest dto) {
+        dto.setCompany(dto.getCompany() == null ? "@" : dto.getCompany() );
+        dto.setLocality(dto.getLocality() == null ? "@" : dto.getLocality() );
+        dto.setStatus(dto.getStatus() == null ? "@" : dto.getStatus() );
     }
 
     @Override

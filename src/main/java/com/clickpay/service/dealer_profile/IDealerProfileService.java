@@ -1,6 +1,7 @@
 package com.clickpay.service.dealer_profile;
 
 import com.clickpay.dto.dealer_profile.dealer_detail.DealerDetailRequest;
+import com.clickpay.dto.dealer_profile.dealer_detail.PaginatedDealerRequest;
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
@@ -16,7 +17,7 @@ public interface IDealerProfileService {
 
     Message findDealerById(Long id) throws BadRequestException, EntityNotFoundException;
 
-    Message findAllDealerByUserId(Long userId) throws EntityNotFoundException;
+    Message findAllDealerByUserId(PaginatedDealerRequest dto, Long userId) throws EntityNotFoundException;
 
     Message updateDealer(DealerDetailRequest dealerDetailRequest, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException;
 

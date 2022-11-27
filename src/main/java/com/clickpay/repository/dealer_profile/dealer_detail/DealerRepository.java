@@ -1,6 +1,8 @@
 package com.clickpay.repository.dealer_profile.dealer_detail;
 
 import com.clickpay.model.dealer_profile.dealer_detail.Dealer;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,5 +19,7 @@ public interface DealerRepository extends JpaRepository<Dealer, Long> {
 
     boolean existsByDealerIDAndIsDeleted(String dealerId, boolean isDeleted);
 
-    List<Dealer> findAllByCreatedByAndIsDeleted(Long userId, boolean isDeleted);
+    Page<Dealer> findAllByCreatedByAndIsDeleted(Long userId, boolean isDeleted, Pageable pageable);
+
+    Page<Dealer> findAllByCreatedByAndIsDeletedAndCompany_NameAndLocality_NameAndStatus(Long userId, Boolean isDeleted, String company, String locality, String status, Pageable pageable);
 }

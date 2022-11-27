@@ -2,6 +2,7 @@ package com.clickpay.controller.dealer_profile;
 
 import com.clickpay.dto.dealer_profile.dealer_detail.DealerDetailRequest;
 import com.clickpay.dto.dealer_profile.dealer_detail.DealerDetailResponse;
+import com.clickpay.dto.dealer_profile.dealer_detail.PaginatedDealerRequest;
 import com.clickpay.dto.recovery_officer.officer.OfficerUpdateRequest;
 import com.clickpay.errors.general.*;
 import com.clickpay.model.area.City;
@@ -61,11 +62,12 @@ public class DealerProfileController {
     }
 
     @GetMapping("/")
-    public ResponseEntity getAllDealers(Principal principal)
+    public ResponseEntity getAllDealers(@Valid @RequestBody PaginatedDealerRequest dto,
+                                        Principal principal)
             throws EntityNotFoundException, PermissionException {
         System.out.println();
         User user = authService.hasPermission(ControllerConstants.DEALER_DETAILS, principal);
-        Message m = service.findAllDealerByUserId(user.getId());
+        Message m = service.findAllDealerByUserId(dto,user.getId());
         return ResponseEntity.ok().body(m);
     }
 
