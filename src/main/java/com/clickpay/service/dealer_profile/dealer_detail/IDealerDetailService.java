@@ -20,5 +20,5 @@ public interface IDealerDetailService {
     Dealer findById(Long id) throws BadRequestException, EntityNotFoundException;
 
     @Transactional(readOnly = true)
-    List<Dealer> findAllDealerByUserId(Long userId) throws EntityNotFoundException;
+    List<Dealer> findAllDealerByUserId(Long userId, Boolean isDeleted) throws EntityNotFoundException;
 }

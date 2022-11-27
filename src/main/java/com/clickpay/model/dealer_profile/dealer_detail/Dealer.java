@@ -52,6 +52,7 @@ public class Dealer extends Auditable<Long> {
     @Column(name = "joining_date", nullable = false)
     private Date joiningDate;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private Status status;
 

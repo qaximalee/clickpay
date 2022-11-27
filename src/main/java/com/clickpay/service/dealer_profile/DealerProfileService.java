@@ -91,7 +91,7 @@ public class DealerProfileService implements IDealerProfileService{
     public Message<List<Dealer>> findAllDealerByUserId(Long userId) throws EntityNotFoundException {
         log.info("Dealer list is fetching.");
         return new Message<List<Dealer>>()
-                .setData(dealerDetailService.findAllDealerByUserId(userId))
+                .setData(dealerDetailService.findAllDealerByUserId(userId,false))
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
                 .setMessage("Dealer list "+ ResponseMessage.FETCHED_MESSAGE_SUCCESS);
@@ -114,7 +114,7 @@ public class DealerProfileService implements IDealerProfileService{
         dealer.setAddress(dealerDetailRequest.getAddress());
         dealer.setCompany(company);
         dealer.setLocality(locality);
-        dealer.setStatus(Status.valueOf(dealerDetailRequest.getStatus()));
+        dealer.setStatus(Status.of(dealerDetailRequest.getStatus()));
         dealer.setModifiedBy(user.getId());
         dealer.setLastModifiedDate(new Date());
 
@@ -135,7 +135,7 @@ public class DealerProfileService implements IDealerProfileService{
 
         Dealer dealer = dealerDetailService.findById(dealerId);
 
-        dealer.setStatus(Status.INACTIVE);
+        dealer.setStatus(Status.of(status));
         dealer.setModifiedBy(user.getId());
         dealer.setLastModifiedDate(new Date());
 
