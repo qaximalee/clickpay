@@ -1,6 +1,7 @@
 package com.clickpay.service.user_profile.customer;
 
-import com.clickpay.dto.user_profile.customer.CustomerFilterDTO;
+import com.clickpay.dto.user_profile.customer.CustomerFilterAndPaginationRequest;
+import com.clickpay.dto.user_profile.customer.CustomerFilterAndPaginationResponse;
 import com.clickpay.dto.user_profile.customer.CustomerRequest;
 import com.clickpay.dto.user_profile.customer.CustomerResponse;
 import com.clickpay.errors.general.*;
@@ -20,11 +21,13 @@ import com.clickpay.service.user.IUserService;
 import com.clickpay.service.user.user_type.IUserTypeService;
 import com.clickpay.service.user_profile.box_media.IBoxMediaService;
 import com.clickpay.service.user_profile.packages.IPackageService;
-import com.clickpay.utils.ResponseMessage;
 import com.clickpay.utils.StringUtil;
 import com.clickpay.utils.enums.Discount;
 import com.clickpay.utils.enums.Status;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +38,7 @@ import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 
 @Slf4j
 @Service
-public class CustomerService implements ICustomerService{
+public class CustomerService implements ICustomerService {
 
     public static final String INTERNET_ID_PREFIX = "speedex-";
 
@@ -126,12 +129,12 @@ public class CustomerService implements ICustomerService{
 
     private String createInternetId(Long id) {
         Random random = new Random();
-        int rand = 100+random.nextInt(99899);
-        String internetId = INTERNET_ID_PREFIX+rand;
+        int rand = 100 + random.nextInt(99899);
+        String internetId = INTERNET_ID_PREFIX + rand;
 
         // while we have same internet id for a user then it should not be equals
-        while(repo.existsByInternetIdAndCreatedBy(internetId, id)) {
-            internetId = INTERNET_ID_PREFIX + (100+random.nextInt(99899));
+        while (repo.existsByInternetIdAndCreatedBy(internetId, id)) {
+            internetId = INTERNET_ID_PREFIX + (100 + random.nextInt(99899));
         }
         return internetId;
     }
@@ -165,7 +168,6 @@ public class CustomerService implements ICustomerService{
     }
 
 
-
     @Transactional
     @Override
     public Customer save(Customer customer) throws BadRequestException, EntityNotSavedException {
@@ -177,7 +179,7 @@ public class CustomerService implements ICustomerService{
         }
         try {
             customer = repo.save(customer);
-            log.debug("Customer with customer id: "+customer.getId()+ " created successfully.");
+            log.debug("Customer with customer id: " + customer.getId() + " created successfully.");
             return customer;
         } catch (Exception e) {
             log.error("Customer can not be saved.");
@@ -188,14 +190,14 @@ public class CustomerService implements ICustomerService{
     @Transactional(readOnly = true)
     @Override
     public Customer findById(Long id) throws BadRequestException, EntityNotFoundException {
-        log.info("Finding customer by id: "+id);
+        log.info("Finding customer by id: " + id);
         if (id == null || id < 1) {
             log.error("Customer id " + id + " is invalid.");
             throw new BadRequestException("Provided customer id should be a valid and non null value.");
         }
         Optional<Customer> data = repo.findById(id);
         if (!data.isPresent()) {
-            log.error("No customer found with id: "+id);
+            log.error("No customer found with id: " + id);
             throw new EntityNotFoundException("No customer found with provided city id.");
         }
         return data.get();
@@ -204,7 +206,7 @@ public class CustomerService implements ICustomerService{
     @Transactional(readOnly = true)
     @Override
     public List<CustomerResponse> findAllCustomerById(Long userId) throws EntityNotFoundException {
-        log.info("Fetching all customer for user id: "+userId);
+        log.info("Fetching all customer for user id: " + userId);
         List<Customer> data = repo.findAllByCreatedBy(userId);
         if (data == null || data.isEmpty()) {
             log.error("No customer data found.");
@@ -216,35 +218,35 @@ public class CustomerService implements ICustomerService{
 
     @Transactional(readOnly = true)
     @Override
-    public List<CustomerResponse> findCustomerByFilter(CustomerFilterDTO customerFilterDTO, User user) throws EntityNotFoundException {
+    public CustomerFilterAndPaginationResponse findCustomerByFilter(CustomerFilterAndPaginationRequest customerFilterDTO, User user) throws EntityNotFoundException {
         log.info("Fetching all customer by filtration data");
-        if(customerFilterDTO.getBoxMediaId() == null
-                && customerFilterDTO.getConnectionTypeId() == null
-                && customerFilterDTO.getPackageId() == null
-                && customerFilterDTO.getStatus() == null
-                && customerFilterDTO.getDiscount() == null
-        ) {
-            log.info("No filtration data selected.");
-            return findAllCustomerById(user.getId());
-        }
+
+        Pageable pageable = PageRequest.of(customerFilterDTO.getPageNo(), customerFilterDTO.getPageSize());
 
         // TODO fetch filtration data from the customerRepo's filtration method and mapped them to customerResponse dto
         log.info("Fetching data with filtration values.");
-        List<CustomerResponse> response = CustomerResponse.mapListOfCustomerDetail(
-                repo.getCustomerByFiltration(
-                    customerFilterDTO.getStatus(),
-                    customerFilterDTO.getConnectionTypeId(),
-                    customerFilterDTO.getBoxMediaId(),
-                    customerFilterDTO.getPackageId(),
-                    customerFilterDTO.getDiscount(),
-                    user.getId()
-                )
+
+        Page<Object[]> customers = repo.getCustomerByFiltration(
+                customerFilterDTO.getStatus(),
+                customerFilterDTO.getConnectionTypeId(),
+                customerFilterDTO.getBoxMediaId(),
+                customerFilterDTO.getPackageId(),
+                customerFilterDTO.getDiscount(),
+                user.getId(),
+                pageable
         );
-        if (response == null || response.isEmpty()) {
-            log.info("No customers found with filtration.");
-            throw new EntityNotFoundException("No customers found with filtration data.");
+
+        if (customers == null || customers.isEmpty()) {
+            log.info("No customers found with and without filtration.");
+            throw new EntityNotFoundException("No customers found with and without filtration data.");
         }
-        return response;
+
+        CustomerFilterAndPaginationResponse resulting = CustomerResponse.mapListOfCustomerDetail(customers);
+
+        resulting.setPageNo(customerFilterDTO.getPageNo());
+        resulting.setPageSize(customerFilterDTO.getPageSize());
+
+        return resulting;
     }
 
 }

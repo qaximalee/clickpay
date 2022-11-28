@@ -1,6 +1,6 @@
 package com.clickpay.controller.user_profile;
 
-import com.clickpay.dto.user_profile.customer.CustomerFilterDTO;
+import com.clickpay.dto.user_profile.customer.CustomerFilterAndPaginationRequest;
 import com.clickpay.dto.user_profile.customer.CustomerRequest;
 import com.clickpay.dto.user_profile.packages.PackageRequest;
 import com.clickpay.errors.general.*;
@@ -18,7 +18,6 @@ import com.clickpay.utils.Message;
 import com.sun.istack.NotNull;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -188,7 +187,7 @@ public class UserProfileController extends CompanyController {
     }
 
     @PostMapping("/user-details/filter")
-    public ResponseEntity getAllCustomerByFiltration(@RequestBody CustomerFilterDTO customerFilterDTO, Principal principal)
+    public ResponseEntity getAllCustomerByFiltration(@RequestBody CustomerFilterAndPaginationRequest customerFilterDTO, Principal principal)
             throws PermissionException, EntityNotFoundException {
         User user = authService.hasPermission(ControllerConstants.USER_DETAILS, principal);
         Message m = userProfileService.findCustomerByFilter(customerFilterDTO, user);

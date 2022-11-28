@@ -1,14 +1,11 @@
 package com.clickpay.service.user_profile;
 
-import com.clickpay.dto.user_profile.customer.CustomerFilterDTO;
+import com.clickpay.dto.user_profile.customer.CustomerFilterAndPaginationRequest;
 import com.clickpay.dto.user_profile.customer.CustomerRequest;
-import com.clickpay.dto.user_profile.customer.CustomerResponse;
 import com.clickpay.dto.user_profile.packages.PackageRequest;
 import com.clickpay.errors.general.*;
 import com.clickpay.model.user.User;
 import com.clickpay.utils.Message;
-
-import java.util.List;
 
 public interface IUserProfileService {
 
@@ -63,6 +60,6 @@ public interface IUserProfileService {
 
     Message findAllCustomerByUserId(Long userId) throws EntityNotFoundException;
 
-    Message findCustomerByFilter(CustomerFilterDTO customerFilterDTO, User user) throws EntityNotFoundException;
+    Message findCustomerByFilter(CustomerFilterAndPaginationRequest customerFilterDTO, User user) throws EntityNotFoundException;
 
 }
