@@ -4,6 +4,7 @@ import com.clickpay.model.dealer_profile.dealer_detail.Dealer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,9 +18,13 @@ public interface DealerRepository extends JpaRepository<Dealer, Long> {
 
     Optional<Dealer> findByIdAndIsDeleted(Long id, boolean isDeleted);
 
-    boolean existsByDealerIDAndIsDeleted(String dealerId, boolean isDeleted);
 
-    Page<Dealer> findAllByCreatedByAndIsDeleted(Long userId, boolean isDeleted, Pageable pageable);
+    Page<Dealer> findAllByCreatedByAndIsDeleted( Long userId, boolean isDeleted, Pageable pageable);
 
-    Page<Dealer> findAllByCreatedByAndIsDeletedAndCompany_NameAndLocality_NameAndStatus(Long userId, Boolean isDeleted, String company, String locality, String status, Pageable pageable);
+    @Query(value = "SELECT * FROM dealer" +
+            "  where (locality_id = :localityId OR :localityId is null)" +
+            "  AND (company_id = :companyId OR :companyId is null)" +
+            "  AND (status = :status OR :status is null)" +
+            "  AND created_by = :userId AND is_deleted = :isDeleted ", nativeQuery = true)
+    Page<Dealer> findAllByCreatedByAndIsDeletedAndByFilters(Long companyId, Long localityId, String status, Long userId, Boolean isDeleted, Pageable pageable);
 }

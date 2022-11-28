@@ -6,8 +6,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PaginatedDealerRequest {
-    private String locality;
-    private String company;
+    private Long locality;
+    private Long company;
     private String status;
     private int pageNo;
     private int pageSize;

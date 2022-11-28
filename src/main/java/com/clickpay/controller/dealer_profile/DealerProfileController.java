@@ -61,7 +61,7 @@ public class DealerProfileController {
         return ResponseEntity.ok().body(m);
     }
 
-    @GetMapping("/")
+    @PostMapping("/")
     public ResponseEntity getAllDealers(@Valid @RequestBody PaginatedDealerRequest dto,
                                         Principal principal)
             throws EntityNotFoundException, PermissionException {

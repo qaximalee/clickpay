@@ -71,22 +71,10 @@ public class DealerDetailService implements IDealerDetailService{
 
     @Transactional(readOnly = true)
     @Override
-    public Page<Dealer> findAllDealerByUserId(Long userId, Boolean isDeleted, Pageable pageable) throws EntityNotFoundException {
+    public Page<Dealer> findAllDealerByUserIdByWithAndWithOutFilter(PaginatedDealerRequest dto, Long userId, Boolean isDeleted, Pageable pageable) throws EntityNotFoundException {
         log.info("Fetching dealer list by user id: "+userId);
-        Page<Dealer> dealerList = repo.findAllByCreatedByAndIsDeleted(userId,isDeleted,pageable);
-        if (dealerList == null || dealerList.isEmpty()) {
-            log.error("No dealer data found.");
-            throw new EntityNotFoundException("Dealer list not found.");
-        }
-        return dealerList;
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public Page<Dealer> findAllDealerByUserIdWithFilter(PaginatedDealerRequest dto, Long userId, Boolean isDeleted, Pageable pageable) throws EntityNotFoundException {
-        log.info("Fetching dealer list by user id: "+userId);
-        Page<Dealer> dealerList = repo.findAllByCreatedByAndIsDeletedAndCompany_NameAndLocality_NameAndStatus(
-                userId,isDeleted,dto.getCompany(),dto.getLocality(),dto.getStatus(),pageable);
+        Page<Dealer> dealerList = repo.findAllByCreatedByAndIsDeletedAndByFilters(
+                dto.getCompany(), dto.getLocality(), dto.getStatus(), userId,isDeleted,pageable);
         if (dealerList == null || dealerList.isEmpty()) {
             log.error("No dealer data found.");
             throw new EntityNotFoundException("Dealer list not found.");

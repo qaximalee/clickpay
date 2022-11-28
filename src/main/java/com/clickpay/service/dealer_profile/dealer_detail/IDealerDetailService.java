@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface IDealerDetailService {
+
     @Transactional(readOnly = true)
     boolean isExistsByDealerID(String dealerId) throws EntityAlreadyExistException;
 
@@ -23,8 +24,5 @@ public interface IDealerDetailService {
     Dealer findById(Long id) throws BadRequestException, EntityNotFoundException;
 
     @Transactional(readOnly = true)
-    Page<Dealer> findAllDealerByUserId(Long userId, Boolean isDeleted, Pageable pageable) throws EntityNotFoundException;
-
-    @Transactional(readOnly = true)
-    Page<Dealer> findAllDealerByUserIdWithFilter(PaginatedDealerRequest dto, Long userId, Boolean isDeleted, Pageable pageable) throws EntityNotFoundException;
+    Page<Dealer> findAllDealerByUserIdByWithAndWithOutFilter(PaginatedDealerRequest dto, Long userId, Boolean isDeleted, Pageable pageable) throws EntityNotFoundException;
 }

@@ -95,15 +95,10 @@ public class DealerProfileService implements IDealerProfileService{
     @Override
     public Message<PaginatedDealerResponse> findAllDealerByUserId(PaginatedDealerRequest dto , Long userId) throws EntityNotFoundException {
         log.info("Dealer list is fetching.");
-        Page<Dealer> resulting = null;
-        Pageable pageable = PageRequest.of(dto.getPageNo(), dto.getPageSize());
-        if (dto.getCompany() == null && dto.getLocality() == null && dto.getStatus() == null){
-            resulting = dealerDetailService.findAllDealerByUserId(userId,false,pageable);
-        }else {
-            populateSpecialCharWhenProvidedNullFilterValues(dto);
-            resulting = dealerDetailService.findAllDealerByUserIdWithFilter(dto,userId,false,pageable);
-        }
 
+        Pageable pageable = PageRequest.of(dto.getPageNo(), dto.getPageSize());
+
+        Page<Dealer> resulting = dealerDetailService.findAllDealerByUserIdByWithAndWithOutFilter(dto,userId,false,pageable);
         if (resulting.getContent() == null || resulting.getContent().isEmpty())
             throw new EntityNotFoundException("No data found.");
 
@@ -120,12 +115,6 @@ public class DealerProfileService implements IDealerProfileService{
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
                 .setMessage("Dealer list "+ ResponseMessage.FETCHED_MESSAGE_SUCCESS);
-    }
-
-    private void populateSpecialCharWhenProvidedNullFilterValues(PaginatedDealerRequest dto) {
-        dto.setCompany(dto.getCompany() == null ? "@" : dto.getCompany() );
-        dto.setLocality(dto.getLocality() == null ? "@" : dto.getLocality() );
-        dto.setStatus(dto.getStatus() == null ? "@" : dto.getStatus() );
     }
 
     @Override

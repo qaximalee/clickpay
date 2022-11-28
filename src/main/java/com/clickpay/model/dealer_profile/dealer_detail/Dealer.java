@@ -53,8 +53,8 @@ public class Dealer extends Auditable<Long> {
     private Date joiningDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private Status status;
+    @Column(name = "status")
+    private Status status = Status.ACTIVE;
 
     @Column(name = "is_deleted")
     private boolean isDeleted = false;
