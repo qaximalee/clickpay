@@ -2,6 +2,8 @@ package com.clickpay.model.transaction;
 
 import com.clickpay.model.audit.Auditable;
 import com.clickpay.model.user.User;
+import com.clickpay.utils.enums.Discount;
+import com.clickpay.utils.enums.UserCollectionStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,7 +18,6 @@ public class UserCollection extends Auditable<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Long id;
 
     @ManyToOne
@@ -27,6 +28,13 @@ public class UserCollection extends Auditable<Long> {
     @Temporal(TemporalType.TIMESTAMP)
     private Date payAt;
 
-    @Column(name = "")
+    @Column(name = "amount")
     private double amount;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "collection_status")
+    private UserCollectionStatus collectionStatus;
+
+    @Column(name = "payment_type")
+    private String paymentType = "MONTHLY";
 }
