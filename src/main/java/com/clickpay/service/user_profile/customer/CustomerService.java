@@ -241,12 +241,14 @@ public class CustomerService implements ICustomerService {
             throw new EntityNotFoundException("No customers found with and without filtration data.");
         }
 
-        CustomerFilterAndPaginationResponse resulting = CustomerResponse.mapListOfCustomerDetail(customers);
-
-        resulting.setPageNo(customerFilterDTO.getPageNo());
-        resulting.setPageSize(customerFilterDTO.getPageSize());
-
-        return resulting;
+        return CustomerFilterAndPaginationResponse.builder()
+                .customers(CustomerResponse.mapListOfCustomerDetail(customers.getContent()))
+                .pageNo(customerFilterDTO.getPageNo())
+                .pageSize(customerFilterDTO.getPageSize())
+                .noOfPages(customers.getTotalPages())
+                .totalRows(customers.getTotalElements())
+                .build();
     }
+
 
 }

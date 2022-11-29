@@ -30,41 +30,28 @@ public class CustomerResponse {
     private String address;
     private String mobile;
 
-    public static CustomerFilterAndPaginationResponse mapListOfCustomerDetail(Page<Object[]> data) {
+    public static List<CustomerResponse> mapListOfCustomerDetail(List<Object[]> data) {
         log.info("Data fetching from db is mapped to customer response.");
-
-        List<CustomerResponse> customerResponses = new ArrayList<>();
-
-        data.stream().forEach(e -> {
+        return data.stream().map(e -> {
             CustomerResponse customerResponse = new CustomerResponse();
             customerResponse.setId(Long.valueOf("" + e[0]));
-            customerResponse.setName("" + e[1]);
-            customerResponse.setInternetId("" + e[1]);
-            customerResponse.setName("" + e[2]);
-            customerResponse.setAddress("" + e[3]);
-            customerResponse.setMobile("" + e[4]);
-            customerResponse.setConnectionType("" + e[5]);
+            customerResponse.setName(""+e[1]);
+            customerResponse.setInternetId(""+e[1]);
+            customerResponse.setName(""+e[2]);
+            customerResponse.setAddress(""+e[3]);
+            customerResponse.setMobile(""+e[4]);
+            customerResponse.setConnectionType(""+e[5]);
             try {
-                customerResponse.setInstallationDate(DateTimeUtil.toDate("" + e[6]));
+                customerResponse.setInstallationDate(DateTimeUtil.toDate(""+e[6]));
             } catch (ParseException ex) {
-                log.error("ERROR: " + ex.getLocalizedMessage());
+                log.error("ERROR: "+ex.getLocalizedMessage());
                 log.error("Date parsing error occurred.");
             }
-            customerResponse.setPackageType("" + e[7]);
-            customerResponse.setStatus("" + e[8]);
-            customerResponse.setDiscount("" + e[9]);
-            customerResponses.add(customerResponse);
-        });
-
-        CustomerFilterAndPaginationResponse response = CustomerFilterAndPaginationResponse.builder()
-                .customers(customerResponses)
-                .noOfPages(data.getTotalPages())
-                .totalRows(data.getTotalElements())
-                .build();
-
-        return response;
-
-
+            customerResponse.setPackageType(""+e[7]);
+            customerResponse.setStatus(""+e[8]);
+            customerResponse.setDiscount(""+e[9]);
+            return customerResponse;
+        }).collect(Collectors.toList());
     }
 
     public static List<CustomerResponse> mapListOfCustomer(List<Customer> data) {
