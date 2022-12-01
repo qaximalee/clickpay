@@ -1,8 +1,6 @@
 package com.clickpay.service.recovery_officer.officer;
 
-import com.clickpay.dto.recovery_officer.officer.OfficerResponse;
-import com.clickpay.dto.recovery_officer.officer.OfficerRequest;
-import com.clickpay.dto.recovery_officer.officer.OfficerUpdateRequest;
+import com.clickpay.dto.recovery_officer.officer.*;
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
@@ -17,12 +15,14 @@ import com.clickpay.utils.StringUtil;
 import com.clickpay.utils.enums.Status;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -126,13 +126,16 @@ public class OfficerService implements IOfficerService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<OfficerResponse> findAllOfficersByUserId(Long userId) throws EntityNotFoundException {
-        List<Officer> officers = repo.findAllByCreatedBy(userId);
+    public Page<Officer> findAllOfficersByUserId(PaginatedOfficerRequest dto, Long userId) throws EntityNotFoundException, BadRequestException {
+
+        Pageable pageable = PageRequest.of(dto.getPageNo(),dto.getPageSize());
+        Page<Officer> officers = repo.findAllByCreatedByAndStatus(userId,dto.getStatus(),pageable);
+
         if (officers == null || officers.isEmpty()) {
             log.error("No officer data found.");
             throw new EntityNotFoundException("Officer list not found.");
         }
-        return OfficerResponse.fromListOfOfficer(officers);
+        return officers;
     }
 
     @Transactional(readOnly = true)
@@ -170,7 +173,7 @@ public class OfficerService implements IOfficerService {
         updatingOfficer.setCellNo(request.getCellNo());
         updatingOfficer.setAddress(request.getAddress());
         updatingOfficer.setLeavingDate(request.getLeavingDate());
-        updatingOfficer.setStatus(Status.valueOf(request.getUpdatingStatus()));
+        updatingOfficer.setStatus(Status.of(request.getUpdatingStatus()));
 
         updatingOfficer.setModifiedBy(user.getId());
         updatingOfficer.setLastModifiedDate(new Date());
