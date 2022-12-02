@@ -1,17 +1,18 @@
 package com.clickpay.service.recovery_officer;
 
-import com.clickpay.dto.recovery_officer.officer.OfficerRequest;
-import com.clickpay.dto.recovery_officer.officer.OfficerUpdateRequest;
+import com.clickpay.dto.recovery_officer.officer.*;
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.general.EntityNotSavedException;
+import com.clickpay.model.recovery_officer.Officer;
 import com.clickpay.model.user.User;
 import com.clickpay.service.recovery_officer.officer.IOfficerService;
 import com.clickpay.utils.Message;
 import com.clickpay.utils.ResponseMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -52,13 +53,23 @@ public class RecoveryOfficerService implements IRecoveryOfficerService{
     }
 
     @Override
-    public Message findAllOfficerByUserId(Long userId) throws EntityNotFoundException {
+    public Message<PaginatedOfficerResponse> findAllOfficerByUserId(PaginatedOfficerRequest dto, Long userId) throws EntityNotFoundException, BadRequestException {
         log.info("Fetching list of officers.");
-        return new Message()
-                .setData(officerService.findAllOfficersByUserId(userId))
+        Page<Officer> officerResponses =  officerService.findAllOfficersByUserId(dto, userId);
+
+        PaginatedOfficerResponse response = PaginatedOfficerResponse.builder()
+                .officers(OfficerResponse.fromListOfOfficer(officerResponses.getContent()))
+                .pageNo(dto.getPageNo())
+                .pageSize(dto.getPageSize())
+                .noOfPages(officerResponses.getTotalPages())
+                .totalRows(officerResponses.getTotalElements())
+                .build();
+
+        return new Message<PaginatedOfficerResponse>()
+                .setData(response)
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("City list "+ ResponseMessage.FETCHED_MESSAGE_SUCCESS);
+                .setMessage("Officer list "+ ResponseMessage.FETCHED_MESSAGE_SUCCESS);
     }
 
     @Override

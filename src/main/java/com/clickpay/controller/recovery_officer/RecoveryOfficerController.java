@@ -1,8 +1,6 @@
 package com.clickpay.controller.recovery_officer;
 
-import com.clickpay.dto.recovery_officer.officer.OfficerRequest;
-import com.clickpay.dto.recovery_officer.officer.OfficerResponse;
-import com.clickpay.dto.recovery_officer.officer.OfficerUpdateRequest;
+import com.clickpay.dto.recovery_officer.officer.*;
 import com.clickpay.errors.general.*;
 import com.clickpay.model.area.City;
 import com.clickpay.model.user.User;
@@ -65,12 +63,14 @@ public class RecoveryOfficerController {
         return ResponseEntity.ok().body(m);
     }
 
-    @GetMapping("/officer")
-    public ResponseEntity getAllOfficer(Principal principal)
-            throws EntityNotFoundException, PermissionException {
+    @PostMapping("/officer/getAll")
+    public ResponseEntity<Message<PaginatedOfficerResponse>> getAllOfficer(
+            @Valid @RequestBody PaginatedOfficerRequest request,
+            Principal principal)
+            throws EntityNotFoundException, PermissionException, BadRequestException {
         System.out.println();
         User user = authService.hasPermission(ControllerConstants.RECOVERY_OFFICER_SUB, principal);
-        Message m = recoveryOfficerService.findAllOfficerByUserId(user.getId());
+        Message<PaginatedOfficerResponse> m = recoveryOfficerService.findAllOfficerByUserId(request,user.getId());
         return ResponseEntity.ok().body(m);
     }
 
