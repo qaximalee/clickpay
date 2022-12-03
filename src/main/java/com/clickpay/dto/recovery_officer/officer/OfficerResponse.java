@@ -36,7 +36,7 @@ public class OfficerResponse extends OfficerRequest{
             officerResponse.setId(officer.getId());
             officerResponse.setName(officer.getName());
             officerResponse.setEmail(officer.getEmail());
-            officerResponse.setAddress(officer.getEmail());
+            officerResponse.setAddress(officer.getAddress());
             officerResponse.setPassword(officer.getPassword());
             officerResponse.setUserName(officer.getUserName());
             officerResponse.setStatus(officer.getStatus());

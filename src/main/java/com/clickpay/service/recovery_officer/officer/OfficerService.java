@@ -138,7 +138,7 @@ public class OfficerService implements IOfficerService {
         return officers;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public OfficerResponse updateOfficer(OfficerUpdateRequest request, User user)
             throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
