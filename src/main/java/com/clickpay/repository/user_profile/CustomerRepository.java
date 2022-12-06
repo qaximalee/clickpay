@@ -30,4 +30,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
             "AND ( c.created_by = :userId ) ORDER BY name, internet_id Asc", nativeQuery = true)
     Page<Object[]> getCustomerByFiltration(String status, Long connectionTypeId, Long boxMediaId, Long packageId, String discount, Long userId, Pageable pageable);
 
+    Customer findByUser_Id(Long userId);
 }

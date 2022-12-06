@@ -216,6 +216,19 @@ public class CustomerService implements ICustomerService {
         return CustomerResponse.mapListOfCustomer(data);
     }
 
+    // for unpaid collections
+    @Transactional(readOnly = true)
+    @Override
+    public Customer findAllCustomerByUserId(Long userId) throws EntityNotFoundException {
+        log.info("Fetching by customer by user id: " + userId);
+        Customer data = repo.findByUser_Id(userId);
+        if (data == null) {
+            log.error("No customer data found.");
+            throw new EntityNotFoundException("Customer not found.");
+        }
+        return data;
+    }
+
     @Transactional(readOnly = true)
     @Override
     public CustomerFilterAndPaginationResponse findCustomerByFilter(CustomerFilterAndPaginationRequest customerFilterDTO, User user) throws EntityNotFoundException {
