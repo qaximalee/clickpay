@@ -1,8 +1,9 @@
 package com.clickpay.controller.transaction;
 
 import com.clickpay.dto.transaction.UnpaidCollectionResponse;
-import com.clickpay.errors.general.EntityNotFoundException;
-import com.clickpay.errors.general.PermissionException;
+import com.clickpay.dto.transaction.UserCollectionRequest;
+import com.clickpay.errors.general.*;
+import com.clickpay.model.transaction.UserCollection;
 import com.clickpay.model.user.User;
 import com.clickpay.service.auth.IAuthService;
 import com.clickpay.service.recovery_officer.IRecoveryOfficerService;
@@ -55,4 +56,14 @@ public class UserCollectionController {
         return ResponseEntity.status(m.getStatus()).body(m);
     }
 
+
+    @PostMapping("/")
+    public ResponseEntity<Message<UserCollection>> createUserCollection(
+            @Valid @RequestBody UserCollectionRequest request,
+            Principal principal)
+            throws PermissionException, EntityNotFoundException, BadRequestException, EntityNotSavedException, EntityAlreadyExistException {
+        User user = authService.hasPermission(ControllerConstants.USERS_COLLECTIONS, principal);
+        Message<UserCollection> m = service.createUserCollection(request,user);
+        return ResponseEntity.status(m.getStatus()).body(m);
+    }
 }

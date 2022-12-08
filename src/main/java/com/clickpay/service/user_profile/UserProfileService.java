@@ -335,7 +335,7 @@ public class UserProfileService implements IUserProfileService{
         return new Message<Customer>()
                 .setStatus(HttpStatus.CREATED.value())
                 .setCode(HttpStatus.CREATED.toString())
-                .setMessage("Customer: " + dto.getName() + ResponseMessage.CREATED_MESSAGE_SUCCESS)
+                .setMessage("Customer: " + dto.getName() +" "+ ResponseMessage.CREATED_MESSAGE_SUCCESS)
                 .setData(customerService.createCustomer(dto, user));
     }
 

@@ -1,10 +1,11 @@
 package com.clickpay.repository.transaction.user_collection;
 
 import com.clickpay.model.transaction.UserCollection;
+import com.clickpay.utils.enums.PaymentType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserCollectionRepository extends JpaRepository<UserCollection, Long> {
-
+    boolean existsByMonthAndYearAndPaymentTypeAndCustomer_Id(String month, Integer year, PaymentType paymentType, Long customerId);
 }
