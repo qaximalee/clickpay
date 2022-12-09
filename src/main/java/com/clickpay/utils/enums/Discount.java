@@ -5,7 +5,17 @@ import com.clickpay.errors.general.BadRequestException;
 import java.util.Locale;
 
 public enum Discount {
-    HALF, FULL, QUARTER, SEMI, CUSTOM;
+    HALF(1), FULL(2), QUARTER(3), SEMI(4), CUSTOM(5);
+
+    private int value;
+
+    Discount(int i) {
+        value = i;
+    }
+
+    public int getValue() {
+        return value;
+    }
 
     public static Discount of(String discount) throws BadRequestException {
         Discount discountData = null;
