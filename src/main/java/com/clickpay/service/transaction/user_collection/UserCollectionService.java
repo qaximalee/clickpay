@@ -90,6 +90,10 @@ public class UserCollectionService implements IUserCollectionService {
     public Message<UserCollection> createUserCollection(UserCollectionRequest requestDto, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException, EntityAlreadyExistException {
 
         boolean isValid = false;
+
+        // TODO Validate if a user created date is after the payment date then it should not be created
+        // TODO Validate if an installment is created at the date of already paid collection
+
         //checking requested collection is valid or not
         if (PaymentType.of(requestDto.getPaymentType()).equals(PaymentType.MONTHLY)){
             isValid = existsByMonthOrYearOrTypeOfCustomer(
