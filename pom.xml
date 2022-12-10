@@ -14,7 +14,6 @@
 	<name>ClickPay</name>
 	<description>It&apos;s a backend system for internet service providers record management system.</description>
 	<properties>
-
 		<java.version>1.8</java.version>
 	</properties>
 	<dependencies>
@@ -53,7 +52,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>

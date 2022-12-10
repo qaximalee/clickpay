@@ -5,7 +5,7 @@ import com.clickpay.errors.general.BadRequestException;
 import java.util.Locale;
 
 public enum UserCollectionStatus {
-    PAID, UNPAID, PARTIAL;
+    PAID, UNPAID;
 
     public static UserCollectionStatus of(String userCollectionStatus) throws BadRequestException {
         UserCollectionStatus userCollectionStatusData = null;

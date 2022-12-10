@@ -13,6 +13,7 @@ import com.clickpay.model.user_profile.Customer;
 import com.clickpay.repository.transaction.user_collection.UserCollectionRepository;
 import com.clickpay.service.user_profile.customer.ICustomerService;
 import com.clickpay.utils.Message;
+import com.clickpay.utils.enums.Months;
 import com.clickpay.utils.enums.PaymentType;
 import com.clickpay.utils.enums.UserCollectionStatus;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,7 @@ public class UserCollectionService implements IUserCollectionService {
     public Message<UnpaidCollectionResponse> getUserUnpaidCollections(Long userId) throws EntityNotFoundException {
         log.info("Getting unpaid collection of user id: " + userId);
 
-        Customer customer = customerService.findAllCustomerByUserId(userId);
+        Customer customer = customerService.findCustomerByUserId(userId);
 
         Date userCreatedDate = customer.getUser().getCreationDate();
         ZoneId defaultZoneId = ZoneId.systemDefault();
@@ -89,31 +90,35 @@ public class UserCollectionService implements IUserCollectionService {
     @Override
     public Message<UserCollection> createUserCollection(UserCollectionRequest requestDto, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException, EntityAlreadyExistException {
 
-        boolean isValid = false;
+      //  boolean isValid = false;
 
         // TODO Validate if a user created date is after the payment date then it should not be created
         // TODO Validate if an installment is created at the date of already paid collection
 
         //checking requested collection is valid or not
-        if (PaymentType.of(requestDto.getPaymentType()).equals(PaymentType.MONTHLY)){
-            isValid = existsByMonthOrYearOrTypeOfCustomer(
-                    requestDto.getMonth(),
-                    requestDto.getYear(),
-                    PaymentType.of(requestDto.getPaymentType()),
-                    requestDto.getCustomerId()
-            );
-        }
 
-        if (isValid){
-            log.error("User collection already created.");
-            throw new EntityAlreadyExistException("User collection already created.");
-        }
+//        if (PaymentType.of(requestDto.getPaymentType()).equals(PaymentType.MONTHLY)){
+//            isValid = existsByMonthOrYearOrTypeOfCustomer(
+//                    requestDto.getMonth(),
+//                    requestDto.getYear(),
+//                    PaymentType.of(requestDto.getPaymentType()),
+//                    requestDto.getCustomerId()
+//            );
+//        }
+
+//        if (isValid){
+//            log.error("User collection already created.");
+//            throw new EntityAlreadyExistException("User collection already created.");
+//        }
 
         //validate customer existing
         Customer customer = customerService.findById(requestDto.getCustomerId());
 
+        checkCollectionValid(requestDto,customer,user);
+
         UserCollectionStatus userCollectionStatus = UserCollectionStatus.of(requestDto.getCollectionStatus());
         PaymentType paymentType = PaymentType.of(requestDto.getPaymentType());
+        Months month = Months.of(requestDto.getMonth());
 
         log.info("Populate user collection data.");
         UserCollection userCollection = new UserCollection();
@@ -121,7 +126,7 @@ public class UserCollectionService implements IUserCollectionService {
         userCollection.setCollectionStatus(userCollectionStatus);
         userCollection.setAmount(requestDto.getAmount());
         userCollection.setPaymentType(paymentType);
-        userCollection.setMonth(requestDto.getMonth());
+        userCollection.setMonth(month);
         userCollection.setYear(requestDto.getYear());
         userCollection.setDeleted(false);
 
@@ -158,8 +163,45 @@ public class UserCollectionService implements IUserCollectionService {
     }
 
     @Override
-    public boolean existsByMonthOrYearOrTypeOfCustomer(String month, Integer year, PaymentType paymentType, Long customerId) {
+    public boolean existsByMonthOrYearOrTypeOfCustomer(Months month, Integer year, PaymentType paymentType, Long customerId) {
         return repo.existsByMonthAndYearAndPaymentTypeAndCustomer_Id(month, year, paymentType, customerId);
+    }
+
+    private void checkCollectionValid(UserCollectionRequest requestDto, Customer customer, User user) throws EntityAlreadyExistException, BadRequestException {
+        boolean isValid = false;
+
+        Date date = customer.getCreationDate();
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        int customerCreatedMonth = localDate.getMonthValue();
+        int customerCreatedYear = localDate.getYear();
+
+        int monthOfCollection = Months.of(requestDto.getMonth()).getValue();
+        int yearOfCollection = requestDto.getYear();
+
+        if (yearOfCollection<customerCreatedYear){
+            log.error("User collection month is invalid.");
+            throw new EntityAlreadyExistException("User collection month is invalid.");
+        }
+        else if (monthOfCollection<customerCreatedMonth && yearOfCollection==customerCreatedYear){
+            log.error("User collection month is invalid.");
+            throw new EntityAlreadyExistException("User collection month is invalid.");
+        }
+
+        // checking the for sa
+        if (PaymentType.of(requestDto.getPaymentType()).equals(PaymentType.MONTHLY)){
+            isValid = existsByMonthOrYearOrTypeOfCustomer(
+                    Months.of(requestDto.getMonth()),
+                    requestDto.getYear(),
+                    PaymentType.of(requestDto.getPaymentType()),
+                    requestDto.getCustomerId()
+            );
+        }
+        if (isValid){
+            log.error("User collection already created.");
+            throw new EntityAlreadyExistException("User collection already created.");
+        }
+
+
     }
 
 }

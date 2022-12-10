@@ -219,7 +219,7 @@ public class CustomerService implements ICustomerService {
     // for unpaid collections
     @Transactional(readOnly = true)
     @Override
-    public Customer findAllCustomerByUserId(Long userId) throws EntityNotFoundException {
+    public Customer findCustomerByUserId(Long userId) throws EntityNotFoundException {
         log.info("Fetching by customer by user id: " + userId);
         Customer data = repo.findByUser_Id(userId);
         if (data == null) {

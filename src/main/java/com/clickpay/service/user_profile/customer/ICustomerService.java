@@ -29,7 +29,7 @@ public interface ICustomerService {
 
     // for unpaid collections
     @Transactional(readOnly = true)
-    Customer findAllCustomerByUserId(Long userId) throws EntityNotFoundException;
+    Customer findCustomerByUserId(Long userId) throws EntityNotFoundException;
 
     @Transactional(readOnly = true)
     CustomerFilterAndPaginationResponse findCustomerByFilter(CustomerFilterAndPaginationRequest customerFilterDTO, User user) throws EntityNotFoundException;

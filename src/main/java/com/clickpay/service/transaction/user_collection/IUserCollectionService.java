@@ -9,6 +9,7 @@ import com.clickpay.errors.general.EntityNotSavedException;
 import com.clickpay.model.transaction.UserCollection;
 import com.clickpay.model.user.User;
 import com.clickpay.utils.Message;
+import com.clickpay.utils.enums.Months;
 import com.clickpay.utils.enums.PaymentType;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,5 +22,7 @@ public interface IUserCollectionService {
     @Transactional
     UserCollection save(UserCollection userCollection) throws BadRequestException, EntityNotSavedException;
 
-    boolean existsByMonthOrYearOrTypeOfCustomer(String month, Integer year, PaymentType paymentType, Long customerId);
+  //  boolean existsByMonthOrYearOrTypeOfCustomer(String month, Integer year, PaymentType paymentType, Long customerId);
+
+    boolean existsByMonthOrYearOrTypeOfCustomer(Months month, Integer year, PaymentType paymentType, Long customerId);
 }

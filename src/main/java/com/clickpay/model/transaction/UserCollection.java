@@ -4,6 +4,7 @@ import com.clickpay.model.audit.Auditable;
 import com.clickpay.model.user.User;
 import com.clickpay.model.user_profile.Customer;
 import com.clickpay.utils.enums.Discount;
+import com.clickpay.utils.enums.Months;
 import com.clickpay.utils.enums.PaymentType;
 import com.clickpay.utils.enums.UserCollectionStatus;
 import lombok.Getter;
@@ -26,8 +27,9 @@ public class UserCollection extends Auditable<Long> {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "month")
-    private String month;
+    private Months month;
 
     @Column(name = "year")
     private int year;
@@ -42,6 +44,9 @@ public class UserCollection extends Auditable<Long> {
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_type")
     private PaymentType paymentType;
+
+    @Column(name = "remarks")
+    private String remarks;
 
     @Column(name = "is_deleted")
     private boolean isDeleted;
