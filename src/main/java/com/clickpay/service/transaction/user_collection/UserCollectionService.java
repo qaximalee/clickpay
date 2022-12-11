@@ -138,7 +138,7 @@ public class UserCollectionService implements IUserCollectionService {
         return new Message<UserCollection>()
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("User Collection Created Successfilly.")
+                .setMessage("User Collection Created Successfully.")
                 .setData(save(userCollection));
 
     }
