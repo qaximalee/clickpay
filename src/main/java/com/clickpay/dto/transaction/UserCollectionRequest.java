@@ -34,4 +34,6 @@ public class UserCollectionRequest {
     @NotBlank
     private String paymentType;
 
+    private String remarks;
+
 }

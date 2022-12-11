@@ -128,6 +128,7 @@ public class UserCollectionService implements IUserCollectionService {
         userCollection.setPaymentType(paymentType);
         userCollection.setMonth(month);
         userCollection.setYear(requestDto.getYear());
+        userCollection.setRemarks(requestDto.getRemarks());
         userCollection.setDeleted(false);
 
         // set audits fields
@@ -167,6 +168,10 @@ public class UserCollectionService implements IUserCollectionService {
         return repo.existsByMonthAndYearAndPaymentTypeAndCustomer_Id(month, year, paymentType, customerId);
     }
 
+    public boolean existsByMonthOrYearOrCollectionStatusOfCustomer(Months month, Integer year, UserCollectionStatus collectionStatus, Long customerId) {
+        return repo.existsByMonthAndYearAndCollectionStatusAndCustomer_Id(month, year, collectionStatus, customerId);
+    }
+
     private void checkCollectionValid(UserCollectionRequest requestDto, Customer customer, User user) throws EntityAlreadyExistException, BadRequestException {
         boolean isValid = false;
 
@@ -187,7 +192,7 @@ public class UserCollectionService implements IUserCollectionService {
             throw new EntityAlreadyExistException("User collection month is invalid.");
         }
 
-        // checking the for sa
+        // checking the for collection already created or not
         if (PaymentType.of(requestDto.getPaymentType()).equals(PaymentType.MONTHLY)){
             isValid = existsByMonthOrYearOrTypeOfCustomer(
                     Months.of(requestDto.getMonth()),
@@ -201,6 +206,19 @@ public class UserCollectionService implements IUserCollectionService {
             throw new EntityAlreadyExistException("User collection already created.");
         }
 
+        // checking the for collection already paid or not
+        if (PaymentType.of(requestDto.getPaymentType()).equals(PaymentType.INSTALLMENT)){
+            isValid = existsByMonthOrYearOrCollectionStatusOfCustomer(
+                    Months.of(requestDto.getMonth()),
+                    requestDto.getYear(),
+                    UserCollectionStatus.PAID,
+                    requestDto.getCustomerId()
+            );
+        }
+        if (isValid){
+            log.error("User collection already paid.");
+            throw new EntityAlreadyExistException("User collection already paid.");
+        }
 
     }
 
