@@ -7,6 +7,7 @@ import com.clickpay.model.transaction.UserCollection;
 import com.clickpay.model.user.User;
 import com.clickpay.service.auth.IAuthService;
 import com.clickpay.service.recovery_officer.IRecoveryOfficerService;
+import com.clickpay.service.transaction.ITransactionService;
 import com.clickpay.service.transaction.user_collection.IUserCollectionService;
 import com.clickpay.utils.ControllerConstants;
 import com.clickpay.utils.Message;
@@ -29,8 +30,7 @@ public class UserCollectionController {
     private String DOMAIN_URL;
 
     private final IAuthService authService;
-    private final IRecoveryOfficerService recoveryOfficerService;
-    private final IUserCollectionService service;
+    private final ITransactionService transactionService;
 
     // Collect fee from user
     @PostMapping("/user-collect")
@@ -47,23 +47,13 @@ public class UserCollectionController {
                 ).body(m);
     }
 
-    @GetMapping("/unpaid-collections")
-    public ResponseEntity<Message<UnpaidCollectionResponse>> gettingUnpaidCollections(
-            @Valid @RequestParam Long userId,
-            Principal principal) throws PermissionException, EntityNotFoundException {
-        User user = authService.hasPermission(ControllerConstants.USERS_COLLECTIONS, principal);
-        Message<UnpaidCollectionResponse> m = service.getUserUnpaidCollections(userId);
-        return ResponseEntity.status(m.getStatus()).body(m);
-    }
-
-
     @PostMapping("/")
     public ResponseEntity<Message<UserCollection>> createUserCollection(
             @Valid @RequestBody UserCollectionRequest request,
             Principal principal)
             throws PermissionException, EntityNotFoundException, BadRequestException, EntityNotSavedException, EntityAlreadyExistException {
         User user = authService.hasPermission(ControllerConstants.USERS_COLLECTIONS, principal);
-        Message<UserCollection> m = service.createUserCollection(request,user);
+        Message<UserCollection> m = transactionService.createUserCollection(request,user);
         return ResponseEntity.status(m.getStatus()).body(m);
     }
 }

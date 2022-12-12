@@ -38,87 +38,17 @@ public class UserCollectionService implements IUserCollectionService {
     private final ICustomerService customerService;
     private final UserCollectionRepository repo;
 
-    @Override
-    public Message<UnpaidCollectionResponse> getUserUnpaidCollections(Long userId) throws EntityNotFoundException {
-        log.info("Getting unpaid collection of user id: " + userId);
-
-        Customer customer = customerService.findCustomerByUserId(userId);
-
-        Date userCreatedDate = customer.getUser().getCreationDate();
-        ZoneId defaultZoneId = ZoneId.systemDefault();
-        Instant instant = userCreatedDate.toInstant();
-        LocalDate userCreatedLocalDate = instant.atZone(defaultZoneId).toLocalDate();
-        int startMonth = userCreatedLocalDate.getMonthValue();
-        LocalDate currentMonth = LocalDate.now();
-        int endMonth = currentMonth.getMonthValue();
-        int numMonths = endMonth - startMonth;
-
-        List<UnpaidCollections> unpaidCollections = new ArrayList<>();
-
-        for (int i = userCreatedLocalDate.getDayOfMonth() < 16 ? 0 : 1; i <= numMonths; i++) {
-
-            //Converting the Date to LocalDate
-            LocalDate localDate = userCreatedLocalDate.plusMonths(i);
-
-            Month month = localDate.getMonth();
-            int year = localDate.getYear();
-
-            UnpaidCollections unpaidCollection = new UnpaidCollections();
-            unpaidCollection.setBalanceAmount(customer.getAmount());
-            unpaidCollection.setMonthAndYear(month + " " + year);
-            unpaidCollection.setCollectionStatus(UserCollectionStatus.UNPAID);
-            unpaidCollection.setPaymentType(PaymentType.MONTHLY);
-            unpaidCollections.add(unpaidCollection);
-        }
-
-        UnpaidCollectionResponse response = UnpaidCollectionResponse.builder()
-                .id(customer.getId())
-                .name(customer.getName())
-                .internetId(customer.getInternetId())
-                .connectionType(customer.getConnectionType().getType())
-                .unpaidCollections(unpaidCollections)
-                .build();
-
-        return new Message<UnpaidCollectionResponse>()
-                .setCode(HttpStatus.OK.toString())
-                .setStatus(HttpStatus.OK.value())
-                .setMessage("Getting unpaid collection of user successfully.")
-                .setData(response);
-    }
-
     @Transactional
     @Override
-    public Message<UserCollection> createUserCollection(UserCollectionRequest requestDto, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException, EntityAlreadyExistException {
-
-      //  boolean isValid = false;
-
-        // TODO Validate if a user created date is after the payment date then it should not be created
-        // TODO Validate if an installment is created at the date of already paid collection
-
-        //checking requested collection is valid or not
-
-//        if (PaymentType.of(requestDto.getPaymentType()).equals(PaymentType.MONTHLY)){
-//            isValid = existsByMonthOrYearOrTypeOfCustomer(
-//                    requestDto.getMonth(),
-//                    requestDto.getYear(),
-//                    PaymentType.of(requestDto.getPaymentType()),
-//                    requestDto.getCustomerId()
-//            );
-//        }
-
-//        if (isValid){
-//            log.error("User collection already created.");
-//            throw new EntityAlreadyExistException("User collection already created.");
-//        }
-
+    public UserCollection createUserCollection(UserCollectionRequest requestDto, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException, EntityAlreadyExistException {
         //validate customer existing
         Customer customer = customerService.findById(requestDto.getCustomerId());
-
-        checkCollectionValid(requestDto,customer,user);
 
         UserCollectionStatus userCollectionStatus = UserCollectionStatus.of(requestDto.getCollectionStatus());
         PaymentType paymentType = PaymentType.of(requestDto.getPaymentType());
         Months month = Months.of(requestDto.getMonth());
+
+        checkCollectionValid(requestDto,customer,user);
 
         log.info("Populate user collection data.");
         UserCollection userCollection = new UserCollection();
@@ -135,12 +65,7 @@ public class UserCollectionService implements IUserCollectionService {
         userCollection.setCreatedBy(user.getId());
         userCollection.setCreationDate(new Date());
 
-        return new Message<UserCollection>()
-                .setStatus(HttpStatus.OK.value())
-                .setCode(HttpStatus.OK.toString())
-                .setMessage("User Collection Created Successfully.")
-                .setData(save(userCollection));
-
+        return save(userCollection);
     }
 
 
@@ -163,12 +88,11 @@ public class UserCollectionService implements IUserCollectionService {
         }
     }
 
-    @Override
-    public boolean existsByMonthOrYearOrTypeOfCustomer(Months month, Integer year, PaymentType paymentType, Long customerId) {
+    private boolean existsByMonthOrYearOrTypeOfCustomer(Months month, Integer year, PaymentType paymentType, Long customerId) {
         return repo.existsByMonthAndYearAndPaymentTypeAndCustomer_Id(month, year, paymentType, customerId);
     }
 
-    public boolean existsByMonthOrYearOrCollectionStatusOfCustomer(Months month, Integer year, UserCollectionStatus collectionStatus, Long customerId) {
+    private boolean existsByMonthOrYearOrCollectionStatusOfCustomer(Months month, Integer year, UserCollectionStatus collectionStatus, Long customerId) {
         return repo.existsByMonthAndYearAndCollectionStatusAndCustomer_Id(month, year, collectionStatus, customerId);
     }
 
