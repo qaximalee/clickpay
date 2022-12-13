@@ -1,7 +1,5 @@
 package com.clickpay.service.transaction.user_collection;
 
-import com.clickpay.dto.transaction.UnpaidCollectionResponse;
-import com.clickpay.dto.transaction.UnpaidCollections;
 import com.clickpay.dto.transaction.UserCollectionRequest;
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
@@ -12,23 +10,18 @@ import com.clickpay.model.user.User;
 import com.clickpay.model.user_profile.Customer;
 import com.clickpay.repository.transaction.user_collection.UserCollectionRepository;
 import com.clickpay.service.user_profile.customer.ICustomerService;
-import com.clickpay.utils.Message;
 import com.clickpay.utils.enums.Months;
 import com.clickpay.utils.enums.PaymentType;
 import com.clickpay.utils.enums.UserCollectionStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -48,7 +41,7 @@ public class UserCollectionService implements IUserCollectionService {
         PaymentType paymentType = PaymentType.of(requestDto.getPaymentType());
         Months month = Months.of(requestDto.getMonth());
 
-        checkCollectionValid(requestDto,customer,user);
+        checkCollectionValid(requestDto, customer, user);
 
         log.info("Populate user collection data.");
         UserCollection userCollection = new UserCollection();
@@ -68,6 +61,38 @@ public class UserCollectionService implements IUserCollectionService {
         return save(userCollection);
     }
 
+    @Transactional
+    @Override
+    public UserCollection updateUserCollectionStatus(String status, Long collectionId, Long customerId, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException{
+        log.info("Updating User collection status by collection Id " + collectionId + " .");
+        //get user collection
+        UserCollection userCollection = getUserCollectionById(collectionId, customerId, user);
+
+        // set user collection status
+        userCollection.setCollectionStatus(UserCollectionStatus.of(status));
+
+        // set audits fields
+        userCollection.setModifiedBy(user.getId());
+        userCollection.setLastModifiedDate(new Date());
+        save(userCollection);
+
+        return userCollection;
+
+    }
+
+
+    @Transactional
+    @Override
+    public UserCollection getUserCollectionById(Long collectionId, Long customerId, User user) throws EntityNotFoundException {
+        log.info("Fetching User collection by collection Id " + collectionId + " .");
+        Optional<UserCollection> userCollection = repo.findById(collectionId);
+
+        if (!userCollection.isPresent()) {
+            log.error("User collection not found.");
+            throw new EntityNotFoundException("User collection not found.");
+        }
+        return userCollection.get();
+    }
 
     @Transactional
     @Override
@@ -86,6 +111,13 @@ public class UserCollectionService implements IUserCollectionService {
             log.error("User collection can not be saved.");
             throw new EntityNotSavedException("User collection can not be saved.");
         }
+    }
+
+    @Transactional
+    @Override
+    public UserCollection delete(Long collectionId, Long customerId, User user) {
+        log.info("Deleting User collection.");
+        return repo.deleteByIdAndCustomer_Id(collectionId, customerId);
     }
 
     private boolean existsByMonthOrYearOrTypeOfCustomer(Months month, Integer year, PaymentType paymentType, Long customerId) {
@@ -107,17 +139,16 @@ public class UserCollectionService implements IUserCollectionService {
         int monthOfCollection = Months.of(requestDto.getMonth()).getValue();
         int yearOfCollection = requestDto.getYear();
 
-        if (yearOfCollection<customerCreatedYear){
+        if (yearOfCollection < customerCreatedYear) {
             log.error("User collection month is invalid.");
             throw new EntityAlreadyExistException("User collection month is invalid.");
-        }
-        else if (monthOfCollection<customerCreatedMonth && yearOfCollection==customerCreatedYear){
+        } else if (monthOfCollection < customerCreatedMonth && yearOfCollection == customerCreatedYear) {
             log.error("User collection month is invalid.");
             throw new EntityAlreadyExistException("User collection month is invalid.");
         }
 
         // checking the for collection already created or not
-        if (PaymentType.of(requestDto.getPaymentType()).equals(PaymentType.MONTHLY)){
+        if (PaymentType.of(requestDto.getPaymentType()).equals(PaymentType.MONTHLY)) {
             isValid = existsByMonthOrYearOrTypeOfCustomer(
                     Months.of(requestDto.getMonth()),
                     requestDto.getYear(),
@@ -125,13 +156,13 @@ public class UserCollectionService implements IUserCollectionService {
                     requestDto.getCustomerId()
             );
         }
-        if (isValid){
+        if (isValid) {
             log.error("User collection already created.");
             throw new EntityAlreadyExistException("User collection already created.");
         }
 
         // checking the for collection already paid or not
-        if (PaymentType.of(requestDto.getPaymentType()).equals(PaymentType.INSTALLMENT)){
+        if (PaymentType.of(requestDto.getPaymentType()).equals(PaymentType.INSTALLMENT)) {
             isValid = existsByMonthOrYearOrCollectionStatusOfCustomer(
                     Months.of(requestDto.getMonth()),
                     requestDto.getYear(),
@@ -139,7 +170,7 @@ public class UserCollectionService implements IUserCollectionService {
                     requestDto.getCustomerId()
             );
         }
-        if (isValid){
+        if (isValid) {
             log.error("User collection already paid.");
             throw new EntityAlreadyExistException("User collection already paid.");
         }

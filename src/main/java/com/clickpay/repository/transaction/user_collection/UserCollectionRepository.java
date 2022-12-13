@@ -12,4 +12,6 @@ public interface UserCollectionRepository extends JpaRepository<UserCollection, 
     boolean existsByMonthAndYearAndPaymentTypeAndCustomer_Id(Months month, Integer year, PaymentType paymentType, Long customerId);
 
     boolean existsByMonthAndYearAndCollectionStatusAndCustomer_Id(Months month, Integer year, UserCollectionStatus collectionStatus, Long customerId);
+
+    UserCollection deleteByIdAndCustomer_Id(Long collectionId, Long customerId);
 }

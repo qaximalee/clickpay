@@ -1,14 +1,12 @@
 package com.clickpay.controller.transaction;
 
-import com.clickpay.dto.transaction.UnpaidCollectionResponse;
 import com.clickpay.dto.transaction.UserCollectionRequest;
+import com.clickpay.dto.transaction.UserCollectionResponse;
 import com.clickpay.errors.general.*;
 import com.clickpay.model.transaction.UserCollection;
 import com.clickpay.model.user.User;
 import com.clickpay.service.auth.IAuthService;
-import com.clickpay.service.recovery_officer.IRecoveryOfficerService;
 import com.clickpay.service.transaction.ITransactionService;
-import com.clickpay.service.transaction.user_collection.IUserCollectionService;
 import com.clickpay.utils.ControllerConstants;
 import com.clickpay.utils.Message;
 import io.swagger.annotations.ApiOperation;
@@ -18,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.security.Principal;
 
@@ -48,12 +47,46 @@ public class UserCollectionController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Message<UserCollection>> createUserCollection(
+    public ResponseEntity<Message<UserCollectionResponse>> createUserCollection(
             @Valid @RequestBody UserCollectionRequest request,
             Principal principal)
             throws PermissionException, EntityNotFoundException, BadRequestException, EntityNotSavedException, EntityAlreadyExistException {
         User user = authService.hasPermission(ControllerConstants.USERS_COLLECTIONS, principal);
-        Message<UserCollection> m = transactionService.createUserCollection(request,user);
+        Message<UserCollectionResponse> m = transactionService.createUserCollection(request,user);
+        return ResponseEntity.status(m.getStatus()).body(m);
+    }
+
+    @GetMapping("/id")
+    public ResponseEntity<Message<UserCollectionResponse>> getUserCollection(
+            @Valid @NotNull @RequestParam Long collectionId,
+            @Valid @NotNull @RequestParam Long customerId,
+            Principal principal)
+            throws PermissionException, EntityNotFoundException {
+        User user = authService.hasPermission(ControllerConstants.USERS_COLLECTIONS, principal);
+        Message<UserCollectionResponse> m = transactionService.getUserCollection(collectionId,customerId,user);
+        return ResponseEntity.status(m.getStatus()).body(m);
+    }
+
+    @DeleteMapping("/")
+    public ResponseEntity<Message<UserCollection>> deleteUserCollection(
+            @Valid @NotNull @RequestParam Long collectionId,
+            @Valid @NotNull @RequestParam Long customerId,
+            Principal principal)
+            throws PermissionException, EntityNotFoundException, EntityAlreadyExistException, BadRequestException, EntityNotSavedException {
+        User user = authService.hasPermission(ControllerConstants.USERS_COLLECTIONS, principal);
+        Message<UserCollection> m = transactionService.deleteUserCollection(collectionId,customerId,user);
+        return ResponseEntity.status(m.getStatus()).body(m);
+    }
+
+    @PutMapping("/")
+    public ResponseEntity<Message<UserCollectionResponse>> updateUserCollectionStatus(
+            @Valid @NotNull @RequestParam String status,
+            @Valid @NotNull @RequestParam Long collectionId,
+            @Valid @NotNull @RequestParam Long customerId,
+            Principal principal)
+            throws PermissionException, EntityNotFoundException, BadRequestException, EntityNotSavedException {
+        User user = authService.hasPermission(ControllerConstants.USERS_COLLECTIONS, principal);
+        Message<UserCollectionResponse> m = transactionService.updateUserCollectionStatus(status,collectionId,customerId,user);
         return ResponseEntity.status(m.getStatus()).body(m);
     }
 }

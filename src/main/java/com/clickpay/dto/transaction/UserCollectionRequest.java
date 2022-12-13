@@ -1,12 +1,9 @@
 package com.clickpay.dto.transaction;
 
-import com.clickpay.model.user_profile.Customer;
-import com.clickpay.utils.enums.UserCollectionStatus;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
