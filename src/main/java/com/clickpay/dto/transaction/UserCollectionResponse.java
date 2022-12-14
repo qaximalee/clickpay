@@ -6,15 +6,20 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
 public class UserCollectionResponse extends UserCollectionRequest{
 
-    @NotNull
+    @NotBlank
     private String customerName;
 
+    @NotBlank
+    private String internetId;
+
+    private String customerAddress;
     private Boolean isDeleted;
 
     public static UserCollectionResponse fromUserCollection(UserCollection userCollection) {
@@ -22,6 +27,8 @@ public class UserCollectionResponse extends UserCollectionRequest{
         userCollectionResponse.setId(userCollection.getId());
         userCollectionResponse.setCustomerId(userCollection.getCustomer().getId());
         userCollectionResponse.setCustomerName(userCollection.getCustomer().getName());
+        userCollectionResponse.setInternetId(userCollectionResponse.getInternetId());
+        userCollectionResponse.setCustomerAddress(userCollectionResponse.getCustomerAddress());
         userCollectionResponse.setMonth(userCollection.getMonth().name());
         userCollectionResponse.setYear(userCollection.getYear());
         userCollectionResponse.setAmount(userCollection.getAmount());
