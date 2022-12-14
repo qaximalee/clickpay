@@ -67,14 +67,14 @@ public class UserCollectionController {
         return ResponseEntity.status(m.getStatus()).body(m);
     }
 
-    @DeleteMapping("/")
-    public ResponseEntity<Message<UserCollection>> deleteUserCollection(
+    @PutMapping("/delete")
+    public ResponseEntity<Message<UserCollectionResponse>> deleteUserCollection(
             @Valid @NotNull @RequestParam Long collectionId,
             @Valid @NotNull @RequestParam Long customerId,
             Principal principal)
             throws PermissionException, EntityNotFoundException, EntityAlreadyExistException, BadRequestException, EntityNotSavedException {
         User user = authService.hasPermission(ControllerConstants.USERS_COLLECTIONS, principal);
-        Message<UserCollection> m = transactionService.deleteUserCollection(collectionId,customerId,user);
+        Message<UserCollectionResponse> m = transactionService.deleteUserCollection(collectionId,customerId,user);
         return ResponseEntity.status(m.getStatus()).body(m);
     }
 

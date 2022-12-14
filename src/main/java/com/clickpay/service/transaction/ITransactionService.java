@@ -15,7 +15,7 @@ public interface ITransactionService {
 
     Message<UserCollectionResponse> getUserCollection(Long collectionId, Long customerId, User user) throws EntityNotFoundException;
 
-    Message<UserCollection> deleteUserCollection(Long collectionId, Long customerId, User user)
+    Message<UserCollectionResponse> deleteUserCollection(Long collectionId, Long customerId, User user)
             throws EntityAlreadyExistException, BadRequestException, EntityNotFoundException, EntityNotSavedException;
 
     Message<UserCollectionResponse> updateUserCollectionStatus(String status, Long collectionId, Long customerId, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException;

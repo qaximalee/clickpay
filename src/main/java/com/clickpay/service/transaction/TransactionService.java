@@ -50,14 +50,16 @@ public class TransactionService implements ITransactionService{
     }
 
     @Override
-    public Message<UserCollection> deleteUserCollection(Long collectionId, Long customerId, User user)
-    {
+    public Message<UserCollectionResponse> deleteUserCollection(Long collectionId, Long customerId, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
         log.info("Deleting user collection by collection Id "+collectionId+" .");
-        return new Message<UserCollection>()
+        UserCollectionResponse response =
+                UserCollectionResponse.fromUserCollection(
+                        userCollectionService.delete(collectionId,customerId,user));
+        return new Message<UserCollectionResponse>()
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
                 .setMessage("User Collection Deleted Successfully.")
-                .setData(userCollectionService.delete(collectionId,customerId,user));
+                .setData(response);
     }
 
     @Override

@@ -115,9 +115,20 @@ public class UserCollectionService implements IUserCollectionService {
 
     @Transactional
     @Override
-    public UserCollection delete(Long collectionId, Long customerId, User user) {
+    public UserCollection delete(Long collectionId, Long customerId, User user) throws EntityNotFoundException, BadRequestException, EntityNotSavedException {
         log.info("Deleting User collection.");
-        return repo.deleteByIdAndCustomer_Id(collectionId, customerId);
+        //get user collection
+        UserCollection userCollection = getUserCollectionById(collectionId, customerId, user);
+
+        // soft delete of user collection
+        userCollection.setDeleted(true);
+
+        // set audits fields
+        userCollection.setModifiedBy(user.getId());
+        userCollection.setLastModifiedDate(new Date());
+        save(userCollection);
+
+        return userCollection;
     }
 
     private boolean existsByMonthOrYearOrTypeOfCustomer(Months month, Integer year, PaymentType paymentType, Long customerId) {
