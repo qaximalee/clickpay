@@ -23,5 +23,5 @@ public interface IUserCollectionService {
     UserCollection save(UserCollection userCollection) throws BadRequestException, EntityNotSavedException;
 
     @Transactional
-    UserCollection delete(Long collectionId, Long customerId, User user);
+    UserCollection delete(Long collectionId, Long customerId, User user) throws EntityNotFoundException, BadRequestException, EntityNotSavedException;
 }
