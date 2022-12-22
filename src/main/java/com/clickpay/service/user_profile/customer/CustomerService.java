@@ -1,5 +1,6 @@
 package com.clickpay.service.user_profile.customer;
 
+import com.clickpay.dto.transaction.PaginatedUserCollectionRequest;
 import com.clickpay.dto.user_profile.customer.CustomerFilterAndPaginationRequest;
 import com.clickpay.dto.user_profile.customer.CustomerFilterAndPaginationResponse;
 import com.clickpay.dto.user_profile.customer.CustomerRequest;
@@ -260,6 +261,35 @@ public class CustomerService implements ICustomerService {
                 .pageSize(customerFilterDTO.getPageSize())
                 .noOfPages(customers.getTotalPages())
                 .totalRows(customers.getTotalElements())
+                .build();
+    }
+
+    @Override
+    public CustomerFilterAndPaginationResponse getCustomersByFilter(PaginatedUserCollectionRequest request, User user) throws EntityNotFoundException {
+
+        log.info("Fetching User collection by collection Id ");
+
+        Pageable pageable = PageRequest.of(request.getPageNo(), request.getPageSize());
+
+        Page<Object[]> customersFiltered = repo.findCustomersByUserCollectionsWithFilter(request.getSubLocality(),
+                request.getCustomerStatus(),
+                request.getUserCollectionStatus(),
+                request.getConnectionType(),
+                request.getSearchInput(),
+                user.getId(),
+                pageable);
+
+        if (customersFiltered == null || customersFiltered.isEmpty()) {
+            log.info("No customers found in user collection with and without filtration.");
+            throw new EntityNotFoundException("No customers found in user collection with and without filtration data.");
+        }
+
+        return CustomerFilterAndPaginationResponse.builder()
+                .customers(CustomerResponse.mapListOfCustomerDetail(customersFiltered.getContent()))
+                .pageNo(request.getPageNo())
+                .pageSize(request.getPageSize())
+                .noOfPages(customersFiltered.getTotalPages())
+                .totalRows(customersFiltered.getTotalElements())
                 .build();
     }
 

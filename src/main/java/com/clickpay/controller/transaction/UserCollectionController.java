@@ -3,7 +3,6 @@ package com.clickpay.controller.transaction;
 import com.clickpay.dto.transaction.UserCollectionRequest;
 import com.clickpay.dto.transaction.UserCollectionResponse;
 import com.clickpay.errors.general.*;
-import com.clickpay.model.transaction.UserCollection;
 import com.clickpay.model.user.User;
 import com.clickpay.service.auth.IAuthService;
 import com.clickpay.service.transaction.ITransactionService;
@@ -89,4 +88,14 @@ public class UserCollectionController {
         Message<UserCollectionResponse> m = transactionService.updateUserCollectionStatus(status,collectionId,customerId,user);
         return ResponseEntity.status(m.getStatus()).body(m);
     }
+
+//    @GetMapping("/find-customers")
+//    public ResponseEntity<Message<PaginatedUserCollectionResponse>> getCustomersByFindingFields(
+//            @Valid @NotNull @RequestBody PaginatedUserCollectionRequest request,
+//            Principal principal)
+//            throws PermissionException {
+//        User user = authService.hasPermission(ControllerConstants.USERS_COLLECTIONS, principal);
+//        Message<PaginatedUserCollectionResponse> m = transactionService.getAllUserOfCollections(request,user);
+//        return ResponseEntity.status(m.getStatus()).body(m);
+//    }
 }

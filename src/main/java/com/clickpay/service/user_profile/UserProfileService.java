@@ -1,6 +1,8 @@
 package com.clickpay.service.user_profile;
 
+import com.clickpay.dto.transaction.PaginatedUserCollectionRequest;
 import com.clickpay.dto.user_profile.customer.CustomerFilterAndPaginationRequest;
+import com.clickpay.dto.user_profile.customer.CustomerFilterAndPaginationResponse;
 import com.clickpay.dto.user_profile.customer.CustomerRequest;
 import com.clickpay.dto.user_profile.packages.PackageRequest;
 import com.clickpay.errors.general.*;
@@ -365,4 +367,15 @@ public class UserProfileService implements IUserProfileService{
                 .setCode(HttpStatus.OK.toString())
                 .setMessage("Customer list by filtration " + ResponseMessage.FETCHED_MESSAGE_SUCCESS);
     }
+
+    @Override
+    public Message<CustomerFilterAndPaginationResponse> getAllCustomersByUserCollections(PaginatedUserCollectionRequest request, User user) throws EntityNotFoundException {
+        log.info("Fetching customers by finding fields.");
+        return new Message<CustomerFilterAndPaginationResponse>()
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("Customers by User Collections Fetched Successfully.")
+                .setData(customerService.getCustomersByFilter(request,user));
+    }
+
 }

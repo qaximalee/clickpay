@@ -1,6 +1,8 @@
 package com.clickpay.service.user_profile;
 
+import com.clickpay.dto.transaction.PaginatedUserCollectionRequest;
 import com.clickpay.dto.user_profile.customer.CustomerFilterAndPaginationRequest;
+import com.clickpay.dto.user_profile.customer.CustomerFilterAndPaginationResponse;
 import com.clickpay.dto.user_profile.customer.CustomerRequest;
 import com.clickpay.dto.user_profile.packages.PackageRequest;
 import com.clickpay.errors.general.*;
@@ -62,4 +64,5 @@ public interface IUserProfileService {
 
     Message findCustomerByFilter(CustomerFilterAndPaginationRequest customerFilterDTO, User user) throws EntityNotFoundException;
 
+    Message<CustomerFilterAndPaginationResponse> getAllCustomersByUserCollections(PaginatedUserCollectionRequest request, User user) throws EntityNotFoundException;
 }

@@ -6,7 +6,6 @@ import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.general.EntityNotSavedException;
-import com.clickpay.model.transaction.UserCollection;
 import com.clickpay.model.user.User;
 import com.clickpay.service.transaction.user_collection.IUserCollectionService;
 import com.clickpay.utils.Message;
@@ -76,6 +75,24 @@ public class TransactionService implements ITransactionService{
                 .setData(response);
     }
 
+    // find of customers in user collection
+//    @Override
+//    public Message<PaginatedUserCollectionResponse> getAllUserOfCollections(PaginatedUserCollectionRequest request, User user){
+//        log.info("Fetching customers by finding fields.");
+//
+//        List<CustomerResponse> customers = userCollectionService.getCustomersByFilter(request,user);
+//        PaginatedUserCollectionResponse response = PaginatedUserCollectionResponse.builder()
+//                .customersList(customers)
+//                .pageNo(request.getPageNo())
+//                .pageSize(request.getPageSize())
+//                .noOfPages().build();
+//
+//        return new Message<UserCollectionResponse>()
+//                .setStatus(HttpStatus.OK.value())
+//                .setCode(HttpStatus.OK.toString())
+//                .setMessage("Customers by User Collections Fetched Successfully.")
+//                .setData(response);
+//    }
 
 
 }

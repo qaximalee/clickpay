@@ -35,7 +35,6 @@ public class CustomerResponse {
         return data.stream().map(e -> {
             CustomerResponse customerResponse = new CustomerResponse();
             customerResponse.setId(Long.valueOf("" + e[0]));
-            customerResponse.setName(""+e[1]);
             customerResponse.setInternetId(""+e[1]);
             customerResponse.setName(""+e[2]);
             customerResponse.setAddress(""+e[3]);

@@ -1,6 +1,8 @@
 package com.clickpay.service.transaction.user_collection;
 
+import com.clickpay.dto.transaction.PaginatedUserCollectionRequest;
 import com.clickpay.dto.transaction.UserCollectionRequest;
+import com.clickpay.dto.user_profile.customer.CustomerResponse;
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -79,6 +82,22 @@ public class UserCollectionService implements IUserCollectionService {
         return userCollection;
 
     }
+
+//    @Override
+//    public List<CustomerResponse> getCustomersByFilter(PaginatedUserCollectionRequest request, User user){
+//
+//        log.info("Fetching User collection by collection Id ");
+//
+//        List<Object[]> customersFiltered = repo.findCustomersWithFilter(request.getSubLocality(),
+//                request.getCustomerStatus(),
+//                request.getUserCollectionStatus(),
+//                request.getConnectionType(),
+//                request.getSearchInput(),
+//                user.getId());
+//
+//        return CustomerResponse.mapListOfCustomerDetail(customersFiltered);
+//
+//    }
 
 
     @Transactional
