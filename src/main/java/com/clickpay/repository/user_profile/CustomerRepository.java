@@ -31,19 +31,30 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     Customer findByUser_Id(Long userId);
 
-    @Query(value = "SELECT c.id,c.internet_id,c.name,c.address,c.mobile,c.connection_type_id,c.installation_date,c.packages_id,c.status,c.discount,c.user_id " +
-            "  FROM customer AS c " +
-            "  INNER JOIN user_collection AS uc ON uc.customer_id = c.id " +
-            "  WHERE ( (c.created_by =:userId ) AND " +
-            "  (c.sub_locality_id =:subLocality or :subLocality is NULL) AND " +
-            "  (c.connection_type_id =:connectionType or :connectionType is NULL) AND " +
-            "  (c.status =:customerStatus or :customerStatus is NULL) AND " +
-            "  (uc.collection_status =:userCollectionStatus or :userCollectionStatus is NULL) AND " +
-            "  ( (c.internet_id like '%'+:searchInput+'%' ) OR " +/*or :searchInput is NULL*/
-            "  (c.name like '%'+:searchInput+'%' ) OR " +/*or :searchInput is NULL*/
-            "  (c.address like '%'+:searchInput+'%' ) OR " +/*or :searchInput is NULL*/
-            "  (c.mobile like '%'+:searchInput+'%' ) OR (:searchInput is NULL) ) ); ",/*or :searchInput is NULL*/
-            nativeQuery = true)
+//    @Query(value = "SELECT c.id,c.internet_id,c.name,c.address,c.mobile,c.connection_type_id,c.installation_date,c.packages_id,c.status,c.discount,c.user_id " +
+//            "  FROM customer AS c " +
+//            "  INNER JOIN user_collection AS uc ON uc.customer_id = c.id " +
+//            "  WHERE ( (c.created_by =:userId ) AND " +
+//            "  (c.sub_locality_id =:subLocality or :subLocality is NULL) AND " +
+//            "  (c.connection_type_id =:connectionType or :connectionType is NULL) AND " +
+//            "  (c.status =:customerStatus or :customerStatus is NULL) AND " +
+//            "  (uc.collection_status =:userCollectionStatus or :userCollectionStatus is NULL) AND " +
+//            "  ( (:searchInput is NULL) OR " +
+//            "  ( c.internet_id like '%'+:searchInput+'%' ) OR " +/*or :searchInput is NULL*/
+//            "  ( c.name like '%'+:searchInput+'%' ) OR " +/*or :searchInput is NULL*/
+//            "  ( c.address like '%'+:searchInput+'%' ) OR " +/*or :searchInput is NULL*/
+//            "  ( c.mobile like '%'+:searchInput+'%' )  ) ) ",/*or :searchInput is NULL*/
+//            nativeQuery = true)
+    @Query(value = "SELECT DISTINCT c.id,c.internet_id,c.name,c.address,c.mobile,c.connection_type_id,c.installation_date,c.packages_id,c.status,c.discount,c.user_id \n" +
+            "FROM customer AS c\n" +
+            "INNER JOIN user_collection AS uc ON uc.customer_id = c.id\n" +
+            "WHERE ( (c.created_by =:userId ) AND\n" +
+            "(c.sub_locality_id =:subLocality or :subLocality is NULL) AND\n" +
+            "(c.connection_type_id =:connectionType or :connectionType is NULL) AND \n" +
+            "(c.status =:customerStatus or :customerStatus is NULL) AND\n" +
+            "(uc.collection_status =:userCollectionStatus or :userCollectionStatus is NULL) AND \n" +
+            " ( :searchInput is NULL OR c.internet_id like :searchInput OR c.name like :searchInput OR c.address like :searchInput OR c.mobile like :searchInput)) ",
+    nativeQuery = true)
     Page<Object[]> findCustomersByUserCollectionsWithFilter(String subLocality, String customerStatus, String userCollectionStatus, String connectionType, String searchInput, Long userId, Pageable pageable);
 
 }

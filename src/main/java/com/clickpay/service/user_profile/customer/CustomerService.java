@@ -271,6 +271,10 @@ public class CustomerService implements ICustomerService {
 
         Pageable pageable = PageRequest.of(request.getPageNo(), request.getPageSize());
 
+        if (request.getSearchInput() != null){
+            request.setSearchInput("%"+request.getSearchInput()+"%");
+        }
+
         Page<Object[]> customersFiltered = repo.findCustomersByUserCollectionsWithFilter(request.getSubLocality(),
                 request.getCustomerStatus(),
                 request.getUserCollectionStatus(),
