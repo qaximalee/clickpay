@@ -2,6 +2,7 @@ package com.clickpay.service.transaction;
 
 import com.clickpay.dto.transaction.UserCollectionRequest;
 import com.clickpay.dto.transaction.UserCollectionResponse;
+import com.clickpay.dto.transaction.UserCollectionStatusUpdateDTO;
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
@@ -62,17 +63,14 @@ public class TransactionService implements ITransactionService{
     }
 
     @Override
-    public Message<UserCollectionResponse> updateUserCollectionStatus(String status, Long collectionId, Long customerId, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+    public Message<String> updateUserCollectionStatus(UserCollectionStatusUpdateDTO updateDTO, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
         log.info("Updating user collection by collection status.");
 
-        UserCollectionResponse response =
-                UserCollectionResponse.fromUserCollection(
-                        userCollectionService.updateUserCollectionStatus(status,collectionId,customerId,user));
-        return new Message<UserCollectionResponse>()
+        return new Message<String>()
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
                 .setMessage("User Collection Status Updated Successfully.")
-                .setData(response);
+                .setData(userCollectionService.updateUserCollectionStatus(updateDTO,user));
     }
 
     // find of customers in user collection

@@ -12,11 +12,13 @@ import java.util.List;
 
 @Repository
 public interface UserCollectionRepository extends JpaRepository<UserCollection, Long> {
-    boolean existsByMonthAndYearAndPaymentTypeAndCustomer_Id(Months month, Integer year, PaymentType paymentType, Long customerId);
+    //boolean existsByMonthAndYearAndPaymentTypeAndCustomer_Id(Months month, Integer year, PaymentType paymentType, Long customerId);
 
     boolean existsByMonthAndYearAndCollectionStatusAndCustomer_Id(Months month, Integer year, UserCollectionStatus collectionStatus, Long customerId);
 
     UserCollection deleteByIdAndCustomer_Id(Long collectionId, Long customerId);
+
+    boolean existsByMonthAndYearAndPaymentTypeAndCustomer_IdAndIsDeleted(Months month, Integer year, PaymentType paymentType, Long customerId, boolean isDeleted);
 
 //    @Query(value = "",
 //    nativeQuery = true)

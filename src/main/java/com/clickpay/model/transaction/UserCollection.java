@@ -1,9 +1,8 @@
 package com.clickpay.model.transaction;
 
 import com.clickpay.model.audit.Auditable;
-import com.clickpay.model.user.User;
+import com.clickpay.model.bill.Bill;
 import com.clickpay.model.user_profile.Customer;
-import com.clickpay.utils.enums.Discount;
 import com.clickpay.utils.enums.Months;
 import com.clickpay.utils.enums.PaymentType;
 import com.clickpay.utils.enums.UserCollectionStatus;
@@ -11,7 +10,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -26,6 +24,10 @@ public class UserCollection extends Auditable<Long> {
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
+
+    @ManyToOne
+    @JoinColumn(name = "bill_number")
+    private Bill bill;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "month")

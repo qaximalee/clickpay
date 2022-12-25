@@ -1,18 +1,23 @@
 package com.clickpay.service.transaction.user_collection;
 
 import com.clickpay.dto.transaction.UserCollectionRequest;
+import com.clickpay.dto.transaction.UserCollectionStatusUpdateDTO;
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.general.EntityNotSavedException;
+import com.clickpay.model.bill.Bill;
 import com.clickpay.model.transaction.UserCollection;
 import com.clickpay.model.user.User;
 import com.clickpay.model.user_profile.Customer;
 import com.clickpay.repository.transaction.user_collection.UserCollectionRepository;
+import com.clickpay.service.transaction.bill.IBillService;
 import com.clickpay.service.user_profile.customer.ICustomerService;
 import com.clickpay.utils.enums.Months;
+import com.clickpay.utils.enums.PaymentMethod;
 import com.clickpay.utils.enums.PaymentType;
 import com.clickpay.utils.enums.UserCollectionStatus;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,6 +35,7 @@ public class UserCollectionService implements IUserCollectionService {
 
     private final ICustomerService customerService;
     private final UserCollectionRepository repo;
+    private final IBillService billService;
 
     @Transactional
     @Override
@@ -63,20 +69,40 @@ public class UserCollectionService implements IUserCollectionService {
 
     @Transactional
     @Override
-    public UserCollection updateUserCollectionStatus(String status, Long collectionId, Long customerId, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException{
-        log.info("Updating User collection status by collection Id " + collectionId + " .");
-        //get user collection
-        UserCollection userCollection = getUserCollectionById(collectionId, customerId, user);
+    public String updateUserCollectionStatus(UserCollectionStatusUpdateDTO dto, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException{
+        log.info("Updating User collections status.");
+        Bill bill = new Bill();
+        bill.setPaymentMethod(PaymentMethod.of(dto.getPaymentMethod()));
+        bill.setCreatedBy(user.getId());
+        bill.setCreationDate(new Date());
+        bill.setAmount(dto.getAmount());
+        billService.save(bill);
 
-        // set user collection status
-        userCollection.setCollectionStatus(UserCollectionStatus.of(status));
+        dto.getCollectionIds().forEach(e -> {
 
-        // set audits fields
-        userCollection.setModifiedBy(user.getId());
-        userCollection.setLastModifiedDate(new Date());
-        save(userCollection);
+            try {
+                //get user collection
+                UserCollection userCollection = null;
 
-        return userCollection;
+                userCollection = getUserCollectionById(e, dto.getCustomerId(), user);
+
+                // set user collection status
+                userCollection.setCollectionStatus(UserCollectionStatus.of(dto.getStatus()));
+                // set audits fields
+                userCollection.setModifiedBy(user.getId());
+                userCollection.setLastModifiedDate(new Date());
+
+                //set bill object
+                userCollection.setBill(bill);
+                save(userCollection);
+
+            } catch (BadRequestException|EntityNotFoundException|EntityNotSavedException ex) {
+                throw new RuntimeException(ex);
+            }
+
+        });
+
+        return "User Collections Successfully Updated.";
 
     }
 
@@ -147,8 +173,8 @@ public class UserCollectionService implements IUserCollectionService {
         return userCollection;
     }
 
-    private boolean existsByMonthOrYearOrTypeOfCustomer(Months month, Integer year, PaymentType paymentType, Long customerId) {
-        return repo.existsByMonthAndYearAndPaymentTypeAndCustomer_Id(month, year, paymentType, customerId);
+    private boolean existsByMonthOrYearOrTypeOfCustomerOrDeleted(Months month, Integer year, PaymentType paymentType, Long customerId, boolean isDeleted) {
+        return repo.existsByMonthAndYearAndPaymentTypeAndCustomer_IdAndIsDeleted(month, year, paymentType, customerId, isDeleted);
     }
 
     private boolean existsByMonthOrYearOrCollectionStatusOfCustomer(Months month, Integer year, UserCollectionStatus collectionStatus, Long customerId) {
@@ -176,11 +202,12 @@ public class UserCollectionService implements IUserCollectionService {
 
         // checking the for collection already created or not
         if (PaymentType.of(requestDto.getPaymentType()).equals(PaymentType.MONTHLY)) {
-            isValid = existsByMonthOrYearOrTypeOfCustomer(
+            isValid = existsByMonthOrYearOrTypeOfCustomerOrDeleted(
                     Months.of(requestDto.getMonth()),
                     requestDto.getYear(),
                     PaymentType.of(requestDto.getPaymentType()),
-                    requestDto.getCustomerId()
+                    requestDto.getCustomerId(),
+                    false
             );
         }
         if (isValid) {

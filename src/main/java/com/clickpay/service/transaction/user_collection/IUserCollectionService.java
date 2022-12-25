@@ -1,6 +1,7 @@
 package com.clickpay.service.transaction.user_collection;
 
 import com.clickpay.dto.transaction.UserCollectionRequest;
+import com.clickpay.dto.transaction.UserCollectionStatusUpdateDTO;
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
@@ -14,7 +15,7 @@ public interface IUserCollectionService {
     UserCollection createUserCollection(UserCollectionRequest requestDto, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException, EntityAlreadyExistException;
 
     @Transactional
-    UserCollection updateUserCollectionStatus(String status, Long collectionId, Long customerId, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException;
+    String updateUserCollectionStatus(UserCollectionStatusUpdateDTO updateDTO, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException;
 
 //    List<CustomerResponse> getCustomersByFilter(PaginatedUserCollectionRequest request, User user);
 

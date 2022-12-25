@@ -2,6 +2,7 @@ package com.clickpay.controller.transaction;
 
 import com.clickpay.dto.transaction.UserCollectionRequest;
 import com.clickpay.dto.transaction.UserCollectionResponse;
+import com.clickpay.dto.transaction.UserCollectionStatusUpdateDTO;
 import com.clickpay.errors.general.*;
 import com.clickpay.model.user.User;
 import com.clickpay.service.auth.IAuthService;
@@ -77,15 +78,13 @@ public class UserCollectionController {
         return ResponseEntity.status(m.getStatus()).body(m);
     }
 
-    @PutMapping("/")
-    public ResponseEntity<Message<UserCollectionResponse>> updateUserCollectionStatus(
-            @Valid @NotNull @RequestParam String status,
-            @Valid @NotNull @RequestParam Long collectionId,
-            @Valid @NotNull @RequestParam Long customerId,
+    @PostMapping("/update")
+    public ResponseEntity<Message<String>> updateUserCollectionStatus(
+            @Valid @NotNull @RequestBody UserCollectionStatusUpdateDTO updateDTO,
             Principal principal)
             throws PermissionException, EntityNotFoundException, BadRequestException, EntityNotSavedException {
         User user = authService.hasPermission(ControllerConstants.USERS_COLLECTIONS, principal);
-        Message<UserCollectionResponse> m = transactionService.updateUserCollectionStatus(status,collectionId,customerId,user);
+        Message<String> m = transactionService.updateUserCollectionStatus(updateDTO,user);
         return ResponseEntity.status(m.getStatus()).body(m);
     }
 
