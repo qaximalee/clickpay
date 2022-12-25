@@ -1,8 +1,6 @@
 package com.clickpay.service.transaction.user_collection;
 
-import com.clickpay.dto.transaction.PaginatedUserCollectionRequest;
 import com.clickpay.dto.transaction.UserCollectionRequest;
-import com.clickpay.dto.user_profile.customer.CustomerResponse;
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
@@ -23,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Service

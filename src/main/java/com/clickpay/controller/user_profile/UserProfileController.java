@@ -1,6 +1,6 @@
 package com.clickpay.controller.user_profile;
 
-import com.clickpay.dto.transaction.PaginatedUserCollectionRequest;
+import com.clickpay.dto.user_profile.customer.PaginatedCustomersInUserCollectionRequest;
 import com.clickpay.dto.user_profile.customer.CustomerFilterAndPaginationRequest;
 import com.clickpay.dto.user_profile.customer.CustomerFilterAndPaginationResponse;
 import com.clickpay.dto.user_profile.customer.CustomerRequest;
@@ -199,7 +199,7 @@ public class UserProfileController extends CompanyController {
 
     @PostMapping("/customer-details/filter")
     public ResponseEntity<Message<CustomerFilterAndPaginationResponse>> getAllCustomerByFiltrationWithUserCollection(
-            @RequestBody PaginatedUserCollectionRequest request,
+            @RequestBody PaginatedCustomersInUserCollectionRequest request,
             Principal principal)
             throws PermissionException, EntityNotFoundException {
         User user = authService.hasPermission(ControllerConstants.USER_DETAILS, principal);

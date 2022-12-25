@@ -1,6 +1,6 @@
 package com.clickpay.service.user_profile.customer;
 
-import com.clickpay.dto.transaction.PaginatedUserCollectionRequest;
+import com.clickpay.dto.user_profile.customer.PaginatedCustomersInUserCollectionRequest;
 import com.clickpay.dto.user_profile.customer.CustomerFilterAndPaginationRequest;
 import com.clickpay.dto.user_profile.customer.CustomerFilterAndPaginationResponse;
 import com.clickpay.dto.user_profile.customer.CustomerRequest;
@@ -8,8 +8,6 @@ import com.clickpay.dto.user_profile.customer.CustomerResponse;
 import com.clickpay.errors.general.*;
 import com.clickpay.model.user.User;
 import com.clickpay.model.user_profile.Customer;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -36,5 +34,5 @@ public interface ICustomerService {
     CustomerFilterAndPaginationResponse findCustomerByFilter(CustomerFilterAndPaginationRequest customerFilterDTO, User user) throws EntityNotFoundException;
 
     @Transactional(readOnly = true)
-    CustomerFilterAndPaginationResponse getCustomersByFilter(PaginatedUserCollectionRequest request, User user) throws EntityNotFoundException;
+    CustomerFilterAndPaginationResponse getCustomersByFilter(PaginatedCustomersInUserCollectionRequest request, User user) throws EntityNotFoundException;
 }

@@ -49,12 +49,12 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
             "FROM customer AS c\n" +
             "INNER JOIN user_collection AS uc ON uc.customer_id = c.id\n" +
             "WHERE ( (c.created_by =:userId ) AND\n" +
-            "(c.sub_locality_id =:subLocality or :subLocality is NULL) AND\n" +
-            "(c.connection_type_id =:connectionType or :connectionType is NULL) AND \n" +
+            "(c.sub_locality_id =:subLocalityId or :subLocalityId is NULL) AND\n" +
+            "(c.connection_type_id =:connectionTypeId or :connectionTypeId is NULL) AND \n" +
             "(c.status =:customerStatus or :customerStatus is NULL) AND\n" +
             "(uc.collection_status =:userCollectionStatus or :userCollectionStatus is NULL) AND \n" +
             " ( :searchInput is NULL OR c.internet_id like :searchInput OR c.name like :searchInput OR c.address like :searchInput OR c.mobile like :searchInput)) ",
     nativeQuery = true)
-    Page<Object[]> findCustomersByUserCollectionsWithFilter(String subLocality, String customerStatus, String userCollectionStatus, String connectionType, String searchInput, Long userId, Pageable pageable);
+    Page<Object[]> findCustomersByUserCollectionsWithFilter(Long subLocalityId, String customerStatus, String userCollectionStatus, Long connectionTypeId, String searchInput, Long userId, Pageable pageable);
 
 }

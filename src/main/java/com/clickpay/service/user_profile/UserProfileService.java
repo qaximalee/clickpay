@@ -1,6 +1,6 @@
 package com.clickpay.service.user_profile;
 
-import com.clickpay.dto.transaction.PaginatedUserCollectionRequest;
+import com.clickpay.dto.user_profile.customer.PaginatedCustomersInUserCollectionRequest;
 import com.clickpay.dto.user_profile.customer.CustomerFilterAndPaginationRequest;
 import com.clickpay.dto.user_profile.customer.CustomerFilterAndPaginationResponse;
 import com.clickpay.dto.user_profile.customer.CustomerRequest;
@@ -369,7 +369,7 @@ public class UserProfileService implements IUserProfileService{
     }
 
     @Override
-    public Message<CustomerFilterAndPaginationResponse> getAllCustomersByUserCollections(PaginatedUserCollectionRequest request, User user) throws EntityNotFoundException {
+    public Message<CustomerFilterAndPaginationResponse> getAllCustomersByUserCollections(PaginatedCustomersInUserCollectionRequest request, User user) throws EntityNotFoundException {
         log.info("Fetching customers by finding fields.");
         return new Message<CustomerFilterAndPaginationResponse>()
                 .setStatus(HttpStatus.OK.value())

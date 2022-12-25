@@ -1,6 +1,6 @@
 package com.clickpay.service.user_profile.customer;
 
-import com.clickpay.dto.transaction.PaginatedUserCollectionRequest;
+import com.clickpay.dto.user_profile.customer.PaginatedCustomersInUserCollectionRequest;
 import com.clickpay.dto.user_profile.customer.CustomerFilterAndPaginationRequest;
 import com.clickpay.dto.user_profile.customer.CustomerFilterAndPaginationResponse;
 import com.clickpay.dto.user_profile.customer.CustomerRequest;
@@ -265,7 +265,7 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
-    public CustomerFilterAndPaginationResponse getCustomersByFilter(PaginatedUserCollectionRequest request, User user) throws EntityNotFoundException {
+    public CustomerFilterAndPaginationResponse getCustomersByFilter(PaginatedCustomersInUserCollectionRequest request, User user) throws EntityNotFoundException {
 
         log.info("Fetching User collection by collection Id ");
 
@@ -275,10 +275,10 @@ public class CustomerService implements ICustomerService {
             request.setSearchInput("%"+request.getSearchInput()+"%");
         }
 
-        Page<Object[]> customersFiltered = repo.findCustomersByUserCollectionsWithFilter(request.getSubLocality(),
+        Page<Object[]> customersFiltered = repo.findCustomersByUserCollectionsWithFilter(request.getSubLocalityId(),
                 request.getCustomerStatus(),
                 request.getUserCollectionStatus(),
-                request.getConnectionType(),
+                request.getConnectionTypeId(),
                 request.getSearchInput(),
                 user.getId(),
                 pageable);
