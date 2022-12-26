@@ -1,6 +1,7 @@
 package com.clickpay.service.transaction.bill;
 
 import com.clickpay.errors.general.BadRequestException;
+import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.general.EntityNotSavedException;
 import com.clickpay.model.bill.Bill;
 import com.clickpay.repository.bill.BillRepository;
@@ -33,5 +34,18 @@ public class BillService implements IBillService{
             log.error("User Bill can not be saved.");
             throw new EntityNotSavedException("User Bill can not be saved.");
         }
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Bill getBillByBillNumber(Long billNo) throws EntityNotFoundException {
+        log.info("Fetching Bill by Bill Number.");
+
+        Bill bill = repo.findByBillNumberAndIsDeleted(billNo,false);
+        if (bill == null){
+            log.error("Bill not found.");
+            throw new EntityNotFoundException("Bill not found.");
+        }
+        return bill;
     }
 }

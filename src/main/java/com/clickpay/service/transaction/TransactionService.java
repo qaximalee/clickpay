@@ -2,7 +2,7 @@ package com.clickpay.service.transaction;
 
 import com.clickpay.dto.transaction.UserCollectionRequest;
 import com.clickpay.dto.transaction.UserCollectionResponse;
-import com.clickpay.dto.transaction.UserCollectionStatusUpdateDTO;
+import com.clickpay.dto.transaction.UserCollectionStatusUpdateAsPaidDTO;
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
@@ -63,14 +63,25 @@ public class TransactionService implements ITransactionService{
     }
 
     @Override
-    public Message<String> updateUserCollectionStatus(UserCollectionStatusUpdateDTO updateDTO, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+    public Message<String> updateUserCollectionStatusAsPaid(UserCollectionStatusUpdateAsPaidDTO updateDTO, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
         log.info("Updating user collection by collection status.");
 
         return new Message<String>()
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
                 .setMessage("User Collection Status Updated Successfully.")
-                .setData(userCollectionService.updateUserCollectionStatus(updateDTO,user));
+                .setData(userCollectionService.updateUserCollectionStatusAsPaid(updateDTO,user));
+    }
+
+    @Override
+    public Message<String> updateUserCollectionStatusAsUnPaid(Long billNo, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+        log.info("Updating user collection by collection status.");
+
+        return new Message<String>()
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("User Collection Status Updated Successfully.")
+                .setData(userCollectionService.updateUserCollectionStatusAsUnPaid(billNo,user));
     }
 
     // find of customers in user collection

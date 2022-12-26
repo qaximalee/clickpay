@@ -2,7 +2,7 @@ package com.clickpay.controller.transaction;
 
 import com.clickpay.dto.transaction.UserCollectionRequest;
 import com.clickpay.dto.transaction.UserCollectionResponse;
-import com.clickpay.dto.transaction.UserCollectionStatusUpdateDTO;
+import com.clickpay.dto.transaction.UserCollectionStatusUpdateAsPaidDTO;
 import com.clickpay.errors.general.*;
 import com.clickpay.model.user.User;
 import com.clickpay.service.auth.IAuthService;
@@ -78,13 +78,23 @@ public class UserCollectionController {
         return ResponseEntity.status(m.getStatus()).body(m);
     }
 
-    @PostMapping("/update")
-    public ResponseEntity<Message<String>> updateUserCollectionStatus(
-            @Valid @NotNull @RequestBody UserCollectionStatusUpdateDTO updateDTO,
+    @PostMapping("/update-as-paid")
+    public ResponseEntity<Message<String>> updateUserCollectionStatusPaid(
+            @Valid @NotNull @RequestBody UserCollectionStatusUpdateAsPaidDTO updateDTO,
             Principal principal)
             throws PermissionException, EntityNotFoundException, BadRequestException, EntityNotSavedException {
         User user = authService.hasPermission(ControllerConstants.USERS_COLLECTIONS, principal);
-        Message<String> m = transactionService.updateUserCollectionStatus(updateDTO,user);
+        Message<String> m = transactionService.updateUserCollectionStatusAsPaid(updateDTO,user);
+        return ResponseEntity.status(m.getStatus()).body(m);
+    }
+
+    @PostMapping("/update-as-unpaid")
+    public ResponseEntity<Message<String>> updateUserCollectionStatusUnPaid(
+            @Valid @NotNull @RequestParam Long billNumber,
+            Principal principal)
+            throws PermissionException, EntityNotFoundException, BadRequestException, EntityNotSavedException {
+        User user = authService.hasPermission(ControllerConstants.USERS_COLLECTIONS, principal);
+        Message<String> m = transactionService.updateUserCollectionStatusAsUnPaid(billNumber,user);
         return ResponseEntity.status(m.getStatus()).body(m);
     }
 
