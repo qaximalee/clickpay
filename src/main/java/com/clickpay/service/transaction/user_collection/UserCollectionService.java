@@ -147,11 +147,11 @@ public class UserCollectionService implements IUserCollectionService {
     @Override
     public UserCollection getUserCollectionById(Long collectionId, Long customerId, User user) throws EntityNotFoundException {
         log.info("Fetching User collection by collection Id " + collectionId + " .");
-        Optional<UserCollection> userCollection = repo.findById(collectionId);
+        Optional<UserCollection> userCollection = repo.findByIdAndIsDeleted(collectionId,false);
 
         if (!userCollection.isPresent()) {
-            log.error("User collection not found.");
-            throw new EntityNotFoundException("User collection not found.");
+            log.error("User collection not found or may be deleted.");
+            throw new EntityNotFoundException("User collection not found or may be deleted.");
         }
         return userCollection.get();
     }

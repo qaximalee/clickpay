@@ -43,8 +43,8 @@ public class BillService implements IBillService{
 
         Bill bill = repo.findByBillNumberAndIsDeleted(billNo,false);
         if (bill == null){
-            log.error("Bill not found.");
-            throw new EntityNotFoundException("Bill not found.");
+            log.error("Bill not found or may be deleted.");
+            throw new EntityNotFoundException("Bill not found or may be deleted.");
         }
         return bill;
     }
