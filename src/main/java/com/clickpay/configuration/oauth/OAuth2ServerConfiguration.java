@@ -17,12 +17,19 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 
+
+/**
+ * FOR TOKEN REMOVAL (LOGOUT)
+ *          Authentication c = getContext().getAuthentication();
+ *         OAuth2AuthenticationDetails detail = (OAuth2AuthenticationDetails) getContext().getAuthentication().getDetails();
+ *         OAuth2ServerConfiguration.tokenStore.removeAccessToken(detail.getTokenValue());
+ * */
 @Configuration
 public class OAuth2ServerConfiguration {
 
     private static final String SERVER_RESOURCE_ID = "oauth2-server";
 
-    private static InMemoryTokenStore tokenStore = new InMemoryTokenStore();
+    public static InMemoryTokenStore tokenStore = new InMemoryTokenStore();
 
     @Configuration
     @EnableResourceServer

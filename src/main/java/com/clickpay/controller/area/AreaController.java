@@ -1,5 +1,6 @@
 package com.clickpay.controller.area;
 
+import com.clickpay.configuration.oauth.OAuth2ServerConfiguration;
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.general.EntityNotSavedException;
@@ -20,11 +21,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
+import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 
 import javax.validation.constraints.NotBlank;
 import java.net.URI;
 import java.security.Principal;
+import java.security.Security;
+
+import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 
 @RequiredArgsConstructor
 @RestController
@@ -67,6 +75,7 @@ public class AreaController {
     public ResponseEntity getCity(@NotNull @PathVariable("id") Long id,
                                   Principal principal)
             throws BadRequestException, EntityNotFoundException, PermissionException {
+
         authService.hasPermission(ControllerConstants.CITY, principal);
         Message m = service.findCityById(id);
         return ResponseEntity.ok().body(m);
