@@ -1,7 +1,7 @@
 package com.clickpay.service.transaction.user_collection;
 
 import com.clickpay.dto.transaction.UserCollectionRequest;
-import com.clickpay.dto.transaction.UserCollectionStatusUpdateDTO;
+import com.clickpay.dto.transaction.UserCollectionStatusUpdateAsPaidDTO;
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
@@ -17,7 +17,6 @@ import com.clickpay.utils.enums.Months;
 import com.clickpay.utils.enums.PaymentMethod;
 import com.clickpay.utils.enums.PaymentType;
 import com.clickpay.utils.enums.UserCollectionStatus;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -69,8 +69,8 @@ public class UserCollectionService implements IUserCollectionService {
 
     @Transactional
     @Override
-    public String updateUserCollectionStatus(UserCollectionStatusUpdateDTO dto, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException{
-        log.info("Updating User collections status.");
+    public String updateUserCollectionStatusAsPaid(UserCollectionStatusUpdateAsPaidDTO dto, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException{
+        log.info("Updating User collections status as Paid.");
         Bill bill = new Bill();
         bill.setPaymentMethod(PaymentMethod.of(dto.getPaymentMethod()));
         bill.setCreatedBy(user.getId());
@@ -86,8 +86,8 @@ public class UserCollectionService implements IUserCollectionService {
 
                 userCollection = getUserCollectionById(e, dto.getCustomerId(), user);
 
-                // set user collection status
-                userCollection.setCollectionStatus(UserCollectionStatus.of(dto.getStatus()));
+                // set user collection status as paid
+                userCollection.setCollectionStatus(UserCollectionStatus.PAID);
                 // set audits fields
                 userCollection.setModifiedBy(user.getId());
                 userCollection.setLastModifiedDate(new Date());
@@ -102,7 +102,27 @@ public class UserCollectionService implements IUserCollectionService {
 
         });
 
-        return "User Collections Successfully Updated.";
+        return "User Collections Paid Successfully.";
+
+    }
+
+    @Transactional
+    @Override
+    public String updateUserCollectionStatusAsUnPaid(Long billNo, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException{
+        log.info("Updating User collections status as Unpaid.");
+
+        Bill bill = billService.getBillByBillNumber(billNo);
+        bill.setDeleted(true);
+        billService.save(bill);
+
+        List<UserCollection> userCollections = getUserCollectionsByBillNumber(billNo,user);
+        for (UserCollection userCollection : userCollections){
+            userCollection.setBill(null);
+            userCollection.setCollectionStatus(UserCollectionStatus.UNPAID);
+            save(userCollection);
+        }
+
+        return "User Collections UnPaid Successfully.";
 
     }
 
@@ -127,13 +147,26 @@ public class UserCollectionService implements IUserCollectionService {
     @Override
     public UserCollection getUserCollectionById(Long collectionId, Long customerId, User user) throws EntityNotFoundException {
         log.info("Fetching User collection by collection Id " + collectionId + " .");
-        Optional<UserCollection> userCollection = repo.findById(collectionId);
+        Optional<UserCollection> userCollection = repo.findByIdAndIsDeleted(collectionId,false);
 
         if (!userCollection.isPresent()) {
-            log.error("User collection not found.");
-            throw new EntityNotFoundException("User collection not found.");
+            log.error("User collection not found or may be deleted.");
+            throw new EntityNotFoundException("User collection not found or may be deleted.");
         }
         return userCollection.get();
+    }
+
+    @Transactional
+    @Override
+    public List<UserCollection> getUserCollectionsByBillNumber(Long billNo, User user) throws EntityNotFoundException {
+        log.info("Fetching User collection by bill number " + billNo + " .");
+        List<UserCollection> userCollections = repo.findByBill_BillNumberAndIsDeleted(billNo,false);
+
+        if (userCollections.isEmpty()) {
+            log.error("User collection by bill number not found.");
+            throw new EntityNotFoundException("User collection by bill number not found.");
+        }
+        return userCollections;
     }
 
     @Transactional
