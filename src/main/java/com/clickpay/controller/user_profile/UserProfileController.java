@@ -80,7 +80,7 @@ public class UserProfileController extends CompanyController {
                 ).body(m);
     }
 
-    @GetMapping("/box-media/{id}")
+    @GetMapping("/box-media/{id}")  
     public ResponseEntity getBoxMedia(@NotNull @PathVariable("id") Long id,
                                       Principal principal)
             throws BadRequestException, EntityNotFoundException, PermissionException {
@@ -98,7 +98,7 @@ public class UserProfileController extends CompanyController {
     }
 
     @PutMapping("/box-media")
-    public ResponseEntity updateBoxMedia(@NotNull @RequestParam("cityName") String boxNumber,
+    public ResponseEntity updateBoxMedia(@NotNull @RequestParam("boxNumber") String boxNumber,
                                          @RequestParam("nearbyLocation") String nearbyLocation,
                                          @NotNull @RequestParam("boxMediaId") Long boxMediaId,
                                          Principal principal)
