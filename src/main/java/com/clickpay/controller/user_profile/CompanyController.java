@@ -4,6 +4,7 @@ import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.general.EntityNotSavedException;
 import com.clickpay.errors.general.PermissionException;
+import com.clickpay.model.area.SubLocality;
 import com.clickpay.model.company.Company;
 import com.clickpay.model.user.User;
 import com.clickpay.service.auth.IAuthService;
@@ -84,6 +85,16 @@ public class CompanyController extends ConnectionTypeController{
             throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
         User user = authService.hasPermission(ControllerConstants.PACKAGE, principal);
         Message m = userProfileService.updateCompany(id, name, user);
+        return ResponseEntity.ok().body(m);
+    }
+
+
+    @DeleteMapping("/company/delete")
+    public ResponseEntity<Message<Company>> deleteCompany(@NotNull @RequestParam("id") Long companyId,
+                                                                  Principal principal)
+            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
+        User user = authService.hasPermission(ControllerConstants.PACKAGE, principal);
+        Message<Company> m = userProfileService.deleteCompany(companyId, user);
         return ResponseEntity.ok().body(m);
     }
 }

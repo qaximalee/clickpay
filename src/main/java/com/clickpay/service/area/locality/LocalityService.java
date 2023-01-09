@@ -30,7 +30,7 @@ public class LocalityService implements ILocalityService{
             throw new BadRequestException("Provided locality id should be a valid and non null value.");
         }
 
-        Optional<Locality> locality = repo.findById(id);
+        Optional<Locality> locality = repo.findByIdAndIsDeleted(id,false);
         if (locality == null) {
             log.error("No locality found with locality id: "+id);
             throw new EntityNotFoundException("No locality found with provided locality id.");
@@ -57,7 +57,7 @@ public class LocalityService implements ILocalityService{
 
     @Override
     public List<Locality> findAllLocalityByUserId(Long userId) throws EntityNotFoundException {
-        List<Locality> localityList = repo.findAllByCreatedBy(userId);
+        List<Locality> localityList = repo.findAllByCreatedByAndIsDeleted(userId,false);
         if (localityList == null || localityList.isEmpty()) {
             log.debug("No locality data found.");
             throw new EntityNotFoundException("Locality list not found.");

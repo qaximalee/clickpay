@@ -31,7 +31,7 @@ public class SubLocalityService implements ISubLocalityService {
             throw new BadRequestException("Provided sub locality id should be a valid and non null value.");
         }
 
-        Optional<SubLocality> subLocality = repo.findById(id);
+        Optional<SubLocality> subLocality = repo.findByIdAndIsDeleted(id, false);
         if (subLocality == null) {
             log.error("No sub locality found with city id: "+id);
             throw new EntityNotFoundException("No sub locality found with provided city id.");
@@ -58,7 +58,7 @@ public class SubLocalityService implements ISubLocalityService {
 
     @Override
     public List<SubLocality> findAllLocalityByUserId(Long userId) throws EntityNotFoundException {
-        List<SubLocality> subLocalities = repo.findAllByCreatedBy(userId);
+        List<SubLocality> subLocalities = repo.findAllByCreatedByAndIsDeleted(userId, false);
         if (subLocalities == null || subLocalities.isEmpty()) {
             log.debug("No sub locality data found.");
             throw new EntityNotFoundException("Sub locality list not found.");

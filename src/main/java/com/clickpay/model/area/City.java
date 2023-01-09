@@ -25,4 +25,7 @@ public class City extends Auditable<Long> {
     @JoinColumn(name = "country_id")
     private Country country;
 
+    @Column(name = "is_deleted")
+    private boolean isDeleted = false;
+
 }

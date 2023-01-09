@@ -26,4 +26,7 @@ public class SubLocality extends Auditable<Long> {
     @JoinColumn(name = "locality_id", nullable = false)
     private Locality locality;
 
+    @Column(name = "is_deleted")
+    private boolean isDeleted = false;
+
 }

@@ -100,6 +100,15 @@ public class AreaController {
         return ResponseEntity.ok().body(m);
     }
 
+    @DeleteMapping("/city/delete")
+    public ResponseEntity<Message<City>> deleteCity(@NotNull @RequestParam("cityId") Long cityId,
+                                     Principal principal)
+            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
+        User user = authService.hasPermission(ControllerConstants.CITY, principal);
+        Message<City> m = service.deleteCity(cityId, user);
+        return ResponseEntity.ok().body(m);
+    }
+
 
     /**
      * For Locality CRUD
@@ -145,6 +154,15 @@ public class AreaController {
         return ResponseEntity.ok().body(m);
     }
 
+    @DeleteMapping("/locality/delete")
+    public ResponseEntity<Message<Locality>> deleteLocality(@NotNull @RequestParam("localityId") Long localityId,
+                                                    Principal principal)
+            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
+        User user = authService.hasPermission(ControllerConstants.LOCALITY, principal);
+        Message<Locality> m = service.deleteLocality(localityId, user);
+        return ResponseEntity.ok().body(m);
+    }
+
 
     /**
      * For Sub locality CRUD
@@ -187,6 +205,15 @@ public class AreaController {
             throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
         User user = authService.hasPermission(ControllerConstants.SUB_LOCALITY, principal);
         Message m = service.updateSubLocality(subLocalityId, subLocalityName, localityId, user);
+        return ResponseEntity.ok().body(m);
+    }
+
+    @DeleteMapping("/sub-locality/delete")
+    public ResponseEntity<Message<SubLocality>> deleteSubLocality(@NotNull @RequestParam("subLocalityId") Long subLocalityId,
+                                                            Principal principal)
+            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
+        User user = authService.hasPermission(ControllerConstants.SUB_LOCALITY, principal);
+        Message<SubLocality> m = service.deleteSubLocality(subLocalityId, user);
         return ResponseEntity.ok().body(m);
     }
 }

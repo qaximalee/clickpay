@@ -108,6 +108,15 @@ public class UserProfileController extends CompanyController {
         return ResponseEntity.ok().body(m);
     }
 
+    @DeleteMapping("/box-media/delete")
+    public ResponseEntity<Message<BoxMedia>> deleteBoxMedia(@NotNull @RequestParam("boxMediaId") Long boxMediaId,
+                                         Principal principal)
+            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
+        User user = authService.hasPermission(ControllerConstants.BOX_MEDIA, principal);
+        Message<BoxMedia> m = userProfileService.deleteBoxMedia(boxMediaId, user);
+        return ResponseEntity.ok().body(m);
+    }
+
 
     /**
      * CRUD for packages
@@ -153,6 +162,15 @@ public class UserProfileController extends CompanyController {
             throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
         User user = authService.hasPermission(ControllerConstants.PACKAGE, principal);
         Message m = userProfileService.updatePackage(dto, user);
+        return ResponseEntity.ok().body(m);
+    }
+
+    @DeleteMapping("/package/delete")
+    public ResponseEntity<Message<Package>> deletePackage(@NotNull @PathVariable("id") Long id,
+                                        Principal principal)
+            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
+        User user = authService.hasPermission(ControllerConstants.PACKAGE, principal);
+        Message<Package> m = userProfileService.deletePackage(id, user);
         return ResponseEntity.ok().body(m);
     }
 

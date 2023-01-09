@@ -38,4 +38,7 @@ public class Package extends Auditable<Long> {
 
     @Column(name = "active")
     private boolean active = true;
+
+    @Column(name = "is_deleted")
+    private boolean isDeleted = false;
 }

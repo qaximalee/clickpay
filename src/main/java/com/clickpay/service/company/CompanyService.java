@@ -28,7 +28,7 @@ public class CompanyService implements ICompanyService {
             log.error("Company id " + id + " is invalid.");
             throw new BadRequestException("Provided company id should be a valid and non null value.");
         }
-        Optional<Company> data = repo.findByIdAndActive(id, true);
+        Optional<Company> data = repo.findByIdAndActiveAndIsDeleted(id, true, false);
         if (!data.isPresent()) {
             log.error("No company found with id: "+id);
             throw new EntityNotFoundException("No company found with provided company id.");
@@ -57,7 +57,7 @@ public class CompanyService implements ICompanyService {
     @Override
     public List<Company> findAllCompanyByUserId(Long userId) throws EntityNotFoundException {
         log.info("Fetching all company for user id: "+userId);
-        List<Company> companyList = repo.findAllByCreatedByAndActive(userId, true);
+        List<Company> companyList = repo.findAllByCreatedByAndActiveAndIsDeleted(userId, true, false);
         if (companyList == null || companyList.isEmpty()) {
             log.error("No company data found.");
             throw new EntityNotFoundException("Company not found.");

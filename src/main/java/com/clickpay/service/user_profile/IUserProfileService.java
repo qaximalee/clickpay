@@ -6,7 +6,10 @@ import com.clickpay.dto.user_profile.customer.CustomerFilterAndPaginationRespons
 import com.clickpay.dto.user_profile.customer.CustomerRequest;
 import com.clickpay.dto.user_profile.packages.PackageRequest;
 import com.clickpay.errors.general.*;
+import com.clickpay.model.company.Company;
 import com.clickpay.model.user.User;
+import com.clickpay.model.user_profile.BoxMedia;
+import com.clickpay.model.user_profile.Package;
 import com.clickpay.utils.Message;
 
 public interface IUserProfileService {
@@ -22,6 +25,9 @@ public interface IUserProfileService {
     Message updateCompany(Long id, String name, User user)
             throws BadRequestException, EntityNotSavedException, EntityNotFoundException;
 
+    Message<Company> deleteCompany(Long id, User user)
+            throws BadRequestException, EntityNotSavedException, EntityNotFoundException;
+
     // BoxMedia CRUD
     Message findBoxMediaById(Long id) throws BadRequestException, EntityNotFoundException;
 
@@ -31,6 +37,9 @@ public interface IUserProfileService {
     Message findAllBoxMediaByUserId(Long userId) throws EntityNotFoundException;
 
     Message updateBoxMedia(Long id, String boxNumber, String nearbyLocation, User user)
+            throws BadRequestException, EntityNotSavedException, EntityNotFoundException;
+
+    Message<BoxMedia> deleteBoxMedia(Long id, User user)
             throws BadRequestException, EntityNotSavedException, EntityNotFoundException;
 
     // ConnectionType CRUD
@@ -53,6 +62,9 @@ public interface IUserProfileService {
     Message findAllPackageByUserId(Long userId) throws EntityNotFoundException;
 
     Message updatePackage(PackageRequest packageRequest, User user)
+            throws BadRequestException, EntityNotSavedException, EntityNotFoundException;
+
+    Message<Package> deletePackage(Long packageId, User user)
             throws BadRequestException, EntityNotSavedException, EntityNotFoundException;
 
     // Customer CRUD

@@ -49,12 +49,13 @@ public class AreaService implements IAreaService{
      *
      * */
     @Override
-    public Message createCity(String name, Long countryId, User user) throws EntityNotFoundException, EntityNotSavedException, BadRequestException {
+    public Message<City> createCity(String name, Long countryId, User user) throws EntityNotFoundException, EntityNotSavedException, BadRequestException {
         log.info("City creation is started.");
 
         City city = new City();
         city.setName(name);
         city.setCountry(countryService.findById(countryId));
+        city.setDeleted(false);
         city.setCreationDate(new Date());
         city.setCreatedBy(user.getId());
 
@@ -107,6 +108,25 @@ public class AreaService implements IAreaService{
                 .setMessage("City "+ ResponseMessage.UPDATED_MESSAGE_SUCCESS);
     }
 
+    @Override
+    public Message<City> deleteCity(Long id, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+        log.info("Deleting city of id : " + id);
+
+        City city = cityService.findById(id);
+        city.setDeleted(true);
+
+        city.setModifiedBy(user.getId());
+        city.setLastModifiedDate(new Date());
+        city = cityService.save(city);
+
+        log.debug("City: " + city.getName() + " is successfully deleted by user id: "+user.getId());
+        return new Message<City>()
+                .setData(city)
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("City "+ ResponseMessage.DELETED_MESSAGE_SUCCESS);
+    }
+
 
     /**
      * CRUD operations for locality
@@ -121,6 +141,7 @@ public class AreaService implements IAreaService{
         Locality locality = new Locality();
         locality.setName(name);
         locality.setCity(city);
+        locality.setDeleted(false);
         locality.setCreationDate(new Date());
         locality.setCreatedBy(user.getId());
 
@@ -174,13 +195,32 @@ public class AreaService implements IAreaService{
                 .setMessage("Locality "+ ResponseMessage.UPDATED_MESSAGE_SUCCESS);
     }
 
+    @Override
+    public Message<Locality> deleteLocality(Long id, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+        log.info("Deleting locality of id : " + id);
+
+        Locality locality = localityService.findById(id);
+        locality.setDeleted(true);
+
+        locality.setModifiedBy(user.getId());
+        locality.setLastModifiedDate(new Date());
+        locality = localityService.save(locality);
+
+        log.debug("Locality: " + locality.getName() + " is successfully deleted by user id: "+user.getId());
+        return new Message<Locality>()
+                .setData(locality)
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("Locality "+ ResponseMessage.DELETED_MESSAGE_SUCCESS);
+    }
+
 
     /**
      * CRUD operations for sub locality
      *
      * */
     @Override
-    public Message createSubLocality(String name, Long localityId, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+    public Message<SubLocality> createSubLocality(String name, Long localityId, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
         log.info("Locality creation is started.");
 
         Locality locality = localityService.findById(localityId);
@@ -188,6 +228,7 @@ public class AreaService implements IAreaService{
         SubLocality subLocality = new SubLocality();
         subLocality.setName(name);
         subLocality.setLocality(locality);
+        subLocality.setDeleted(false);
         subLocality.setCreationDate(new Date());
         subLocality.setCreatedBy(user.getId());
 
@@ -240,4 +281,23 @@ public class AreaService implements IAreaService{
                 .setCode(HttpStatus.OK.toString())
                 .setMessage("Sub locality "+ ResponseMessage.UPDATED_MESSAGE_SUCCESS);
     }
+
+    @Override
+    public Message<SubLocality> deleteSubLocality(Long id, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+        log.info("Deleting SubLocality of id : " + id);
+
+        SubLocality subLocality = subLocalityService.findById(id);
+        subLocality.setDeleted(true);
+        subLocality.setModifiedBy(user.getId());
+        subLocality.setLastModifiedDate(new Date());
+        subLocality = subLocalityService.save(subLocality);
+
+        log.debug("SubLocality: " + subLocality.getName() + " is successfully deleted by user id: "+user.getId());
+        return new Message<SubLocality>()
+                .setData(subLocality)
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("SubLocality "+ ResponseMessage.DELETED_MESSAGE_SUCCESS);
+    }
+
 }

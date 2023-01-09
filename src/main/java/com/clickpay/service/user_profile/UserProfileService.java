@@ -28,7 +28,7 @@ import java.util.Date;
 
 @Slf4j
 @Service
-public class UserProfileService implements IUserProfileService{
+public class UserProfileService implements IUserProfileService {
 
     private final ICompanyService companyService;
     private final IBoxMediaService boxMediaService;
@@ -53,7 +53,7 @@ public class UserProfileService implements IUserProfileService{
 
 
     /**
-     * CRUB for company
+     * CRUD for company
      */
 
     @Override
@@ -66,12 +66,14 @@ public class UserProfileService implements IUserProfileService{
     }
 
     @Override
-    public Message createCompany(String name, User user)
+    public Message<Company> createCompany(String name, User user)
             throws EntityNotSavedException, BadRequestException {
         log.info("Company creation is started.");
 
         Company company = new Company();
         company.setName(name);
+        company.setActive(true);
+        company.setDeleted(false);
         company.setCreationDate(new Date());
         company.setCreatedBy(user.getId());
 
@@ -91,7 +93,7 @@ public class UserProfileService implements IUserProfileService{
                 .setData(companyService.findAllCompanyByUserId(userId))
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("Company list "+ ResponseMessage.FETCHED_MESSAGE_SUCCESS);
+                .setMessage("Company list " + ResponseMessage.FETCHED_MESSAGE_SUCCESS);
     }
 
     @Override
@@ -107,18 +109,40 @@ public class UserProfileService implements IUserProfileService{
 
         company = companyService.save(company);
 
-        log.debug("Company: " + name + " is successfully updated for user id: "+user.getId());
+        log.debug("Company: " + name + " is successfully updated for user id: " + user.getId());
         return new Message()
                 .setData(company)
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("Company "+ ResponseMessage.UPDATED_MESSAGE_SUCCESS);
+                .setMessage("Company " + ResponseMessage.UPDATED_MESSAGE_SUCCESS);
+    }
+
+
+    @Override
+    public Message<Company> deleteCompany(Long id, User user)
+            throws BadRequestException, EntityNotSavedException, EntityNotFoundException {
+        log.info("Company deleting with company id : " + id);
+
+        Company company = companyService.findById(id);
+        company.setDeleted(true);
+
+        company.setModifiedBy(user.getId());
+        company.setLastModifiedDate(new Date());
+
+        company = companyService.save(company);
+
+        log.debug("Company : " + company.getName() + " is successfully deleted for user id: " + user.getId());
+        return new Message<Company>()
+                .setData(company)
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("Company " + ResponseMessage.DELETED_MESSAGE_SUCCESS);
     }
 
 
     /**
-     * CRUB for box media
-     * */
+     * CRUD for box media
+     */
 
     @Override
     public Message findBoxMediaById(Long id) throws BadRequestException, EntityNotFoundException {
@@ -137,6 +161,8 @@ public class UserProfileService implements IUserProfileService{
         BoxMedia boxMedia = new BoxMedia();
         boxMedia.setBoxNumber(boxNumber);
         boxMedia.setNearbyLocation(nearbyLocation);
+        boxMedia.setActive(true);
+        boxMedia.setDeleted(false);
         boxMedia.setCreationDate(new Date());
         boxMedia.setCreatedBy(user.getId());
 
@@ -156,7 +182,7 @@ public class UserProfileService implements IUserProfileService{
                 .setData(boxMediaService.findAllBoxMediaByUserId(userId))
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("Box media list "+ ResponseMessage.FETCHED_MESSAGE_SUCCESS);
+                .setMessage("Box media list " + ResponseMessage.FETCHED_MESSAGE_SUCCESS);
     }
 
     @Override
@@ -173,18 +199,39 @@ public class UserProfileService implements IUserProfileService{
 
         boxMedia = boxMediaService.save(boxMedia);
 
-        log.debug("Box media: " + boxNumber + " is successfully updated for user id: "+user.getId());
+        log.debug("Box media: " + boxNumber + " is successfully updated for user id: " + user.getId());
         return new Message()
                 .setData(boxMedia)
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("Box media "+ ResponseMessage.UPDATED_MESSAGE_SUCCESS);
+                .setMessage("Box media " + ResponseMessage.UPDATED_MESSAGE_SUCCESS);
+    }
+
+    @Override
+    public Message<BoxMedia> deleteBoxMedia(Long id, User user)
+            throws BadRequestException, EntityNotSavedException, EntityNotFoundException {
+        log.info("Box media deleting with boxMedia id: " + id);
+
+        BoxMedia boxMedia = boxMediaService.findById(id);
+        boxMedia.setDeleted(true);
+
+        boxMedia.setModifiedBy(user.getId());
+        boxMedia.setLastModifiedDate(new Date());
+
+        boxMedia = boxMediaService.save(boxMedia);
+
+        log.debug("Box media Id : " + id + " is successfully deleted for user id: " + user.getId());
+        return new Message<BoxMedia>()
+                .setData(boxMedia)
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("Box media " + ResponseMessage.DELETED_MESSAGE_SUCCESS);
     }
 
 
     /**
-     * CRUB for connection type
-     * */
+     * CRUD for connection type
+     */
 
     @Override
     public Message findConnectionTypeById(Long id) throws BadRequestException, EntityNotFoundException {
@@ -221,7 +268,7 @@ public class UserProfileService implements IUserProfileService{
                 .setData(connectionTypeService.findAllConnectionTypeByUserId(userId))
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("Connection type list "+ ResponseMessage.FETCHED_MESSAGE_SUCCESS);
+                .setMessage("Connection type list " + ResponseMessage.FETCHED_MESSAGE_SUCCESS);
     }
 
     @Override
@@ -237,18 +284,18 @@ public class UserProfileService implements IUserProfileService{
 
         connectionType = connectionTypeService.save(connectionType);
 
-        log.debug("Connection type: " + type + " is successfully updated for user id: "+user.getId());
+        log.debug("Connection type: " + type + " is successfully updated for user id: " + user.getId());
         return new Message()
                 .setData(connectionType)
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("Connection type "+ ResponseMessage.UPDATED_MESSAGE_SUCCESS);
+                .setMessage("Connection type " + ResponseMessage.UPDATED_MESSAGE_SUCCESS);
     }
 
 
     /**
      * CRUB for package
-     * */
+     */
 
     @Override
     public Message findPackageById(Long id) throws BadRequestException, EntityNotFoundException {
@@ -260,7 +307,7 @@ public class UserProfileService implements IUserProfileService{
     }
 
     @Override
-    public Message createPackage(PackageRequest packageRequest, User user)
+    public Message<Package> createPackage(PackageRequest packageRequest, User user)
             throws EntityNotSavedException, BadRequestException, EntityNotFoundException {
         log.info("Package creation is started.");
 
@@ -273,6 +320,8 @@ public class UserProfileService implements IUserProfileService{
         pack.setSalePrice(packageRequest.getSalePrice());
         pack.setCompany(company);
         pack.setConnectionType(connectionType);
+        pack.setDeleted(false);
+        pack.setActive(true);
 
         pack.setCreationDate(new Date());
         pack.setCreatedBy(user.getId());
@@ -293,13 +342,13 @@ public class UserProfileService implements IUserProfileService{
                 .setData(packageService.findAllPackageByUserId(userId))
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("Package list "+ ResponseMessage.FETCHED_MESSAGE_SUCCESS);
+                .setMessage("Package list " + ResponseMessage.FETCHED_MESSAGE_SUCCESS);
     }
 
     @Override
     public Message updatePackage(PackageRequest packageRequest, User user)
             throws BadRequestException, EntityNotSavedException, EntityNotFoundException {
-        log.info("Connection type updating with package name: " + packageRequest.getPackageName());
+        log.info("Package updating with package name: " + packageRequest.getPackageName());
 
         Package packageData = packageService.findById(packageRequest.getId());
 
@@ -317,12 +366,33 @@ public class UserProfileService implements IUserProfileService{
 
         packageData = packageService.save(packageData);
 
-        log.debug("Package : " + packageRequest.getPackageName() + " is successfully updated for user id: "+user.getId());
+        log.debug("Package : " + packageRequest.getPackageName() + " is successfully updated for user id: " + user.getId());
         return new Message()
                 .setData(packageData)
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
-                .setMessage("Package "+ ResponseMessage.UPDATED_MESSAGE_SUCCESS);
+                .setMessage("Package " + ResponseMessage.UPDATED_MESSAGE_SUCCESS);
+    }
+
+    @Override
+    public Message<Package> deletePackage(Long packageId, User user)
+            throws BadRequestException, EntityNotSavedException, EntityNotFoundException {
+        log.info("Package deleting with package id : " + packageId);
+
+        Package packageData = packageService.findById(packageId);
+        packageData.setDeleted(true);
+
+        packageData.setModifiedBy(user.getId());
+        packageData.setLastModifiedDate(new Date());
+
+        packageData = packageService.save(packageData);
+
+        log.debug("Package : " + packageData.getPackageName() + " is successfully deleted for user id: " + user.getId());
+        return new Message<Package>()
+                .setData(packageData)
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("Package " + ResponseMessage.DELETED_MESSAGE_SUCCESS);
     }
 
 
@@ -337,7 +407,7 @@ public class UserProfileService implements IUserProfileService{
         return new Message<Customer>()
                 .setStatus(HttpStatus.CREATED.value())
                 .setCode(HttpStatus.CREATED.toString())
-                .setMessage("Customer: " + dto.getName() +" "+ ResponseMessage.CREATED_MESSAGE_SUCCESS)
+                .setMessage("Customer: " + dto.getName() + " " + ResponseMessage.CREATED_MESSAGE_SUCCESS)
                 .setData(customerService.createCustomer(dto, user));
     }
 
@@ -375,7 +445,7 @@ public class UserProfileService implements IUserProfileService{
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
                 .setMessage("Customers by User Collections Fetched Successfully.")
-                .setData(customerService.getCustomersByFilter(request,user));
+                .setData(customerService.getCustomersByFilter(request, user));
     }
 
 }

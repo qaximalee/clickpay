@@ -32,7 +32,7 @@ public class BoxMediaService implements IBoxMediaService{
             log.error("Box media id " + id + " is invalid.");
             throw new BadRequestException("Provided box media id should be a valid and non null value.");
         }
-        Optional<BoxMedia> data = repo.findByIdAndActive(id, true);
+        Optional<BoxMedia> data = repo.findByIdAndActiveAndIsDeleted(id, true, false);
         if (!data.isPresent()) {
             log.error("No box media found with id: "+id);
             throw new EntityNotFoundException("No box media found with provided box media id.");
@@ -61,7 +61,7 @@ public class BoxMediaService implements IBoxMediaService{
     @Override
     public List<BoxMedia> findAllBoxMediaByUserId(Long userId) throws EntityNotFoundException {
         log.info("Fetching all box media for user id: "+userId);
-        List<BoxMedia> boxMediaList = repo.findAllByCreatedByAndActive(userId, true);
+        List<BoxMedia> boxMediaList = repo.findAllByCreatedByAndActiveAndIsDeleted(userId, true, false);
         if (boxMediaList == null || boxMediaList.isEmpty()) {
             log.error("No box media data found.");
             throw new EntityNotFoundException("Box media not found.");

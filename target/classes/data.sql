@@ -16,27 +16,27 @@ VALUES ('Azan', 'Ali', '$2a$12$wx4lDphOSYxnWtXvvBJ1n.a8A8HswN6nisl9NvSxJLDgBCG3i
 INSERT INTO country (name) VALUES ('Pakistan')
 ----
 ---- Populate the city's data
-INSERT INTO city (created_by,created_date,name,country_id) VALUES(2,'2022-12-08 21:41:46.6860000','Karachi',1);
-INSERT INTO city (created_by,created_date,name,country_id) VALUES(2,'2022-12-08 21:41:46.6860000','Hyderabad',1);
-INSERT INTO city (created_by,created_date,name,country_id) VALUES(2,'2022-12-08 21:41:46.6860000','Lahore',1);
-INSERT INTO city (created_by,created_date,name,country_id) VALUES(2,'2022-12-08 21:41:46.6860000','Multan',1);
-INSERT INTO city (created_by,created_date,name,country_id) VALUES(2,'2022-12-08 21:41:46.6860000','Islamabad',1);
-INSERT INTO city (created_by,created_date,name,country_id) VALUES(2,'2022-12-08 21:41:46.6860000','Quetta',1);
+INSERT INTO city (created_by,created_date,name,country_id,is_deleted) VALUES(2,'2022-12-08 21:41:46.6860000','Karachi',1,0);
+INSERT INTO city (created_by,created_date,name,country_id,is_deleted) VALUES(2,'2022-12-08 21:41:46.6860000','Hyderabad',1,0);
+INSERT INTO city (created_by,created_date,name,country_id,is_deleted) VALUES(2,'2022-12-08 21:41:46.6860000','Lahore',1,0);
+INSERT INTO city (created_by,created_date,name,country_id,is_deleted) VALUES(2,'2022-12-08 21:41:46.6860000','Multan',1,0);
+INSERT INTO city (created_by,created_date,name,country_id,is_deleted) VALUES(2,'2022-12-08 21:41:46.6860000','Islamabad',1,0);
+INSERT INTO city (created_by,created_date,name,country_id,is_deleted) VALUES(2,'2022-12-08 21:41:46.6860000','Quetta',1,0);
 ----
 ---- Populate the locality's data
-INSERT INTO locality (created_by,created_date,name,city_id) VALUES (2,'2022-12-08 21:41:46.6860000','Gulshan',1);
-INSERT INTO locality (created_by,created_date,name,city_id) VALUES (2,'2022-12-08 21:41:46.6860000','Johar',1);
-INSERT INTO locality (created_by,created_date,name,city_id) VALUES (2,'2022-12-08 21:41:46.6860000','Malir',1);
-INSERT INTO locality (created_by,created_date,name,city_id) VALUES (2,'2022-12-08 21:41:46.6860000','Nazimabad',1);
-INSERT INTO locality (created_by,created_date,name,city_id) VALUES (2,'2022-12-08 21:41:46.6860000','Maskan',1);
-INSERT INTO locality (created_by,created_date,name,city_id) VALUES (2,'2022-12-08 21:41:46.6860000','PECHS',1);
-INSERT INTO locality (created_by,created_date,name,city_id) VALUES (2,'2022-12-08 21:41:46.6860000','13D',1);
+INSERT INTO locality (created_by,created_date,name,city_id,is_deleted) VALUES (2,'2022-12-08 21:41:46.6860000','Gulshan',1,0);
+INSERT INTO locality (created_by,created_date,name,city_id,is_deleted) VALUES (2,'2022-12-08 21:41:46.6860000','Johar',1,0);
+INSERT INTO locality (created_by,created_date,name,city_id,is_deleted) VALUES (2,'2022-12-08 21:41:46.6860000','Malir',1,0);
+INSERT INTO locality (created_by,created_date,name,city_id,is_deleted) VALUES (2,'2022-12-08 21:41:46.6860000','Nazimabad',1,0);
+INSERT INTO locality (created_by,created_date,name,city_id,is_deleted) VALUES (2,'2022-12-08 21:41:46.6860000','Maskan',1,0);
+INSERT INTO locality (created_by,created_date,name,city_id,is_deleted) VALUES (2,'2022-12-08 21:41:46.6860000','PECHS',1,0);
+INSERT INTO locality (created_by,created_date,name,city_id,is_deleted) VALUES (2,'2022-12-08 21:41:46.6860000','13D',1,0);
 ----
 ---- Populate company's data
-INSERT INTO company (created_by,created_date,active,name) VALUES (2,'2022-12-08 21:41:46.6860000',1,'Fiber Strom');
-INSERT INTO company (created_by,created_date,active,name) VALUES (2,'2022-12-08 21:41:46.6860000',1,'Transworld');
-INSERT INTO company (created_by,created_date,active,name) VALUES (2,'2022-12-08 21:41:46.6860000',1,'Connect');
-INSERT INTO company (created_by,created_date,active,name) VALUES (2,'2022-12-08 21:41:46.6860000',1,'Click Pay');
+INSERT INTO company (created_by,created_date,active,name,is_deleted) VALUES (2,'2022-12-08 21:41:46.6860000',1,'Fiber Strom',0);
+INSERT INTO company (created_by,created_date,active,name,is_deleted) VALUES (2,'2022-12-08 21:41:46.6860000',1,'Transworld',0);
+INSERT INTO company (created_by,created_date,active,name,is_deleted) VALUES (2,'2022-12-08 21:41:46.6860000',1,'Connect',0);
+INSERT INTO company (created_by,created_date,active,name,is_deleted) VALUES (2,'2022-12-08 21:41:46.6860000',1,'Click Pay',0);
 ----
 ---- Populate connection_type's data
 INSERT INTO connection_type (created_by,created_date,active,type) VALUES (2,'2022-12-08 21:41:46.6860000',1,'Internet');
@@ -44,32 +44,32 @@ INSERT INTO connection_type (created_by,created_date,active,type) VALUES (2,'202
 INSERT INTO connection_type (created_by,created_date,active,type) VALUES (2,'2022-12-08 21:41:46.6860000',1,'Both');
 ----
 ----Populate sub_locality's data
-INSERT INTO sub_locality (created_by,created_date,name,locality_id) VALUES (2,'2022-12-08 21:41:46.6860000','Block 10',1);
-INSERT INTO sub_locality (created_by,created_date,name,locality_id) VALUES (2,'2022-12-08 21:41:46.6860000','Block 5',1);
-INSERT INTO sub_locality (created_by,created_date,name,locality_id) VALUES (2,'2022-12-08 21:41:46.6860000','Block 8',1);
-INSERT INTO sub_locality (created_by,created_date,name,locality_id) VALUES (2,'2022-12-08 21:41:46.6860000','Block 7',1);
-INSERT INTO sub_locality (created_by,created_date,name,locality_id) VALUES (2,'2022-12-08 21:41:46.6860000','Block 14',2);
-INSERT INTO sub_locality (created_by,created_date,name,locality_id) VALUES (2,'2022-12-08 21:41:46.6860000','Block 13',2);
-INSERT INTO sub_locality (created_by,created_date,name,locality_id) VALUES (2,'2022-12-08 21:41:46.6860000','Block 11',2);
+INSERT INTO sub_locality (created_by,created_date,name,locality_id,is_deleted) VALUES (2,'2022-12-08 21:41:46.6860000','Block 10',1,0);
+INSERT INTO sub_locality (created_by,created_date,name,locality_id,is_deleted) VALUES (2,'2022-12-08 21:41:46.6860000','Block 5',1,0);
+INSERT INTO sub_locality (created_by,created_date,name,locality_id,is_deleted) VALUES (2,'2022-12-08 21:41:46.6860000','Block 8',1,0);
+INSERT INTO sub_locality (created_by,created_date,name,locality_id,is_deleted) VALUES (2,'2022-12-08 21:41:46.6860000','Block 7',1,0);
+INSERT INTO sub_locality (created_by,created_date,name,locality_id,is_deleted) VALUES (2,'2022-12-08 21:41:46.6860000','Block 14',2,0);
+INSERT INTO sub_locality (created_by,created_date,name,locality_id,is_deleted) VALUES (2,'2022-12-08 21:41:46.6860000','Block 13',2,0);
+INSERT INTO sub_locality (created_by,created_date,name,locality_id,is_deleted) VALUES (2,'2022-12-08 21:41:46.6860000','Block 11',2,0);
 ---- Populate package's data
-INSERT INTO package (created_by,created_date,active,package_name,purchase_price,sale_price,company_id,connection_type_id)
-VALUES (2,'2022-12-08 21:41:46.6860000',1,'5 MB',1000,1400,1,1);
-INSERT INTO package (created_by,created_date,active,package_name,purchase_price,sale_price,company_id,connection_type_id)
-VALUES (2,'2022-12-08 21:41:46.6860000',1,'8 MB',1200,1600,1,1);
-INSERT INTO package (created_by,created_date,active,package_name,purchase_price,sale_price,company_id,connection_type_id)
-VALUES (2,'2022-12-08 21:41:46.6860000',1,'10 MB',1400,2000,1,1);
-INSERT INTO package (created_by,created_date,active,package_name,purchase_price,sale_price,company_id,connection_type_id)
-VALUES (2,'2022-12-08 21:41:46.6860000',1,'50 channels',200,300,1,2);
-INSERT INTO package (created_by,created_date,active,package_name,purchase_price,sale_price,company_id,connection_type_id)
-VALUES (2,'2022-12-08 21:41:46.6860000',1,'100 channels',350,500,1,2);
-INSERT INTO package (created_by,created_date,active,package_name,purchase_price,sale_price,company_id,connection_type_id)
-VALUES (2,'2022-12-08 21:41:46.6860000',1,'200 channels',500,800,1,2);
+INSERT INTO package (created_by,created_date,active,package_name,purchase_price,sale_price,company_id,connection_type_id,is_deleted)
+VALUES (2,'2022-12-08 21:41:46.6860000',1,'5 MB',1000,1400,1,1,0);
+INSERT INTO package (created_by,created_date,active,package_name,purchase_price,sale_price,company_id,connection_type_id,is_deleted)
+VALUES (2,'2022-12-08 21:41:46.6860000',1,'8 MB',1200,1600,1,1,0);
+INSERT INTO package (created_by,created_date,active,package_name,purchase_price,sale_price,company_id,connection_type_id,is_deleted)
+VALUES (2,'2022-12-08 21:41:46.6860000',1,'10 MB',1400,2000,1,1,0);
+INSERT INTO package (created_by,created_date,active,package_name,purchase_price,sale_price,company_id,connection_type_id,is_deleted)
+VALUES (2,'2022-12-08 21:41:46.6860000',1,'50 channels',200,300,1,2,0);
+INSERT INTO package (created_by,created_date,active,package_name,purchase_price,sale_price,company_id,connection_type_id,is_deleted)
+VALUES (2,'2022-12-08 21:41:46.6860000',1,'100 channels',350,500,1,2,0);
+INSERT INTO package (created_by,created_date,active,package_name,purchase_price,sale_price,company_id,connection_type_id,is_deleted)
+VALUES (2,'2022-12-08 21:41:46.6860000',1,'200 channels',500,800,1,2,0);
 ----
 ---- Populate box_media's data
-INSERT INTO box_media (created_by,created_date,active,box_number,nearby_location)
-VALUES (2,'2022-12-08 21:20:05.1410000',1,0,'Gulshan Block 10');
-INSERT INTO box_media (created_by,created_date,active,box_number,nearby_location)
-VALUES (2,'2022-12-08 21:20:05.1410000',1,25,'Johar Block 13');
+INSERT INTO box_media (created_by,created_date,active,box_number,nearby_location,is_deleted)
+VALUES (2,'2022-12-08 21:20:05.1410000',1,0,'Gulshan Block 10',0);
+INSERT INTO box_media (created_by,created_date,active,box_number,nearby_location,is_deleted)
+VALUES (2,'2022-12-08 21:20:05.1410000',1,25,'Johar Block 13',0);
 ----
 ---- Populate feature's data
 INSERT INTO feature (name, main_menu_name, main_url, active, value) VALUES ('', 'Dashboard', 'api/v1/dashboard', 1, 'DASHBOARD')

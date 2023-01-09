@@ -33,7 +33,7 @@ public class CityService implements ICityService{
             throw new BadRequestException("Provided city id should be a valid and non null value.");
         }
 
-        Optional<City> city = repo.findById(id);
+        Optional<City> city = repo.findByIdAndIsDeleted(id,false);
         if (city == null) {
             log.error("No city found with city id: "+id);
             throw new EntityNotFoundException("No city found with provided city id.");
@@ -64,7 +64,7 @@ public class CityService implements ICityService{
     @Override
     public List<City> findAllCityByUserId(Long userId) throws EntityNotFoundException {
         log.info("Fetching city list by user id: "+userId);
-        List<City> cityList = repo.findAllByCreatedBy(userId);
+        List<City> cityList = repo.findAllByCreatedByAndIsDeleted(userId,false);
         if (cityList == null || cityList.isEmpty()) {
             log.error("No city data found.");
             throw new EntityNotFoundException("City list not found.");

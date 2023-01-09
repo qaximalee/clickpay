@@ -32,7 +32,7 @@ public class PackageService implements IPackageService{
             log.error("Package id " + id + " is invalid.");
             throw new BadRequestException("Provided package id should be a valid and non null value.");
         }
-        Optional<Package> data = repo.findById(id);
+        Optional<Package> data = repo.findByIdAndIsDeleted(id, false);
         if (!data.isPresent()) {
             log.error("No package found with id: "+id);
             throw new EntityNotFoundException("No package found with provided city id.");
@@ -61,7 +61,7 @@ public class PackageService implements IPackageService{
     @Override
     public List<Package> findAllPackageByUserId(Long userId) throws EntityNotFoundException {
         log.info("Fetching all package for user id: "+userId);
-        List<Package> packageDataList = repo.findAllByCreatedBy(userId);
+        List<Package> packageDataList = repo.findAllByCreatedByAndIsDeleted(userId,false);
         if (packageDataList == null || packageDataList.isEmpty()) {
             log.error("No package data found.");
             throw new EntityNotFoundException("Package not found.");
