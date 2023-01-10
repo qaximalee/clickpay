@@ -1,19 +1,16 @@
 ---- Populate user type data
-INSERT INTO user_type (type) VALUES ('superadmin')
-INSERT INTO user_type (type) VALUES ('admin')
-INSERT INTO user_type (type) VALUES ('officer')
-INSERT INTO user_type (type) VALUES ('user')
+INSERT INTO user_type (type) VALUES ('superadmin');
+INSERT INTO user_type (type) VALUES ('admin');
+INSERT INTO user_type (type) VALUES ('officer');
+INSERT INTO user_type (type) VALUES ('user');
 ----
 ---- Password is password
-INSERT INTO users (first_name, last_name, password, email, username, verified, is_custom_permission, user_type_id, active)
-VALUES ('Muhammad', 'Asif', '$2a$12$wx4lDphOSYxnWtXvvBJ1n.a8A8HswN6nisl9NvSxJLDgBCG3iK3Ma', 'superadmin@mailinator.com', 'superadmin', 1, 0, 1, 1);
-INSERT INTO users (first_name, last_name, password, email, username, verified, is_custom_permission, user_type_id, active)
-VALUES ('Niaz', 'Ali', '$2a$12$wx4lDphOSYxnWtXvvBJ1n.a8A8HswN6nisl9NvSxJLDgBCG3iK3Ma', 'admin@mailinator.com', 'admin', 1, 0, 2, 1);
-INSERT INTO users (first_name, last_name, password, email, username, verified, is_custom_permission, user_type_id, active)
-VALUES ('Azan', 'Ali', '$2a$12$wx4lDphOSYxnWtXvvBJ1n.a8A8HswN6nisl9NvSxJLDgBCG3iK3Ma', 'officer@mailinator.com', 'officer', 1, 0, 3, 1);
+INSERT INTO users (first_name, last_name, password, email, username, verified, is_custom_permission, user_type_id, active) VALUES ('Muhammad', 'Asif', '$2a$12$wx4lDphOSYxnWtXvvBJ1n.a8A8HswN6nisl9NvSxJLDgBCG3iK3Ma', 'superadmin@mailinator.com', 'superadmin', 1, 0, 1, 1);
+INSERT INTO users (first_name, last_name, password, email, username, verified, is_custom_permission, user_type_id, active) VALUES ('Niaz', 'Ali', '$2a$12$wx4lDphOSYxnWtXvvBJ1n.a8A8HswN6nisl9NvSxJLDgBCG3iK3Ma', 'admin@mailinator.com', 'admin', 1, 0, 2, 1);
+INSERT INTO users (first_name, last_name, password, email, username, verified, is_custom_permission, user_type_id, active) VALUES ('Azan', 'Ali', '$2a$12$wx4lDphOSYxnWtXvvBJ1n.a8A8HswN6nisl9NvSxJLDgBCG3iK3Ma', 'officer@mailinator.com', 'officer', 1, 0, 3, 1);
 ----
 ---- Populate the country's data
-INSERT INTO country (name) VALUES ('Pakistan')
+INSERT INTO country (name) VALUES ('Pakistan');
 ----
 ---- Populate the city's data
 INSERT INTO city (created_by,created_date,name,country_id,is_deleted) VALUES(2,'2022-12-08 21:41:46.6860000','Karachi',1,0);
@@ -52,24 +49,16 @@ INSERT INTO sub_locality (created_by,created_date,name,locality_id,is_deleted) V
 INSERT INTO sub_locality (created_by,created_date,name,locality_id,is_deleted) VALUES (2,'2022-12-08 21:41:46.6860000','Block 13',2,0);
 INSERT INTO sub_locality (created_by,created_date,name,locality_id,is_deleted) VALUES (2,'2022-12-08 21:41:46.6860000','Block 11',2,0);
 ---- Populate package's data
-INSERT INTO package (created_by,created_date,active,package_name,purchase_price,sale_price,company_id,connection_type_id,is_deleted)
-VALUES (2,'2022-12-08 21:41:46.6860000',1,'5 MB',1000,1400,1,1,0);
-INSERT INTO package (created_by,created_date,active,package_name,purchase_price,sale_price,company_id,connection_type_id,is_deleted)
-VALUES (2,'2022-12-08 21:41:46.6860000',1,'8 MB',1200,1600,1,1,0);
-INSERT INTO package (created_by,created_date,active,package_name,purchase_price,sale_price,company_id,connection_type_id,is_deleted)
-VALUES (2,'2022-12-08 21:41:46.6860000',1,'10 MB',1400,2000,1,1,0);
-INSERT INTO package (created_by,created_date,active,package_name,purchase_price,sale_price,company_id,connection_type_id,is_deleted)
-VALUES (2,'2022-12-08 21:41:46.6860000',1,'50 channels',200,300,1,2,0);
-INSERT INTO package (created_by,created_date,active,package_name,purchase_price,sale_price,company_id,connection_type_id,is_deleted)
-VALUES (2,'2022-12-08 21:41:46.6860000',1,'100 channels',350,500,1,2,0);
-INSERT INTO package (created_by,created_date,active,package_name,purchase_price,sale_price,company_id,connection_type_id,is_deleted)
-VALUES (2,'2022-12-08 21:41:46.6860000',1,'200 channels',500,800,1,2,0);
+INSERT INTO package (created_by,created_date,active,package_name,purchase_price,sale_price,company_id,connection_type_id,is_deleted) VALUES (2,'2022-12-08 21:41:46.6860000',1,'5 MB',1000,1400,1,1,0);
+INSERT INTO package (created_by,created_date,active,package_name,purchase_price,sale_price,company_id,connection_type_id,is_deleted) VALUES (2,'2022-12-08 21:41:46.6860000',1,'8 MB',1200,1600,1,1,0);
+INSERT INTO package (created_by,created_date,active,package_name,purchase_price,sale_price,company_id,connection_type_id,is_deleted) VALUES (2,'2022-12-08 21:41:46.6860000',1,'10 MB',1400,2000,1,1,0);
+INSERT INTO package (created_by,created_date,active,package_name,purchase_price,sale_price,company_id,connection_type_id,is_deleted) VALUES (2,'2022-12-08 21:41:46.6860000',1,'50 channels',200,300,1,2,0);
+INSERT INTO package (created_by,created_date,active,package_name,purchase_price,sale_price,company_id,connection_type_id,is_deleted) VALUES (2,'2022-12-08 21:41:46.6860000',1,'100 channels',350,500,1,2,0);
+INSERT INTO package (created_by,created_date,active,package_name,purchase_price,sale_price,company_id,connection_type_id,is_deleted) VALUES (2,'2022-12-08 21:41:46.6860000',1,'200 channels',500,800,1,2,0);
 ----
 ---- Populate box_media's data
-INSERT INTO box_media (created_by,created_date,active,box_number,nearby_location,is_deleted)
-VALUES (2,'2022-12-08 21:20:05.1410000',1,0,'Gulshan Block 10',0);
-INSERT INTO box_media (created_by,created_date,active,box_number,nearby_location,is_deleted)
-VALUES (2,'2022-12-08 21:20:05.1410000',1,25,'Johar Block 13',0);
+INSERT INTO box_media (created_by,created_date,active,box_number,nearby_location,is_deleted) VALUES (2,'2022-12-08 21:20:05.1410000',1,0,'Gulshan Block 10',0);
+INSERT INTO box_media (created_by,created_date,active,box_number,nearby_location,is_deleted) VALUES (2,'2022-12-08 21:20:05.1410000',1,25,'Johar Block 13',0);
 ----
 ---- Populate feature's data
 INSERT INTO feature (name, main_menu_name, main_url, active, value) VALUES ('', 'Dashboard', 'api/v1/dashboard', 1, 'DASHBOARD')
@@ -122,52 +111,52 @@ INSERT INTO feature (name, main_menu_name, main_url, active, value)  VALUES ('Ch
 
 -- FOR SUPER ADMIN WE HAVE ALL ACCESS BY DEFAULT
 -- For ADMIN
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 1)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 2)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 3)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 4)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 5)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 6)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 7)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 8)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 9)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 10)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 11)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 12)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 13)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 14)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 15)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 16)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 17)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 18)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 19)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 20)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 21)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 22)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 23)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 24)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 25)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 26)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 27)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 28)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 29)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 30)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 31)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 32)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 33)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 34)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 35)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 36)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 37)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 38)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 39)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 40)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 41)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 42)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 43)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 44)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 44)
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 1);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 2);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 3);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 4);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 5);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 6);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 7);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 8);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 9);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 10);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 11);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 12);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 13);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 14);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 15);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 16);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 17);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 18);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 19);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 20);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 21);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 22);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 23);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 24);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 25);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 26);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 27);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 28);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 29);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 30);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 31);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 32);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 33);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 34);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 35);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 36);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 37);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 38);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 39);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 40);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 41);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 42);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 43);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 44);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 44);
 
 -- FOR OFFICER
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (3, 13)
-INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (3, 29)
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (3, 13);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (3, 29);
