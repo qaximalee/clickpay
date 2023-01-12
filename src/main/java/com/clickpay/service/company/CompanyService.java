@@ -1,10 +1,12 @@
 package com.clickpay.service.company;
 
 import com.clickpay.errors.general.BadRequestException;
+import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.general.EntityNotSavedException;
 import com.clickpay.model.company.Company;
 import com.clickpay.repository.company.CompanyRepository;
+import com.clickpay.service.validation.IValidationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +18,11 @@ import java.util.Optional;
 public class CompanyService implements ICompanyService {
 
     private final CompanyRepository repo;
+    private final IValidationService<Company> validationService;
 
-    public CompanyService(final CompanyRepository repo) {
+    public CompanyService(final CompanyRepository repo, IValidationService<Company> validationService) {
         this.repo = repo;
+        this.validationService = validationService;
     }
 
     @Override
@@ -37,18 +41,27 @@ public class CompanyService implements ICompanyService {
     }
 
     @Override
-    public Company save(Company company) throws EntityNotSavedException, BadRequestException {
+    public Company save(Company company) throws EntityNotSavedException, BadRequestException, EntityAlreadyExistException {
         log.info("Creating company.");
         if (company == null) {
             log.error("Company should not be null.");
             throw new BadRequestException("Company should not be null.");
         }
 
+        validationService.getRecords(
+                Company.class,
+                "name",
+                "createdBy",
+                company.getName(),
+                company.getCreatedBy(),
+                "Company name"+company.getName()+" already exists."
+        );
+
         try {
             company = repo.save(company);
             log.debug("Company with city id: "+company.getId()+ " created successfully.");
             return company;
-        } catch (Exception e) {
+        }catch (Exception e) {
             log.error("Company can not be saved.");
             throw new EntityNotSavedException("Company can not be saved.");
         }

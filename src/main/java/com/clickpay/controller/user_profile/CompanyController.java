@@ -1,9 +1,6 @@
 package com.clickpay.controller.user_profile;
 
-import com.clickpay.errors.general.BadRequestException;
-import com.clickpay.errors.general.EntityNotFoundException;
-import com.clickpay.errors.general.EntityNotSavedException;
-import com.clickpay.errors.general.PermissionException;
+import com.clickpay.errors.general.*;
 import com.clickpay.model.area.SubLocality;
 import com.clickpay.model.company.Company;
 import com.clickpay.model.user.User;
@@ -52,7 +49,7 @@ public class CompanyController extends ConnectionTypeController{
     public ResponseEntity createCompany(
             @NotBlank @RequestParam("name") String name,
             Principal principal)
-            throws BadRequestException, EntityNotFoundException, EntityNotSavedException, PermissionException {
+            throws BadRequestException, EntityNotFoundException, EntityNotSavedException, PermissionException, EntityAlreadyExistException {
         User user = authService.hasPermission(ControllerConstants.PACKAGE, principal);
         Message<Company> m = userProfileService.createCompany(name,  user);
         return ResponseEntity
@@ -82,7 +79,7 @@ public class CompanyController extends ConnectionTypeController{
     public ResponseEntity updateCompany(@NotBlank @RequestParam("name") String name,
                                         @NotNull @RequestParam("id") Long id,
                                         Principal principal)
-            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
+            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException, EntityAlreadyExistException {
         User user = authService.hasPermission(ControllerConstants.PACKAGE, principal);
         Message m = userProfileService.updateCompany(id, name, user);
         return ResponseEntity.ok().body(m);
@@ -92,7 +89,7 @@ public class CompanyController extends ConnectionTypeController{
     @DeleteMapping("/company/delete")
     public ResponseEntity<Message<Company>> deleteCompany(@NotNull @RequestParam("id") Long companyId,
                                                                   Principal principal)
-            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
+            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException, EntityAlreadyExistException {
         User user = authService.hasPermission(ControllerConstants.PACKAGE, principal);
         Message<Company> m = userProfileService.deleteCompany(companyId, user);
         return ResponseEntity.ok().body(m);

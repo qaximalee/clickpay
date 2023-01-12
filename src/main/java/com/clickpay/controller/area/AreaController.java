@@ -1,10 +1,7 @@
 package com.clickpay.controller.area;
 
 import com.clickpay.configuration.oauth.OAuth2ServerConfiguration;
-import com.clickpay.errors.general.BadRequestException;
-import com.clickpay.errors.general.EntityNotFoundException;
-import com.clickpay.errors.general.EntityNotSavedException;
-import com.clickpay.errors.general.PermissionException;
+import com.clickpay.errors.general.*;
 import com.clickpay.model.area.City;
 import com.clickpay.model.area.Locality;
 import com.clickpay.model.area.SubLocality;
@@ -62,7 +59,7 @@ public class AreaController {
                     required = true
             ) @NotNull @NotBlank @RequestParam("cityName") String name,
             Principal principal)
-            throws BadRequestException, EntityNotFoundException, EntityNotSavedException, PermissionException {
+            throws BadRequestException, EntityNotFoundException, EntityNotSavedException, PermissionException, EntityAlreadyExistException {
         User user = authService.hasPermission(ControllerConstants.CITY, principal);
         Message<City> m = service.createCity(name, COUNTRY_ID, user);
         return ResponseEntity
@@ -94,7 +91,7 @@ public class AreaController {
     public ResponseEntity updateCity(@NotNull @RequestParam("cityName") String cityName,
                                      @NotNull @RequestParam("cityId") Long cityId,
                                      Principal principal)
-            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
+            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException, EntityAlreadyExistException {
         User user = authService.hasPermission(ControllerConstants.CITY, principal);
         Message m = service.updateCity(cityId, cityName, user);
         return ResponseEntity.ok().body(m);
@@ -103,7 +100,7 @@ public class AreaController {
     @DeleteMapping("/city/delete")
     public ResponseEntity<Message<City>> deleteCity(@NotNull @RequestParam("cityId") Long cityId,
                                      Principal principal)
-            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
+            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException, EntityAlreadyExistException {
         User user = authService.hasPermission(ControllerConstants.CITY, principal);
         Message<City> m = service.deleteCity(cityId, user);
         return ResponseEntity.ok().body(m);
@@ -117,7 +114,7 @@ public class AreaController {
     public ResponseEntity createLocality(@NotNull @RequestParam("localityName") String name,
                                          @NotNull @RequestParam("cityId") Long cityId,
                                          Principal principal)
-            throws PermissionException, BadRequestException, EntityNotFoundException, EntityNotSavedException {
+            throws PermissionException, BadRequestException, EntityNotFoundException, EntityNotSavedException, EntityAlreadyExistException {
         User user = authService.hasPermission(ControllerConstants.LOCALITY, principal);
         Message<Locality> m = service.createLocality(name, cityId, user);
         return ResponseEntity
@@ -148,7 +145,7 @@ public class AreaController {
                                          @NotNull @RequestParam("localityId") Long localityId,
                                          @NotNull @RequestParam("cityId") Long cityId,
                                          Principal principal)
-            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
+            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException, EntityAlreadyExistException {
         User user = authService.hasPermission(ControllerConstants.LOCALITY, principal);
         Message m = service.updateLocality(localityId, localityName, cityId, user);
         return ResponseEntity.ok().body(m);
@@ -157,7 +154,7 @@ public class AreaController {
     @DeleteMapping("/locality/delete")
     public ResponseEntity<Message<Locality>> deleteLocality(@NotNull @RequestParam("localityId") Long localityId,
                                                     Principal principal)
-            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
+            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException, EntityAlreadyExistException {
         User user = authService.hasPermission(ControllerConstants.LOCALITY, principal);
         Message<Locality> m = service.deleteLocality(localityId, user);
         return ResponseEntity.ok().body(m);
@@ -171,7 +168,7 @@ public class AreaController {
     public ResponseEntity createSubLocality(@NotNull @RequestParam("subLocalityName") String name,
                                             @NotNull @RequestParam("localityId") Long localityId,
                                             Principal principal)
-            throws PermissionException, BadRequestException, EntityNotFoundException, EntityNotSavedException {
+            throws PermissionException, BadRequestException, EntityNotFoundException, EntityNotSavedException, EntityAlreadyExistException {
         User user = authService.hasPermission(ControllerConstants.SUB_LOCALITY, principal);
         Message<SubLocality> m = service.createSubLocality(name, localityId, user);
         return ResponseEntity
@@ -202,7 +199,7 @@ public class AreaController {
                                             @NotNull @RequestParam("subLocalityId") Long subLocalityId,
                                             @NotNull @RequestParam("localityId") Long localityId,
                                             Principal principal)
-            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
+            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException, EntityAlreadyExistException {
         User user = authService.hasPermission(ControllerConstants.SUB_LOCALITY, principal);
         Message m = service.updateSubLocality(subLocalityId, subLocalityName, localityId, user);
         return ResponseEntity.ok().body(m);
@@ -211,7 +208,7 @@ public class AreaController {
     @DeleteMapping("/sub-locality/delete")
     public ResponseEntity<Message<SubLocality>> deleteSubLocality(@NotNull @RequestParam("subLocalityId") Long subLocalityId,
                                                             Principal principal)
-            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
+            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException, EntityAlreadyExistException {
         User user = authService.hasPermission(ControllerConstants.SUB_LOCALITY, principal);
         Message<SubLocality> m = service.deleteSubLocality(subLocalityId, user);
         return ResponseEntity.ok().body(m);

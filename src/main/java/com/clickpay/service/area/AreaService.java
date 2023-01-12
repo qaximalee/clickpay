@@ -1,6 +1,7 @@
 package com.clickpay.service.area;
 
 import com.clickpay.errors.general.BadRequestException;
+import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.general.EntityNotSavedException;
 import com.clickpay.model.area.City;
@@ -49,7 +50,7 @@ public class AreaService implements IAreaService{
      *
      * */
     @Override
-    public Message<City> createCity(String name, Long countryId, User user) throws EntityNotFoundException, EntityNotSavedException, BadRequestException {
+    public Message<City> createCity(String name, Long countryId, User user) throws EntityNotFoundException, EntityNotSavedException, BadRequestException, EntityAlreadyExistException {
         log.info("City creation is started.");
 
         City city = new City();
@@ -90,7 +91,7 @@ public class AreaService implements IAreaService{
     }
 
     @Override
-    public Message updateCity(Long id, String name, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+    public Message updateCity(Long id, String name, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException, EntityAlreadyExistException {
         log.info("City updating with name: " + name);
 
         City city = cityService.findById(id);
@@ -109,7 +110,7 @@ public class AreaService implements IAreaService{
     }
 
     @Override
-    public Message<City> deleteCity(Long id, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+    public Message<City> deleteCity(Long id, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException, EntityAlreadyExistException {
         log.info("Deleting city of id : " + id);
 
         City city = cityService.findById(id);
@@ -133,7 +134,7 @@ public class AreaService implements IAreaService{
      *
      * */
     @Override
-    public Message createLocality(String name, Long cityId, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+    public Message createLocality(String name, Long cityId, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException, EntityAlreadyExistException {
         log.info("Locality creation is started.");
 
         City city = cityService.findById(cityId);
@@ -176,7 +177,7 @@ public class AreaService implements IAreaService{
     }
 
     @Override
-    public Message updateLocality(Long id, String name, Long cityId, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+    public Message updateLocality(Long id, String name, Long cityId, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException, EntityAlreadyExistException {
         log.info("Locality updating with name: " + name);
 
         Locality locality = localityService.findById(id);
@@ -196,7 +197,7 @@ public class AreaService implements IAreaService{
     }
 
     @Override
-    public Message<Locality> deleteLocality(Long id, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+    public Message<Locality> deleteLocality(Long id, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException, EntityAlreadyExistException {
         log.info("Deleting locality of id : " + id);
 
         Locality locality = localityService.findById(id);
@@ -220,7 +221,7 @@ public class AreaService implements IAreaService{
      *
      * */
     @Override
-    public Message<SubLocality> createSubLocality(String name, Long localityId, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+    public Message<SubLocality> createSubLocality(String name, Long localityId, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException, EntityAlreadyExistException {
         log.info("Locality creation is started.");
 
         Locality locality = localityService.findById(localityId);
@@ -263,7 +264,7 @@ public class AreaService implements IAreaService{
     }
 
     @Override
-    public Message updateSubLocality(Long id, String name, Long localityId, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+    public Message updateSubLocality(Long id, String name, Long localityId, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException, EntityAlreadyExistException {
         log.info("Sub locality updating with name: " + name);
 
         SubLocality subLocality = subLocalityService.findById(id);
@@ -283,7 +284,7 @@ public class AreaService implements IAreaService{
     }
 
     @Override
-    public Message<SubLocality> deleteSubLocality(Long id, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+    public Message<SubLocality> deleteSubLocality(Long id, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException, EntityAlreadyExistException {
         log.info("Deleting SubLocality of id : " + id);
 
         SubLocality subLocality = subLocalityService.findById(id);

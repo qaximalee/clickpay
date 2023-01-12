@@ -67,7 +67,7 @@ public class UserProfileService implements IUserProfileService {
 
     @Override
     public Message<Company> createCompany(String name, User user)
-            throws EntityNotSavedException, BadRequestException {
+            throws EntityNotSavedException, BadRequestException, EntityAlreadyExistException {
         log.info("Company creation is started.");
 
         Company company = new Company();
@@ -98,7 +98,7 @@ public class UserProfileService implements IUserProfileService {
 
     @Override
     public Message updateCompany(Long id, String name, User user)
-            throws BadRequestException, EntityNotSavedException, EntityNotFoundException {
+            throws BadRequestException, EntityNotSavedException, EntityNotFoundException, EntityAlreadyExistException {
         log.info("Company updating with company name: " + name);
 
         Company company = companyService.findById(id);
@@ -120,7 +120,7 @@ public class UserProfileService implements IUserProfileService {
 
     @Override
     public Message<Company> deleteCompany(Long id, User user)
-            throws BadRequestException, EntityNotSavedException, EntityNotFoundException {
+            throws BadRequestException, EntityNotSavedException, EntityNotFoundException, EntityAlreadyExistException {
         log.info("Company deleting with company id : " + id);
 
         Company company = companyService.findById(id);
@@ -155,7 +155,7 @@ public class UserProfileService implements IUserProfileService {
 
     @Override
     public Message createBoxMedia(String boxNumber, String nearbyLocation, User user)
-            throws EntityNotSavedException, BadRequestException {
+            throws EntityNotSavedException, BadRequestException, EntityAlreadyExistException {
         log.info("Box media creation is started.");
 
         BoxMedia boxMedia = new BoxMedia();
@@ -187,7 +187,7 @@ public class UserProfileService implements IUserProfileService {
 
     @Override
     public Message updateBoxMedia(Long id, String boxNumber, String nearbyLocation, User user)
-            throws BadRequestException, EntityNotSavedException, EntityNotFoundException {
+            throws BadRequestException, EntityNotSavedException, EntityNotFoundException, EntityAlreadyExistException {
         log.info("Box media updating with box number: " + boxNumber);
 
         BoxMedia boxMedia = boxMediaService.findById(id);
@@ -209,7 +209,7 @@ public class UserProfileService implements IUserProfileService {
 
     @Override
     public Message<BoxMedia> deleteBoxMedia(Long id, User user)
-            throws BadRequestException, EntityNotSavedException, EntityNotFoundException {
+            throws BadRequestException, EntityNotSavedException, EntityNotFoundException, EntityAlreadyExistException {
         log.info("Box media deleting with boxMedia id: " + id);
 
         BoxMedia boxMedia = boxMediaService.findById(id);
@@ -308,7 +308,7 @@ public class UserProfileService implements IUserProfileService {
 
     @Override
     public Message<Package> createPackage(PackageRequest packageRequest, User user)
-            throws EntityNotSavedException, BadRequestException, EntityNotFoundException {
+            throws EntityNotSavedException, BadRequestException, EntityNotFoundException, EntityAlreadyExistException {
         log.info("Package creation is started.");
 
         Company company = companyService.findById(packageRequest.getCompanyId());
@@ -347,7 +347,7 @@ public class UserProfileService implements IUserProfileService {
 
     @Override
     public Message updatePackage(PackageRequest packageRequest, User user)
-            throws BadRequestException, EntityNotSavedException, EntityNotFoundException {
+            throws BadRequestException, EntityNotSavedException, EntityNotFoundException, EntityAlreadyExistException {
         log.info("Package updating with package name: " + packageRequest.getPackageName());
 
         Package packageData = packageService.findById(packageRequest.getId());
@@ -376,7 +376,7 @@ public class UserProfileService implements IUserProfileService {
 
     @Override
     public Message<Package> deletePackage(Long packageId, User user)
-            throws BadRequestException, EntityNotSavedException, EntityNotFoundException {
+            throws BadRequestException, EntityNotSavedException, EntityNotFoundException, EntityAlreadyExistException {
         log.info("Package deleting with package id : " + packageId);
 
         Package packageData = packageService.findById(packageId);
