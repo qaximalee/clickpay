@@ -31,7 +31,7 @@ public class LocalityService implements ILocalityService{
         }
 
         Optional<Locality> locality = repo.findByIdAndIsDeleted(id,false);
-        if (locality == null) {
+        if (!locality.isPresent()) {
             log.error("No locality found with locality id: "+id);
             throw new EntityNotFoundException("No locality found with provided locality id.");
         }

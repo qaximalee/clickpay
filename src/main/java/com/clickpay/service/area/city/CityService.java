@@ -34,7 +34,7 @@ public class CityService implements ICityService{
         }
 
         Optional<City> city = repo.findByIdAndIsDeleted(id,false);
-        if (city == null) {
+        if (!city.isPresent()) {
             log.error("No city found with city id: "+id);
             throw new EntityNotFoundException("No city found with provided city id.");
         }

@@ -32,7 +32,7 @@ public class SubLocalityService implements ISubLocalityService {
         }
 
         Optional<SubLocality> subLocality = repo.findByIdAndIsDeleted(id, false);
-        if (subLocality == null) {
+        if (!subLocality.isPresent()) {
             log.error("No sub locality found with city id: "+id);
             throw new EntityNotFoundException("No sub locality found with provided city id.");
         }

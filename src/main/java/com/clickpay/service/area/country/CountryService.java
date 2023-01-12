@@ -29,7 +29,7 @@ public class CountryService implements ICountryService{
         }
 
         Optional<Country> country = repo.findById(id);
-        if (country == null) {
+        if (!country.isPresent()) {
             log.error("No country found with city id: "+id);
             throw new EntityNotFoundException("No country found with provided city id.");
         }

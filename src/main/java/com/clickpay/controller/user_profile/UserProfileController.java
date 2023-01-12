@@ -166,7 +166,7 @@ public class UserProfileController extends CompanyController {
     }
 
     @DeleteMapping("/package/delete")
-    public ResponseEntity<Message<Package>> deletePackage(@NotNull @PathVariable("id") Long id,
+    public ResponseEntity<Message<Package>> deletePackage(@NotNull @RequestParam("id") Long id,
                                         Principal principal)
             throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
         User user = authService.hasPermission(ControllerConstants.PACKAGE, principal);
