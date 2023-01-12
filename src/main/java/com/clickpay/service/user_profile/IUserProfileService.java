@@ -18,29 +18,29 @@ public interface IUserProfileService {
     Message findCompanyById(Long id) throws BadRequestException, EntityNotFoundException;
 
     Message createCompany(String name, User user)
-            throws EntityNotFoundException, EntityNotSavedException, BadRequestException;
+            throws EntityNotFoundException, EntityNotSavedException, BadRequestException, EntityAlreadyExistException;
 
     Message findAllCompaniesByUserId(Long userId) throws EntityNotFoundException;
 
     Message updateCompany(Long id, String name, User user)
-            throws BadRequestException, EntityNotSavedException, EntityNotFoundException;
+            throws BadRequestException, EntityNotSavedException, EntityNotFoundException, EntityAlreadyExistException;
 
     Message<Company> deleteCompany(Long id, User user)
-            throws BadRequestException, EntityNotSavedException, EntityNotFoundException;
+            throws BadRequestException, EntityNotSavedException, EntityNotFoundException, EntityAlreadyExistException;
 
     // BoxMedia CRUD
     Message findBoxMediaById(Long id) throws BadRequestException, EntityNotFoundException;
 
     Message createBoxMedia(String boxNumber, String nearbyLocation, User user)
-            throws EntityNotFoundException, EntityNotSavedException, BadRequestException;
+            throws EntityNotFoundException, EntityNotSavedException, BadRequestException, EntityAlreadyExistException;
 
     Message findAllBoxMediaByUserId(Long userId) throws EntityNotFoundException;
 
     Message updateBoxMedia(Long id, String boxNumber, String nearbyLocation, User user)
-            throws BadRequestException, EntityNotSavedException, EntityNotFoundException;
+            throws BadRequestException, EntityNotSavedException, EntityNotFoundException, EntityAlreadyExistException;
 
     Message<BoxMedia> deleteBoxMedia(Long id, User user)
-            throws BadRequestException, EntityNotSavedException, EntityNotFoundException;
+            throws BadRequestException, EntityNotSavedException, EntityNotFoundException, EntityAlreadyExistException;
 
     // ConnectionType CRUD
     Message findConnectionTypeById(Long id) throws BadRequestException, EntityNotFoundException;
@@ -57,15 +57,15 @@ public interface IUserProfileService {
     Message findPackageById(Long id) throws BadRequestException, EntityNotFoundException;
 
     Message createPackage(PackageRequest packageRequest, User user)
-            throws EntityNotSavedException, BadRequestException, EntityNotFoundException;
+            throws EntityNotSavedException, BadRequestException, EntityNotFoundException, EntityAlreadyExistException;
 
     Message findAllPackageByUserId(Long userId) throws EntityNotFoundException;
 
     Message updatePackage(PackageRequest packageRequest, User user)
-            throws BadRequestException, EntityNotSavedException, EntityNotFoundException;
+            throws BadRequestException, EntityNotSavedException, EntityNotFoundException, EntityAlreadyExistException;
 
     Message<Package> deletePackage(Long packageId, User user)
-            throws BadRequestException, EntityNotSavedException, EntityNotFoundException;
+            throws BadRequestException, EntityNotSavedException, EntityNotFoundException, EntityAlreadyExistException;
 
     // Customer CRUD
     Message createCustomer(CustomerRequest dto, User user) throws PermissionException, BadRequestException, EntityNotFoundException, EntityNotSavedException, EntityAlreadyExistException;

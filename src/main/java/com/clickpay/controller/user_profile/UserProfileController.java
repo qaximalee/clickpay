@@ -71,7 +71,7 @@ public class UserProfileController extends CompanyController {
                     required = false
             ) @NotNull @NotBlank @RequestParam("nearbyLocation") String nearbyLocation,
             Principal principal)
-            throws BadRequestException, EntityNotFoundException, EntityNotSavedException, PermissionException {
+            throws BadRequestException, EntityNotFoundException, EntityNotSavedException, PermissionException, EntityAlreadyExistException {
         User user = authService.hasPermission(ControllerConstants.BOX_MEDIA, principal);
         Message<BoxMedia> m = userProfileService.createBoxMedia(boxNumber, nearbyLocation, user);
         return ResponseEntity
@@ -102,7 +102,7 @@ public class UserProfileController extends CompanyController {
                                          @RequestParam("nearbyLocation") String nearbyLocation,
                                          @NotNull @RequestParam("boxMediaId") Long boxMediaId,
                                          Principal principal)
-            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
+            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException, EntityAlreadyExistException {
         User user = authService.hasPermission(ControllerConstants.BOX_MEDIA, principal);
         Message m = userProfileService.updateBoxMedia(boxMediaId, boxNumber, nearbyLocation, user);
         return ResponseEntity.ok().body(m);
@@ -111,7 +111,7 @@ public class UserProfileController extends CompanyController {
     @DeleteMapping("/box-media/delete")
     public ResponseEntity<Message<BoxMedia>> deleteBoxMedia(@NotNull @RequestParam("boxMediaId") Long boxMediaId,
                                          Principal principal)
-            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
+            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException, EntityAlreadyExistException {
         User user = authService.hasPermission(ControllerConstants.BOX_MEDIA, principal);
         Message<BoxMedia> m = userProfileService.deleteBoxMedia(boxMediaId, user);
         return ResponseEntity.ok().body(m);
@@ -130,7 +130,7 @@ public class UserProfileController extends CompanyController {
     public ResponseEntity createPackage(
             @Valid @RequestBody PackageRequest dto,
             Principal principal)
-            throws BadRequestException, EntityNotFoundException, EntityNotSavedException, PermissionException {
+            throws BadRequestException, EntityNotFoundException, EntityNotSavedException, PermissionException, EntityAlreadyExistException {
         User user = authService.hasPermission(ControllerConstants.PACKAGE, principal);
         Message<Package> m = userProfileService.createPackage(dto, user);
         return ResponseEntity
@@ -159,7 +159,7 @@ public class UserProfileController extends CompanyController {
     @PutMapping("/package")
     public ResponseEntity updatePackage(@Valid @RequestBody PackageRequest dto,
                                         Principal principal)
-            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
+            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException, EntityAlreadyExistException {
         User user = authService.hasPermission(ControllerConstants.PACKAGE, principal);
         Message m = userProfileService.updatePackage(dto, user);
         return ResponseEntity.ok().body(m);
@@ -168,7 +168,7 @@ public class UserProfileController extends CompanyController {
     @DeleteMapping("/package/delete")
     public ResponseEntity<Message<Package>> deletePackage(@NotNull @PathVariable("id") Long id,
                                         Principal principal)
-            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
+            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException, EntityAlreadyExistException {
         User user = authService.hasPermission(ControllerConstants.PACKAGE, principal);
         Message<Package> m = userProfileService.deletePackage(id, user);
         return ResponseEntity.ok().body(m);

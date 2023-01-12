@@ -1,11 +1,14 @@
 package com.clickpay.service.user_profile.box_media;
 
 import com.clickpay.errors.general.BadRequestException;
+import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.general.EntityNotSavedException;
+import com.clickpay.model.area.SubLocality;
 import com.clickpay.model.user_profile.BoxMedia;
 import com.clickpay.repository.user_profile.BoxMediaRepository;
 import com.clickpay.service.user.IUserService;
+import com.clickpay.service.validation.IValidationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +21,13 @@ public class BoxMediaService implements IBoxMediaService{
 
     private final IUserService userService;
     private final BoxMediaRepository repo;
+    private final IValidationService<BoxMedia> validationService;
 
     public BoxMediaService(final IUserService userService,
-                           final BoxMediaRepository repo) {
+                           final BoxMediaRepository repo, IValidationService<BoxMedia> validationService) {
         this.userService = userService;
         this.repo = repo;
+        this.validationService = validationService;
     }
 
     @Override
@@ -41,12 +46,21 @@ public class BoxMediaService implements IBoxMediaService{
     }
 
     @Override
-    public BoxMedia save(BoxMedia boxMedia) throws EntityNotSavedException, BadRequestException {
+    public BoxMedia save(BoxMedia boxMedia) throws EntityNotSavedException, BadRequestException, EntityAlreadyExistException {
         log.info("Creating box media.");
         if (boxMedia == null) {
             log.error("Box media should not be null.");
             throw new BadRequestException("Box media should not be null.");
         }
+
+        validationService.getRecords(
+                BoxMedia.class,
+                "boxNumber",
+                "createdBy",
+                boxMedia.getBoxNumber(),
+                boxMedia.getCreatedBy(),
+                "Box media number: "+boxMedia.getBoxNumber()+" already exists."
+        );
 
         try {
             boxMedia = repo.save(boxMedia);

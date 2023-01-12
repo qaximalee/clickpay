@@ -1,10 +1,13 @@
 package com.clickpay.service.area.city;
 
 import com.clickpay.errors.general.BadRequestException;
+import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.general.EntityNotSavedException;
 import com.clickpay.model.area.City;
+import com.clickpay.model.company.Company;
 import com.clickpay.repository.area.CityRepository;
+import com.clickpay.service.validation.IValidationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,10 +21,12 @@ import java.util.Optional;
 public class CityService implements ICityService{
 
     private final CityRepository repo;
+    private final IValidationService<City> validationService;
 
     @Autowired
-    public CityService(final CityRepository repo) {
+    public CityService(final CityRepository repo, IValidationService<City> validationService) {
         this.repo = repo;
+        this.validationService = validationService;
     }
 
     @Transactional(readOnly = true)
@@ -34,21 +39,30 @@ public class CityService implements ICityService{
         }
 
         Optional<City> city = repo.findByIdAndIsDeleted(id,false);
-        if (city == null) {
+
+        return city.orElseThrow(() -> {
             log.error("No city found with city id: "+id);
-            throw new EntityNotFoundException("No city found with provided city id.");
-        }
-        return city.get();
+            return new EntityNotFoundException("No city found with provided city id.");
+        });
     }
 
     @Transactional
     @Override
-    public City save(City city) throws EntityNotSavedException, BadRequestException {
+    public City save(City city) throws EntityNotSavedException, BadRequestException, EntityAlreadyExistException {
         log.info("Saving city.");
         if (city == null) {
             log.error("City should not be null.");
             throw new BadRequestException("City should not be null.");
         }
+
+        validationService.getRecords(
+                City.class,
+                "name",
+                "createdBy",
+                city.getName(),
+                city.getCreatedBy(),
+                "City name: "+city.getName()+" already exists."
+        );
 
         try {
             city = repo.save(city);
