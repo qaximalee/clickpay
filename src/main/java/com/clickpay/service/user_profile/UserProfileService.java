@@ -1,9 +1,6 @@
 package com.clickpay.service.user_profile;
 
-import com.clickpay.dto.user_profile.customer.PaginatedCustomersInUserCollectionRequest;
-import com.clickpay.dto.user_profile.customer.CustomerFilterAndPaginationRequest;
-import com.clickpay.dto.user_profile.customer.CustomerFilterAndPaginationResponse;
-import com.clickpay.dto.user_profile.customer.CustomerRequest;
+import com.clickpay.dto.user_profile.customer.*;
 import com.clickpay.dto.user_profile.packages.PackageRequest;
 import com.clickpay.errors.general.*;
 import com.clickpay.model.company.Company;
@@ -423,7 +420,7 @@ public class UserProfileService implements IUserProfileService {
     @Override
     public Message findAllCustomerByUserId(Long userId) throws EntityNotFoundException {
         return new Message()
-                .setData(customerService.findAllCustomerById(userId))
+                .setData(CustomerResponse.mapListOfCustomer(customerService.findAllCustomerById(userId)))
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
                 .setMessage("Customer list " + ResponseMessage.FETCHED_MESSAGE_SUCCESS);

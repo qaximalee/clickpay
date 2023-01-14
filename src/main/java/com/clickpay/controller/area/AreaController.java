@@ -1,6 +1,5 @@
 package com.clickpay.controller.area;
 
-import com.clickpay.configuration.oauth.OAuth2ServerConfiguration;
 import com.clickpay.errors.general.*;
 import com.clickpay.model.area.City;
 import com.clickpay.model.area.Locality;
@@ -8,28 +7,19 @@ import com.clickpay.model.area.SubLocality;
 import com.clickpay.model.user.User;
 import com.clickpay.service.area.IAreaService;
 import com.clickpay.service.auth.IAuthService;
-import com.clickpay.utils.ResponseMessage;
 import com.clickpay.utils.Message;
 import com.clickpay.utils.ControllerConstants;
 import com.sun.istack.NotNull;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
-import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.spi.service.contexts.SecurityContext;
 
 import javax.validation.constraints.NotBlank;
 import java.net.URI;
 import java.security.Principal;
-import java.security.Security;
-
-import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 
 @RequiredArgsConstructor
 @RestController

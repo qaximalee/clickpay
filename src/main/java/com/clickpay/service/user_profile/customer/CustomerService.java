@@ -206,7 +206,7 @@ public class CustomerService implements ICustomerService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<CustomerResponse> findAllCustomerById(Long userId) throws EntityNotFoundException {
+    public List<Customer> findAllCustomerById(Long userId) throws EntityNotFoundException {
         log.info("Fetching all customer for user id: " + userId);
         List<Customer> data = repo.findAllByCreatedBy(userId);
         if (data == null || data.isEmpty()) {
@@ -214,7 +214,7 @@ public class CustomerService implements ICustomerService {
             throw new EntityNotFoundException("Customer not found.");
         }
 
-        return CustomerResponse.mapListOfCustomer(data);
+        return data;
     }
 
     // for unpaid collections

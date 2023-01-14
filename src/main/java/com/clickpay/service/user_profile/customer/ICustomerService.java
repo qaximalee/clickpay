@@ -24,7 +24,7 @@ public interface ICustomerService {
     Customer findById(Long id) throws BadRequestException, EntityNotFoundException;
 
     @Transactional(readOnly = true)
-    List<CustomerResponse> findAllCustomerById(Long userId) throws EntityNotFoundException;
+    List<Customer> findAllCustomerById(Long userId) throws EntityNotFoundException;
 
     // for unpaid collections
     @Transactional(readOnly = true)

@@ -1,4 +1,4 @@
-package com.clickpay.dto.transaction;
+package com.clickpay.dto.transaction.user_collection;
 
 import lombok.Getter;
 import lombok.Setter;

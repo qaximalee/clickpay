@@ -1,7 +1,7 @@
 package com.clickpay.service.transaction.user_collection;
 
-import com.clickpay.dto.transaction.UserCollectionRequest;
-import com.clickpay.dto.transaction.UserCollectionStatusUpdateAsPaidDTO;
+import com.clickpay.dto.transaction.user_collection.UserCollectionRequest;
+import com.clickpay.dto.transaction.user_collection.UserCollectionStatusUpdateAsPaidDTO;
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
