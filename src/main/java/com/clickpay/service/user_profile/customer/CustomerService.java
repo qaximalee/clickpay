@@ -217,6 +217,32 @@ public class CustomerService implements ICustomerService {
         return data;
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public List<Customer> findAllCustomerByIdAndConnectionTypeId(Long userId, Long connectionTypeId) throws EntityNotFoundException {
+        log.info("Fetching all customer for user id: " + userId + " and connection Type Id : "+connectionTypeId);
+        List<Customer> data = repo.findAllByCreatedByAndConnectionType_Id(userId,connectionTypeId);
+        if (data == null || data.isEmpty()) {
+            log.error("No customer data found.");
+            throw new EntityNotFoundException("Customer not found.");
+        }
+
+        return data;
+    }
+
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Customer> findAllCustomerByIdAndConnectionTypeIdAndSubLocalityId(Long userId, Long connectionTypeId, Long subLocalityId) throws EntityNotFoundException {
+        log.info("Fetching all customer for user id : " + userId + " and connection Type Id : "+connectionTypeId+ " and subLocality id : " + subLocalityId);
+        List<Customer> data = repo.findAllByCreatedByAndConnectionType_IdAndSubLocality_Id(userId,connectionTypeId,subLocalityId);
+        if (data == null || data.isEmpty()) {
+            log.error("No customer data found.");
+            throw new EntityNotFoundException("Customer not found.");
+        }
+        return data;
+    }
+
     // for unpaid collections
     @Transactional(readOnly = true)
     @Override

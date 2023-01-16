@@ -3,10 +3,12 @@ package com.clickpay.service.transaction.bills_creator;
 import com.clickpay.dto.transaction.bills_creator.BillsCreatorRequest;
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityNotFoundException;
+import com.clickpay.model.area.SubLocality;
 import com.clickpay.model.bills_creator.BillsCreator;
 import com.clickpay.model.connection_type.ConnectionType;
 import com.clickpay.model.user.User;
 import com.clickpay.repository.bills_creator.BillsCreatorRepository;
+import com.clickpay.service.area.sub_locality.ISubLocalityService;
 import com.clickpay.service.connection_type.IConnectionTypeService;
 import com.clickpay.utils.Message;
 import com.clickpay.utils.enums.Months;
@@ -23,6 +25,7 @@ import java.util.Date;
 public class BillsCreatorService implements IBillsCreatorService{
     private final BillsCreatorRepository repo;
     private final IConnectionTypeService connectionTypeService;
+    private final ISubLocalityService subLocalityService;
 
     @Transactional
     @Override
@@ -33,6 +36,10 @@ public class BillsCreatorService implements IBillsCreatorService{
 
         billsCreator.setAmount(request.getAmount());
         billsCreator.setConnectionType(connectionType);
+        if(request.getSubLocality()!=null){
+            SubLocality subLocality = subLocalityService.findById(request.getSubLocality());
+            billsCreator.setSubLocality(subLocality);
+        }
         billsCreator.setMonth(Months.of(request.getMonth()));
         billsCreator.setYear(request.getYear());
         billsCreator.setNoOfUsers(request.getNoOfUsers());

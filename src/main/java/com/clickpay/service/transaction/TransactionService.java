@@ -27,6 +27,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.Column;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -125,7 +126,14 @@ public class TransactionService implements ITransactionService{
     @Override
     public Message<BillsCreator> createBillsCreator(BillsCreatorRequest requestDto, User user) throws EntityNotFoundException, EntityAlreadyExistException, BadRequestException, EntityNotSavedException {
         log.info("Creating bills creator by requested data.");
-        List<Customer> customers = customerService.findAllCustomerById(user.getId());
+        List<Customer> customers;
+        if (requestDto.getSubLocality() == null){
+            customers = customerService.findAllCustomerByIdAndConnectionTypeId(user.getId(), requestDto.getConnectionType());
+        }else {
+            customers = customerService.findAllCustomerByIdAndConnectionTypeIdAndSubLocalityId(user.getId(),
+                    requestDto.getConnectionType(), requestDto.getSubLocality());
+        }
+
         double totalAmount = 0;
 
         for(Customer customer : customers){
