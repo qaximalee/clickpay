@@ -53,4 +53,8 @@ public class BillsCreatorService implements IBillsCreatorService{
         return billsCreator;
 
     }
+
+    private void checkBillCreatorValid(BillsCreatorRequest request, User user){
+        BillsCreator billsCreator = repo.existsBillCreator(user.getId(),request.getSubLocality(),request.getConnectionType(),request.getMonth(),request.getYear());
+    }
 }
