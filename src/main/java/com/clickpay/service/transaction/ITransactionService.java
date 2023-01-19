@@ -12,6 +12,8 @@ import com.clickpay.model.bills_creator.BillsCreator;
 import com.clickpay.model.user.User;
 import com.clickpay.utils.Message;
 
+import java.util.List;
+
 public interface ITransactionService {
     Message<UserCollectionResponse> createUserCollection(UserCollectionRequest requestDto, User user) throws EntityAlreadyExistException, BadRequestException, EntityNotFoundException, EntityNotSavedException;
 
@@ -26,6 +28,10 @@ public interface ITransactionService {
 
     Message<BillsCreator> createBillsCreator(BillsCreatorRequest requestDto, User user) throws EntityNotFoundException, EntityAlreadyExistException, BadRequestException, EntityNotSavedException;
 
+    Message<List<BillsCreator>> getAllBillCreatorsByUserId(Long userId) throws BadRequestException, EntityNotFoundException, EntityNotSavedException;
+
+    Message<BillsCreator> deleteBillCreator(Long billCreatorId, User user) throws EntityNotFoundException, EntityNotSavedException;
+
     // find of customers in user collection
-   // Message<PaginatedUserCollectionResponse> getAllUserOfCollections(PaginatedUserCollectionRequest request, User user);
+    //Message<PaginatedUserCollectionResponse> getAllUserOfCollections(PaginatedUserCollectionRequest request, User user);
 }

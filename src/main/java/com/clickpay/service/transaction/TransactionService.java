@@ -4,7 +4,6 @@ import com.clickpay.dto.transaction.bills_creator.BillsCreatorRequest;
 import com.clickpay.dto.transaction.user_collection.UserCollectionRequest;
 import com.clickpay.dto.transaction.user_collection.UserCollectionResponse;
 import com.clickpay.dto.transaction.user_collection.UserCollectionStatusUpdateAsPaidDTO;
-import com.clickpay.dto.user_profile.customer.CustomerResponse;
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
@@ -14,20 +13,15 @@ import com.clickpay.model.user.User;
 import com.clickpay.model.user_profile.Customer;
 import com.clickpay.service.transaction.bills_creator.IBillsCreatorService;
 import com.clickpay.service.transaction.user_collection.IUserCollectionService;
-import com.clickpay.service.user_profile.IUserProfileService;
 import com.clickpay.service.user_profile.customer.ICustomerService;
 import com.clickpay.utils.Message;
-import com.clickpay.utils.enums.PaymentMethod;
 import com.clickpay.utils.enums.PaymentType;
 import com.clickpay.utils.enums.UserCollectionStatus;
-import jdk.nashorn.internal.codegen.FieldObjectCreator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.Column;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -157,6 +151,28 @@ public class TransactionService implements ITransactionService{
                 .setCode(HttpStatus.OK.toString())
                 .setMessage("Bills Creator Created Successfully.")
                 .setData(response);
+    }
+
+    @Override
+    public Message<List<BillsCreator>> getAllBillCreatorsByUserId(Long userId) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+        log.info("Fetching bills creator by user id.");
+
+        return new Message<List<BillsCreator>>()
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("Bills Creator by user id Fetched Successfully.")
+                .setData(billsCreatorService.getAllBillCreatorsByUserId(userId));
+    }
+
+    @Override
+    public Message<BillsCreator> deleteBillCreator(Long billCreatorId, User user) throws EntityNotFoundException, EntityNotSavedException {
+        log.info("Deleting bills creator.");
+
+        return new Message<BillsCreator>()
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("Bills Creator Deleted Successfully.")
+                .setData(billsCreatorService.deleteBillCreators(billCreatorId,user));
     }
 
 }

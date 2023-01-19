@@ -8,8 +8,16 @@ import com.clickpay.model.user.User;
 import com.clickpay.utils.Message;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public interface IBillsCreatorService {
 
     @Transactional
     BillsCreator createBillsCreator(BillsCreatorRequest request, User user) throws BadRequestException, EntityNotFoundException;
+
+    @Transactional(readOnly = true)
+    List<BillsCreator> getAllBillCreatorsByUserId(Long userId) throws EntityNotFoundException;
+
+    @Transactional
+    BillsCreator deleteBillCreators(Long billCreatorId, User user) throws EntityNotFoundException;
 }

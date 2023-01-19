@@ -10,14 +10,16 @@ import com.clickpay.model.user.User;
 import com.clickpay.repository.bills_creator.BillsCreatorRepository;
 import com.clickpay.service.area.sub_locality.ISubLocalityService;
 import com.clickpay.service.connection_type.IConnectionTypeService;
-import com.clickpay.utils.Message;
 import com.clickpay.utils.enums.Months;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -45,7 +47,7 @@ public class BillsCreatorService implements IBillsCreatorService{
         billsCreator.setNoOfUsers(request.getNoOfUsers());
         billsCreator.setDeleted(false);
         // set audits
-        billsCreator.setCreatedBy(user.getId());
+        billsCreator.setCreatedBy(user);
         billsCreator.setCreationDate(new Date());
 
         repo.save(billsCreator);
@@ -54,7 +56,41 @@ public class BillsCreatorService implements IBillsCreatorService{
 
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public List<BillsCreator> getAllBillCreatorsByUserId(Long userId) throws EntityNotFoundException {
+        log.info("Fetching bills creator list by user id: "+userId);
+        List<BillsCreator> billsCreatorsList = repo.findAllByCreatedBy(userId);
+        if (CollectionUtils.isEmpty(billsCreatorsList)) {
+            log.error("No Bills Creator data found.");
+            throw new EntityNotFoundException("Bills Creator list not found.");
+        }
+        return billsCreatorsList;
+    }
+
     private void checkBillCreatorValid(BillsCreatorRequest request, User user){
         BillsCreator billsCreator = repo.existsBillCreator(user.getId(),request.getSubLocality(),request.getConnectionType(),request.getMonth(),request.getYear());
     }
+
+    @Transactional
+    @Override
+    public BillsCreator deleteBillCreators(Long billCreatorId, User user) throws EntityNotFoundException {
+        log.info("Deleting bills creator by id: "+billCreatorId);
+
+        Optional<BillsCreator> billsCreator = repo.findById(billCreatorId);
+        if (!billsCreator.isPresent()) {
+            log.error("No Bills Creator data found by Id.");
+            throw new EntityNotFoundException("Bills Creator list not found by Id.");
+        }
+
+        billsCreator.get().setDeleted(true);
+        // set audits
+        billsCreator.get().setModifiedBy(user);
+        billsCreator.get().setLastModifiedDate(new Date());
+
+        repo.save(billsCreator.get());
+
+        return billsCreator.get();
+    }
+
 }

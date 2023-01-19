@@ -3,6 +3,7 @@ package com.clickpay.model.bills_creator;
 import com.clickpay.model.area.SubLocality;
 import com.clickpay.model.audit.Auditable;
 import com.clickpay.model.connection_type.ConnectionType;
+import com.clickpay.model.user.User;
 import com.clickpay.utils.enums.Months;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +14,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "bill_creator")
-public class BillsCreator extends Auditable<Long> {
+public class BillsCreator extends Auditable<User> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
