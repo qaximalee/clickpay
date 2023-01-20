@@ -1,8 +1,8 @@
 package com.clickpay.controller.transaction;
 
-import com.clickpay.dto.transaction.UserCollectionRequest;
-import com.clickpay.dto.transaction.UserCollectionResponse;
-import com.clickpay.dto.transaction.UserCollectionStatusUpdateAsPaidDTO;
+import com.clickpay.dto.transaction.user_collection.UserCollectionRequest;
+import com.clickpay.dto.transaction.user_collection.UserCollectionResponse;
+import com.clickpay.dto.transaction.user_collection.UserCollectionStatusUpdateAsPaidDTO;
 import com.clickpay.errors.general.*;
 import com.clickpay.model.user.User;
 import com.clickpay.service.auth.IAuthService;

@@ -8,6 +8,9 @@ public class ControllerConstants {
     public static final String DEALERS = "api/v1/dealers";
     public static final String RECOVERY_OFFICER = "api/v1/recovery-officer";
     public static final String TRANSACTION = "api/v1/transactions";
+
+    public static final String BILLS_CREATOR = "api/v1/bills-creator";
+
     public static final String MESSAGE = "api/v1/message";
     public static final String RECHARGE_SYSTEM = "api/v1/recharge-system";
     public static final String ACCOUNTS = "api/v1/accounts";

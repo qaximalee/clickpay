@@ -1,14 +1,18 @@
 package com.clickpay.service.transaction;
 
-import com.clickpay.dto.transaction.UserCollectionRequest;
-import com.clickpay.dto.transaction.UserCollectionResponse;
-import com.clickpay.dto.transaction.UserCollectionStatusUpdateAsPaidDTO;
+import com.clickpay.dto.transaction.bills_creator.BillsCreatorRequest;
+import com.clickpay.dto.transaction.user_collection.UserCollectionRequest;
+import com.clickpay.dto.transaction.user_collection.UserCollectionResponse;
+import com.clickpay.dto.transaction.user_collection.UserCollectionStatusUpdateAsPaidDTO;
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.general.EntityNotSavedException;
+import com.clickpay.model.bills_creator.BillsCreator;
 import com.clickpay.model.user.User;
 import com.clickpay.utils.Message;
+
+import java.util.List;
 
 public interface ITransactionService {
     Message<UserCollectionResponse> createUserCollection(UserCollectionRequest requestDto, User user) throws EntityAlreadyExistException, BadRequestException, EntityNotFoundException, EntityNotSavedException;
@@ -22,6 +26,12 @@ public interface ITransactionService {
 
     Message<String> updateUserCollectionStatusAsUnPaid(Long billNo, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException;
 
+    Message<BillsCreator> createBillsCreator(BillsCreatorRequest requestDto, User user) throws EntityNotFoundException, EntityAlreadyExistException, BadRequestException, EntityNotSavedException;
+
+    Message<List<BillsCreator>> getAllBillCreatorsByUserId(Long userId) throws BadRequestException, EntityNotFoundException, EntityNotSavedException;
+
+    Message<BillsCreator> deleteBillCreator(Long billCreatorId, User user) throws EntityNotFoundException, EntityNotSavedException;
+
     // find of customers in user collection
-   // Message<PaginatedUserCollectionResponse> getAllUserOfCollections(PaginatedUserCollectionRequest request, User user);
+    //Message<PaginatedUserCollectionResponse> getAllUserOfCollections(PaginatedUserCollectionRequest request, User user);
 }

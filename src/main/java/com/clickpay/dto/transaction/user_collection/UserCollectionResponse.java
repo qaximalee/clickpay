@@ -1,17 +1,14 @@
-package com.clickpay.dto.transaction;
+package com.clickpay.dto.transaction.user_collection;
 
 import com.clickpay.model.transaction.UserCollection;
-import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-public class UserCollectionResponse extends UserCollectionRequest{
+public class UserCollectionResponse extends UserCollectionRequest {
 
     @NotBlank
     private String customerName;
