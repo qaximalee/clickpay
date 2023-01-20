@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "bill_creator")
-public class BillsCreator extends Auditable<User> {
+public class BillsCreator extends Auditable<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -43,4 +43,8 @@ public class BillsCreator extends Auditable<User> {
 
     @Column(name = "is_deleted")
     private boolean isDeleted;
+
+    @ManyToOne
+    @JoinColumn(name = "by_id")
+    private User by;
 }

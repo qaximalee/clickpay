@@ -46,8 +46,9 @@ public class BillsCreatorService implements IBillsCreatorService{
         billsCreator.setYear(request.getYear());
         billsCreator.setNoOfUsers(request.getNoOfUsers());
         billsCreator.setDeleted(false);
+        billsCreator.setBy(user);
         // set audits
-        billsCreator.setCreatedBy(user);
+        billsCreator.setCreatedBy(user.getId());
         billsCreator.setCreationDate(new Date());
 
         repo.save(billsCreator);
@@ -85,7 +86,7 @@ public class BillsCreatorService implements IBillsCreatorService{
 
         billsCreator.get().setDeleted(true);
         // set audits
-        billsCreator.get().setModifiedBy(user);
+        billsCreator.get().setModifiedBy(user.getId());
         billsCreator.get().setLastModifiedDate(new Date());
 
         repo.save(billsCreator.get());
