@@ -13,6 +13,9 @@ import com.clickpay.service.connection_type.IConnectionTypeService;
 import com.clickpay.utils.enums.Months;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -59,10 +62,11 @@ public class BillsCreatorService implements IBillsCreatorService{
 
     @Transactional(readOnly = true)
     @Override
-    public List<BillsCreator> getAllBillCreatorsByUserId(Long userId) throws EntityNotFoundException {
+    public Page<BillsCreator> getAllBillCreatorsByUserId(Long userId, int pageNo, int pageSize) throws EntityNotFoundException {
         log.info("Fetching bills creator list by user id: "+userId);
-        List<BillsCreator> billsCreatorsList = repo.findAllByCreatedBy(userId);
-        if (CollectionUtils.isEmpty(billsCreatorsList)) {
+        Pageable paging = PageRequest.of(pageNo,pageSize);
+        Page<BillsCreator> billsCreatorsList = repo.findAllByCreatedBy(userId,paging);
+        if (CollectionUtils.isEmpty(billsCreatorsList.getContent())) {
             log.error("No Bills Creator data found.");
             throw new EntityNotFoundException("Bills Creator list not found.");
         }

@@ -2,6 +2,8 @@ package com.clickpay.repository.bills_creator;
 
 import com.clickpay.model.bills_creator.BillsCreator;
 import com.clickpay.model.user.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -14,5 +16,5 @@ public interface BillsCreatorRepository extends JpaRepository<BillsCreator, Long
     nativeQuery = true)
     BillsCreator existsBillCreator(long id, Long subLocality, Long connectionType, String month, int year);
 
-    List<BillsCreator> findAllByCreatedBy(Long userId);
+    Page<BillsCreator> findAllByCreatedBy(Long userId, Pageable pageable);
 }

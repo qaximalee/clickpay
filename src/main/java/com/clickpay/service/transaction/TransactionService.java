@@ -1,6 +1,7 @@
 package com.clickpay.service.transaction;
 
 import com.clickpay.dto.transaction.bills_creator.BillsCreatorRequest;
+import com.clickpay.dto.transaction.bills_creator.PaginatedBillsCreatorResponse;
 import com.clickpay.dto.transaction.user_collection.UserCollectionRequest;
 import com.clickpay.dto.transaction.user_collection.UserCollectionResponse;
 import com.clickpay.dto.transaction.user_collection.UserCollectionStatusUpdateAsPaidDTO;
@@ -19,6 +20,7 @@ import com.clickpay.utils.enums.PaymentType;
 import com.clickpay.utils.enums.UserCollectionStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -154,14 +156,22 @@ public class TransactionService implements ITransactionService{
     }
 
     @Override
-    public Message<List<BillsCreator>> getAllBillCreatorsByUserId(Long userId) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+    public Message<PaginatedBillsCreatorResponse> getAllBillCreatorsByUserId(Long userId, int pageNo, int pageSize) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
         log.info("Fetching bills creator by user id.");
 
-        return new Message<List<BillsCreator>>()
+        Page<BillsCreator> billsCreators = billsCreatorService.getAllBillCreatorsByUserId(userId,pageNo,pageSize);
+        PaginatedBillsCreatorResponse response = new PaginatedBillsCreatorResponse();
+        response.setBillsCreators(billsCreators.getContent());
+        response.setPageNo(pageNo);
+        response.setPageSize(pageSize);
+        response.setNoOfPages(billsCreators.getTotalPages());
+        response.setTotalRows(billsCreators.getTotalElements());
+
+        return new Message<PaginatedBillsCreatorResponse>()
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
                 .setMessage("Bills Creator by user id Fetched Successfully.")
-                .setData(billsCreatorService.getAllBillCreatorsByUserId(userId));
+                .setData(response);
     }
 
     @Override

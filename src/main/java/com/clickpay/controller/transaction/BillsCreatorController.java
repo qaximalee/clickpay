@@ -1,6 +1,7 @@
 package com.clickpay.controller.transaction;
 
 import com.clickpay.dto.transaction.bills_creator.BillsCreatorRequest;
+import com.clickpay.dto.transaction.bills_creator.PaginatedBillsCreatorResponse;
 import com.clickpay.errors.general.*;
 import com.clickpay.model.bills_creator.BillsCreator;
 import com.clickpay.model.user.User;
@@ -34,11 +35,15 @@ public class BillsCreatorController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<Message<List<BillsCreator>>> getAllBillsCreator(Principal principal)
+    public ResponseEntity<Message<PaginatedBillsCreatorResponse>> getAllBillsCreator(
+            @Valid @RequestParam int pageNo,
+            @Valid @RequestParam int pageSize,
+            Principal principal
+    )
             throws PermissionException, BadRequestException, EntityNotFoundException, EntityNotSavedException {
         System.out.println();
         User user = authService.hasPermission(ControllerConstants.BILL_CREATOR, principal);
-        Message<List<BillsCreator>> m = transactionService.getAllBillCreatorsByUserId(user.getId());
+        Message<PaginatedBillsCreatorResponse> m = transactionService.getAllBillCreatorsByUserId(user.getId(),pageNo,pageSize);
         return ResponseEntity.status(m.getStatus()).body(m);
     }
 
