@@ -1,6 +1,7 @@
 package com.clickpay.service.transaction;
 
 import com.clickpay.dto.transaction.bills_creator.BillsCreatorRequest;
+import com.clickpay.dto.transaction.bills_creator.PaginatedBillsCreatorResponse;
 import com.clickpay.dto.transaction.user_collection.UserCollectionRequest;
 import com.clickpay.dto.transaction.user_collection.UserCollectionResponse;
 import com.clickpay.dto.transaction.user_collection.UserCollectionStatusUpdateAsPaidDTO;
@@ -11,6 +12,8 @@ import com.clickpay.errors.general.EntityNotSavedException;
 import com.clickpay.model.bills_creator.BillsCreator;
 import com.clickpay.model.user.User;
 import com.clickpay.utils.Message;
+
+import java.util.List;
 
 public interface ITransactionService {
     Message<UserCollectionResponse> createUserCollection(UserCollectionRequest requestDto, User user) throws EntityAlreadyExistException, BadRequestException, EntityNotFoundException, EntityNotSavedException;
@@ -26,6 +29,10 @@ public interface ITransactionService {
 
     Message<BillsCreator> createBillsCreator(BillsCreatorRequest requestDto, User user) throws EntityNotFoundException, EntityAlreadyExistException, BadRequestException, EntityNotSavedException;
 
+    Message<PaginatedBillsCreatorResponse> getAllBillCreatorsByUserId(Long userId, int pageNo, int pageSize) throws BadRequestException, EntityNotFoundException, EntityNotSavedException;
+
+    Message<BillsCreator> deleteBillCreator(Long billCreatorId, User user) throws EntityNotFoundException, EntityNotSavedException;
+
     // find of customers in user collection
-   // Message<PaginatedUserCollectionResponse> getAllUserOfCollections(PaginatedUserCollectionRequest request, User user);
+    //Message<PaginatedUserCollectionResponse> getAllUserOfCollections(PaginatedUserCollectionRequest request, User user);
 }

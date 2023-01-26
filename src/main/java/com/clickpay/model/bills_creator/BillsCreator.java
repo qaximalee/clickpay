@@ -3,6 +3,7 @@ package com.clickpay.model.bills_creator;
 import com.clickpay.model.area.SubLocality;
 import com.clickpay.model.audit.Auditable;
 import com.clickpay.model.connection_type.ConnectionType;
+import com.clickpay.model.user.User;
 import com.clickpay.utils.enums.Months;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,4 +43,8 @@ public class BillsCreator extends Auditable<Long> {
 
     @Column(name = "is_deleted")
     private boolean isDeleted;
+
+    @ManyToOne
+    @JoinColumn(name = "by_id")
+    private User by;
 }

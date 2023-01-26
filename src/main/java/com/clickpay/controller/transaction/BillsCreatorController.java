@@ -1,6 +1,7 @@
 package com.clickpay.controller.transaction;
 
 import com.clickpay.dto.transaction.bills_creator.BillsCreatorRequest;
+import com.clickpay.dto.transaction.bills_creator.PaginatedBillsCreatorResponse;
 import com.clickpay.errors.general.*;
 import com.clickpay.model.bills_creator.BillsCreator;
 import com.clickpay.model.user.User;
@@ -10,13 +11,11 @@ import com.clickpay.utils.ControllerConstants;
 import com.clickpay.utils.Message;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -32,6 +31,30 @@ public class BillsCreatorController {
             throws PermissionException, EntityAlreadyExistException, BadRequestException, EntityNotFoundException, EntityNotSavedException {
         User user = authService.hasPermission(ControllerConstants.BILL_CREATOR, principal);
         Message<BillsCreator> m = transactionService.createBillsCreator(request,user);
+        return ResponseEntity.status(m.getStatus()).body(m);
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<Message<PaginatedBillsCreatorResponse>> getAllBillsCreator(
+            @Valid @RequestParam int pageNo,
+            @Valid @RequestParam int pageSize,
+            Principal principal
+    )
+            throws PermissionException, BadRequestException, EntityNotFoundException, EntityNotSavedException {
+        System.out.println();
+        User user = authService.hasPermission(ControllerConstants.BILL_CREATOR, principal);
+        Message<PaginatedBillsCreatorResponse> m = transactionService.getAllBillCreatorsByUserId(user.getId(),pageNo,pageSize);
+        return ResponseEntity.status(m.getStatus()).body(m);
+    }
+
+    @DeleteMapping("/")
+    public ResponseEntity<Message<BillsCreator>> deleteBillsCreator(
+            @Valid @RequestParam Long billsCreatorId,
+            Principal principal)
+            throws PermissionException, BadRequestException, EntityNotFoundException, EntityNotSavedException {
+        System.out.println();
+        User user = authService.hasPermission(ControllerConstants.BILL_CREATOR, principal);
+        Message<BillsCreator> m = transactionService.deleteBillCreator(billsCreatorId,user);
         return ResponseEntity.status(m.getStatus()).body(m);
     }
 }

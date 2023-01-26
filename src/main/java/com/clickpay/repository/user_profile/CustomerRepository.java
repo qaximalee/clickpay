@@ -57,4 +57,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     nativeQuery = true)
     Page<Object[]> findCustomersByUserCollectionsWithFilter(Long subLocalityId, String customerStatus, String userCollectionStatus, Long connectionTypeId, String searchInput, Long userId, Pageable pageable);
 
+    List<Customer> findAllByCreatedByAndConnectionType_Id(Long userId, Long connectionTypeId);
+
+    List<Customer> findAllByCreatedByAndConnectionType_IdAndSubLocality_Id(Long userId, Long connectionTypeId, Long subLocalityId);
 }

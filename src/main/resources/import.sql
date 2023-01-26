@@ -38,7 +38,6 @@ INSERT INTO company (created_by,created_date,active,name,is_deleted) VALUES (2,'
 ---- Populate connection_type's data
 INSERT INTO connection_type (created_by,created_date,active,type) VALUES (2,'2022-12-08 21:41:46.6860000',1,'Internet');
 INSERT INTO connection_type (created_by,created_date,active,type) VALUES (2,'2022-12-08 21:41:46.6860000',1,'Cable');
-INSERT INTO connection_type (created_by,created_date,active,type) VALUES (2,'2022-12-08 21:41:46.6860000',1,'Both');
 ----
 ----Populate sub_locality's data
 INSERT INTO sub_locality (created_by,created_date,name,locality_id,is_deleted) VALUES (2,'2022-12-08 21:41:46.6860000','Block 10',1,0);
