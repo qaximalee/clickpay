@@ -19,8 +19,12 @@ import com.clickpay.utils.enums.PaymentType;
 import com.clickpay.utils.enums.UserCollectionStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -154,6 +158,20 @@ public class UserCollectionService implements IUserCollectionService {
             throw new EntityNotFoundException("User collection not found or may be deleted.");
         }
         return userCollection.get();
+    }
+
+    @Transactional
+    @Override
+    public Page<UserCollection> getUserCollectionByCustomerId(Long customerId, int pageNo, int pageSize) throws EntityNotFoundException {
+        log.info("Fetching User collection by customer Id " + customerId + " .");
+        Pageable paging = PageRequest.of(pageNo,pageSize);
+        Page<UserCollection> userCollections = repo.findByCustomer_IdAndIsDeleted(customerId,false,paging);
+
+        if (CollectionUtils.isEmpty(userCollections.getContent())) {
+            log.error("User collections by customer not found or may be deleted.");
+            throw new EntityNotFoundException("User collection by customer not found or may be deleted.");
+        }
+        return userCollections;
     }
 
     @Transactional

@@ -2,6 +2,7 @@ package com.clickpay.service.transaction;
 
 import com.clickpay.dto.transaction.bills_creator.BillsCreatorRequest;
 import com.clickpay.dto.transaction.bills_creator.PaginatedBillsCreatorResponse;
+import com.clickpay.dto.transaction.user_collection.PaginatedUserCollectionsResponse;
 import com.clickpay.dto.transaction.user_collection.UserCollectionRequest;
 import com.clickpay.dto.transaction.user_collection.UserCollectionResponse;
 import com.clickpay.dto.transaction.user_collection.UserCollectionStatusUpdateAsPaidDTO;
@@ -10,6 +11,7 @@ import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.general.EntityNotSavedException;
 import com.clickpay.model.bills_creator.BillsCreator;
+import com.clickpay.model.transaction.UserCollection;
 import com.clickpay.model.user.User;
 import com.clickpay.model.user_profile.Customer;
 import com.clickpay.service.transaction.bills_creator.IBillsCreatorService;
@@ -59,6 +61,24 @@ public class TransactionService implements ITransactionService{
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
                 .setMessage("User Collection Fetched Successfully.")
+                .setData(response);
+    }
+
+    @Override
+    public Message<PaginatedUserCollectionsResponse> getUserCollectionByCustomerId(Long customerId, int pageNo, int pageSize) throws EntityNotFoundException {
+        log.info("Fetching user collection by customer Id : "+customerId+" .");
+        Page<UserCollection> userCollections = userCollectionService.getUserCollectionByCustomerId(customerId,pageNo,pageSize);
+        PaginatedUserCollectionsResponse response = new PaginatedUserCollectionsResponse();
+        response.setUserCollections(UserCollectionResponse.fromUserCollectionList(userCollections.getContent()));
+        response.setPageNo(pageNo);
+        response.setPageSize(pageSize);
+        response.setTotalRows(userCollections.getTotalElements());
+        response.setNoOfPages(userCollections.getTotalPages());
+
+        return new Message<PaginatedUserCollectionsResponse>()
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("User Collections By Customer Id Fetched Successfully.")
                 .setData(response);
     }
 

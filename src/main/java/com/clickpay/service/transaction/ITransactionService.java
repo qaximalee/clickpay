@@ -2,6 +2,7 @@ package com.clickpay.service.transaction;
 
 import com.clickpay.dto.transaction.bills_creator.BillsCreatorRequest;
 import com.clickpay.dto.transaction.bills_creator.PaginatedBillsCreatorResponse;
+import com.clickpay.dto.transaction.user_collection.PaginatedUserCollectionsResponse;
 import com.clickpay.dto.transaction.user_collection.UserCollectionRequest;
 import com.clickpay.dto.transaction.user_collection.UserCollectionResponse;
 import com.clickpay.dto.transaction.user_collection.UserCollectionStatusUpdateAsPaidDTO;
@@ -19,6 +20,8 @@ public interface ITransactionService {
     Message<UserCollectionResponse> createUserCollection(UserCollectionRequest requestDto, User user) throws EntityAlreadyExistException, BadRequestException, EntityNotFoundException, EntityNotSavedException;
 
     Message<UserCollectionResponse> getUserCollection(Long collectionId, Long customerId, User user) throws EntityNotFoundException;
+
+    Message<PaginatedUserCollectionsResponse> getUserCollectionByCustomerId(Long customerId, int pageNo, int pageSize) throws EntityNotFoundException;
 
     Message<UserCollectionResponse> deleteUserCollection(Long collectionId, Long customerId, User user)
             throws EntityAlreadyExistException, BadRequestException, EntityNotFoundException, EntityNotSavedException;
