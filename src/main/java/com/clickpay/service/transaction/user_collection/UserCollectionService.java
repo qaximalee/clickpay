@@ -24,7 +24,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -53,22 +52,90 @@ public class UserCollectionService implements IUserCollectionService {
 
         checkCollectionValid(requestDto, customer, user);
 
-        log.info("Populate user collection data.");
-        UserCollection userCollection = new UserCollection();
-        userCollection.setCustomer(customer);
-        userCollection.setCollectionStatus(userCollectionStatus);
-        userCollection.setAmount(requestDto.getAmount());
-        userCollection.setPaymentType(paymentType);
-        userCollection.setMonth(month);
-        userCollection.setYear(requestDto.getYear());
-        userCollection.setRemarks(requestDto.getRemarks());
-        userCollection.setDeleted(false);
+        UserCollection userCollection = null;
 
-        // set audits fields
-        userCollection.setCreatedBy(user.getId());
-        userCollection.setCreationDate(new Date());
+        if (PaymentType.of(requestDto.getPaymentType()).equals(PaymentType.INSTALLMENT)){
+            if(existsByMonthOrYearOrTypeOfCustomerOrDeleted(
+                    month,
+                    requestDto.getYear(),
+                    PaymentType.MONTHLY,
+                    requestDto.getCustomerId(),
+                    false
+            )){
 
-        return save(userCollection);
+                UserCollection oldUserCollection =
+                        getUserCollectionByCustomerIdAndMonthAndYear(customer.getId(),month, requestDto.getYear());
+
+                deleteUserCollection(oldUserCollection.getId());
+
+                userCollection = UserCollection.mapInUserCollection(customer,
+                        userCollectionStatus,
+                        requestDto.getAmount(),
+                        paymentType,
+                        month,
+                        requestDto.getYear(),
+                        requestDto.getRemarks());
+                // set audits fields
+                userCollection.setCreatedBy(user.getId());
+                userCollection.setCreationDate(new Date());
+
+                save(userCollection);
+
+                 oldUserCollection = UserCollection.mapInUserCollection(customer,
+                         oldUserCollection.getCollectionStatus(),
+                        (oldUserCollection.getAmount()-requestDto.getAmount()),
+                        paymentType,
+                        month,
+                        requestDto.getYear(),
+                        requestDto.getRemarks());
+                // set audits fields
+                oldUserCollection.setCreatedBy(user.getId());
+                oldUserCollection.setCreationDate(new Date());
+
+                return save(oldUserCollection);
+            }else {
+                userCollection = UserCollection.mapInUserCollection(customer,
+                        userCollectionStatus,
+                        requestDto.getAmount(),
+                        paymentType,
+                        month,
+                        requestDto.getYear(),
+                        requestDto.getRemarks());
+                // set audits fields
+                userCollection.setCreatedBy(user.getId());
+                userCollection.setCreationDate(new Date());
+
+                save(userCollection);
+
+                UserCollection userCollection1 = UserCollection.mapInUserCollection(customer,
+                        userCollectionStatus,
+                        (customer.getAmount()-requestDto.getAmount()),
+                        paymentType,
+                        month,
+                        requestDto.getYear(),
+                        requestDto.getRemarks());
+                // set audits fields
+                userCollection1.setCreatedBy(user.getId());
+                userCollection1.setCreationDate(new Date());
+                return save(userCollection1);
+            }
+        }else {
+            log.info("Populate user collection data.");
+            userCollection = UserCollection.mapInUserCollection(customer,
+                    userCollectionStatus,
+                    requestDto.getAmount(),
+                    paymentType,
+                    month,
+                    requestDto.getYear(),
+                    requestDto.getRemarks());
+
+            // set audits fields
+            userCollection.setCreatedBy(user.getId());
+            userCollection.setCreationDate(new Date());
+
+            return save(userCollection);
+        }
+
     }
 
     @Transactional
@@ -162,16 +229,30 @@ public class UserCollectionService implements IUserCollectionService {
 
     @Transactional
     @Override
+    public UserCollection getUserCollectionByCustomerIdAndMonthAndYear(Long customerId, Months month, int year) throws EntityNotFoundException {
+        log.info("Fetching User collection by Customer Id : " + customerId + " and Month : "+month+" and Year : "+year+" .");
+        UserCollection userCollection = repo.findByCustomer_IdAndMonthAndYearAndIsDeleted(customerId,month,year,false);
+
+        if (userCollection==null) {
+            log.error("User collection not found or may be deleted.");
+            throw new EntityNotFoundException("User collection not found or may be deleted.");
+        }
+        return userCollection;
+    }
+
+    @Transactional
+    @Override
     public Page<UserCollection> getUserCollectionByCustomerId(Long customerId, int pageNo, int pageSize) throws EntityNotFoundException {
         log.info("Fetching User collection by customer Id " + customerId + " .");
-        Pageable paging = PageRequest.of(pageNo,pageSize);
-        Page<UserCollection> userCollections = repo.findByCustomer_IdAndIsDeleted(customerId,false,paging);
 
-        if (CollectionUtils.isEmpty(userCollections.getContent())) {
-            log.error("User collections by customer not found or may be deleted.");
-            throw new EntityNotFoundException("User collection by customer not found or may be deleted.");
+        Pageable paging = PageRequest.of(pageNo,pageSize);
+        Page<UserCollection> userCollection = repo.findByCustomer_IdAndIsDeleted(customerId,false,paging);
+
+        if (userCollection.isEmpty()) {
+            log.error("User collection not found or may be deleted.");
+            throw new EntityNotFoundException("User collection not found or may be deleted.");
         }
-        return userCollections;
+        return userCollection;
     }
 
     @Transactional
@@ -228,8 +309,17 @@ public class UserCollectionService implements IUserCollectionService {
         return repo.existsByMonthAndYearAndPaymentTypeAndCustomer_IdAndIsDeleted(month, year, paymentType, customerId, isDeleted);
     }
 
+    private boolean existsByMonthOrYearOrDeleted(Months month, Integer year, Long customerId, boolean isDeleted) {
+        return repo.existsByMonthAndYearAndCustomer_IdAndIsDeleted(month, year, customerId, isDeleted);
+    }
+
     private boolean existsByMonthOrYearOrCollectionStatusOfCustomer(Months month, Integer year, UserCollectionStatus collectionStatus, Long customerId) {
         return repo.existsByMonthAndYearAndCollectionStatusAndCustomer_Id(month, year, collectionStatus, customerId);
+    }
+
+    private void deleteUserCollection(Long userCollectionId){
+        log.info("Deleting User Collection By Id : "+userCollectionId);
+        repo.deleteById(userCollectionId);
     }
 
     private void checkCollectionValid(UserCollectionRequest requestDto, Customer customer, User user) throws EntityAlreadyExistException, BadRequestException {
@@ -252,14 +342,27 @@ public class UserCollectionService implements IUserCollectionService {
         }
 
         // checking the for collection already created or not
-        if (PaymentType.of(requestDto.getPaymentType()).equals(PaymentType.MONTHLY)) {
+        if (PaymentType.of(requestDto.getPaymentType()).equals(PaymentType.MONTHLY) ){
             isValid = existsByMonthOrYearOrTypeOfCustomerOrDeleted(
                     Months.of(requestDto.getMonth()),
                     requestDto.getYear(),
                     PaymentType.of(requestDto.getPaymentType()),
                     requestDto.getCustomerId(),
                     false
+            ) || existsByMonthOrYearOrTypeOfCustomerOrDeleted(
+                    Months.of(requestDto.getMonth()),
+                    requestDto.getYear(),
+                    PaymentType.INSTALLMENT,
+                    requestDto.getCustomerId(),
+                    false
             );
+        }else if(PaymentType.of(requestDto.getPaymentType()).equals(PaymentType.INSTALLMENT)){
+            isValid = existsByMonthOrYearOrTypeOfCustomerOrDeleted(
+                    Months.of(requestDto.getMonth()),
+                    requestDto.getYear(),
+                    PaymentType.of(requestDto.getPaymentType()),
+                    requestDto.getCustomerId(),
+                    false);
         }
         if (isValid) {
             log.error("User collection already created.");
@@ -267,7 +370,8 @@ public class UserCollectionService implements IUserCollectionService {
         }
 
         // checking the for collection already paid or not
-        if (PaymentType.of(requestDto.getPaymentType()).equals(PaymentType.INSTALLMENT)) {
+        if (PaymentType.of(requestDto.getPaymentType()).equals(PaymentType.MONTHLY) ||
+                PaymentType.of(requestDto.getPaymentType()).equals(PaymentType.INSTALLMENT)) {
             isValid = existsByMonthOrYearOrCollectionStatusOfCustomer(
                     Months.of(requestDto.getMonth()),
                     requestDto.getYear(),

@@ -8,6 +8,7 @@ import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.general.EntityNotSavedException;
 import com.clickpay.model.transaction.UserCollection;
 import com.clickpay.model.user.User;
+import com.clickpay.utils.enums.Months;
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,9 @@ public interface IUserCollectionService {
 
     @Transactional
     Page<UserCollection> getUserCollectionByCustomerId(Long customerId, int pageNo, int pageSize) throws EntityNotFoundException;
+
+    @Transactional
+    UserCollection getUserCollectionByCustomerIdAndMonthAndYear(Long customerId, Months month, int year) throws EntityNotFoundException;
 
     @Transactional
     List<UserCollection> getUserCollectionsByBillNumber(Long billNo, User user) throws EntityNotFoundException;

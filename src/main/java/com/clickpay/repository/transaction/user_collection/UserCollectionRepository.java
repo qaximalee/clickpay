@@ -31,6 +31,10 @@ public interface UserCollectionRepository extends JpaRepository<UserCollection, 
 
     Page<UserCollection> findByCustomer_IdAndIsDeleted(Long customerId, boolean b, Pageable paging);
 
+    UserCollection findByCustomer_IdAndMonthAndYearAndIsDeleted(Long customerId, Months month, int year, boolean b);
+
+    boolean existsByMonthAndYearAndCustomer_IdAndIsDeleted(Months month, Integer year, Long customerId, boolean isDeleted);
+
 //    @Query(value = "",
 //    nativeQuery = true)
 //    List<Object[]> findCustomersWithFilter(String subLocality, String customerStatus, String userCollectionStatus, String connectionType, String searchInput, Long usrId);
