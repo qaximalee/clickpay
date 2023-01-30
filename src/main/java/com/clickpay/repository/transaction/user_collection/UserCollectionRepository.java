@@ -27,6 +27,10 @@ public interface UserCollectionRepository extends JpaRepository<UserCollection, 
 
     Optional<UserCollection> findByIdAndIsDeleted(Long collectionId, boolean isDeleted);
 
+    UserCollection findByCustomer_IdAndMonthAndYearAndIsDeleted(Long customerId, Months month, int year, boolean b);
+
+    boolean existsByMonthAndYearAndCustomer_IdAndIsDeleted(Months month, Integer year, Long customerId, boolean isDeleted);
+
 //    @Query(value = "",
 //    nativeQuery = true)
 //    List<Object[]> findCustomersWithFilter(String subLocality, String customerStatus, String userCollectionStatus, String connectionType, String searchInput, Long usrId);

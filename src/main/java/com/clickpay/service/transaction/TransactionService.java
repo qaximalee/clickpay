@@ -9,7 +9,7 @@ import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.general.EntityNotSavedException;
-import com.clickpay.model.bills_creator.BillsCreator;
+import com.clickpay.model.transaction.BillsCreator;
 import com.clickpay.model.user.User;
 import com.clickpay.model.user_profile.Customer;
 import com.clickpay.service.transaction.bills_creator.IBillsCreatorService;

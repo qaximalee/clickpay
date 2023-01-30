@@ -9,11 +9,9 @@ import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.general.EntityNotSavedException;
-import com.clickpay.model.bills_creator.BillsCreator;
+import com.clickpay.model.transaction.BillsCreator;
 import com.clickpay.model.user.User;
 import com.clickpay.utils.Message;
-
-import java.util.List;
 
 public interface ITransactionService {
     Message<UserCollectionResponse> createUserCollection(UserCollectionRequest requestDto, User user) throws EntityAlreadyExistException, BadRequestException, EntityNotFoundException, EntityNotSavedException;

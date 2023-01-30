@@ -3,7 +3,7 @@ package com.clickpay.controller.transaction;
 import com.clickpay.dto.transaction.bills_creator.BillsCreatorRequest;
 import com.clickpay.dto.transaction.bills_creator.PaginatedBillsCreatorResponse;
 import com.clickpay.errors.general.*;
-import com.clickpay.model.bills_creator.BillsCreator;
+import com.clickpay.model.transaction.BillsCreator;
 import com.clickpay.model.user.User;
 import com.clickpay.service.auth.IAuthService;
 import com.clickpay.service.transaction.ITransactionService;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController

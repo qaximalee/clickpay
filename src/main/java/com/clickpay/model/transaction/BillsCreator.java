@@ -1,4 +1,4 @@
-package com.clickpay.model.bills_creator;
+package com.clickpay.model.transaction;
 
 import com.clickpay.model.area.SubLocality;
 import com.clickpay.model.audit.Auditable;

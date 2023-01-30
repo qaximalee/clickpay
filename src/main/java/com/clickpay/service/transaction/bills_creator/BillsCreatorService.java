@@ -4,10 +4,10 @@ import com.clickpay.dto.transaction.bills_creator.BillsCreatorRequest;
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.model.area.SubLocality;
-import com.clickpay.model.bills_creator.BillsCreator;
+import com.clickpay.model.transaction.BillsCreator;
 import com.clickpay.model.connection_type.ConnectionType;
 import com.clickpay.model.user.User;
-import com.clickpay.repository.bills_creator.BillsCreatorRepository;
+import com.clickpay.repository.transaction.bills_creator.BillsCreatorRepository;
 import com.clickpay.service.area.sub_locality.ISubLocalityService;
 import com.clickpay.service.connection_type.IConnectionTypeService;
 import com.clickpay.utils.enums.Months;
@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j

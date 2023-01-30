@@ -1,4 +1,4 @@
-package com.clickpay.model.bill;
+package com.clickpay.model.transaction;
 
 import com.clickpay.model.audit.Auditable;
 import com.clickpay.utils.enums.PaymentMethod;

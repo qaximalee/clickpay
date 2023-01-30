@@ -1,6 +1,6 @@
 package com.clickpay.dto.transaction.bills_creator;
 
-import com.clickpay.model.bills_creator.BillsCreator;
+import com.clickpay.model.transaction.BillsCreator;
 import lombok.Getter;
 import lombok.Setter;
 

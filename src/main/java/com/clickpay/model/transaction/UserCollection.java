@@ -1,7 +1,6 @@
 package com.clickpay.model.transaction;
 
 import com.clickpay.model.audit.Auditable;
-import com.clickpay.model.bill.Bill;
 import com.clickpay.model.user_profile.Customer;
 import com.clickpay.utils.enums.Months;
 import com.clickpay.utils.enums.PaymentType;
@@ -52,4 +51,20 @@ public class UserCollection extends Auditable<Long> {
 
     @Column(name = "is_deleted")
     private boolean isDeleted;
+
+    public static UserCollection mapInUserCollection(Customer customer, UserCollectionStatus userCollectionStatus,
+                                                     double amount, PaymentType paymentType, Months month, int year,
+                                                     String remarks){
+        System.out.println("Map user collection data.");
+        UserCollection userCollection = new UserCollection();
+        userCollection.setCustomer(customer);
+        userCollection.setCollectionStatus(userCollectionStatus);
+        userCollection.setAmount(amount);
+        userCollection.setPaymentType(paymentType);
+        userCollection.setMonth(month);
+        userCollection.setYear(year);
+        userCollection.setRemarks(remarks);
+        userCollection.setDeleted(false);
+        return userCollection;
+    }
 }

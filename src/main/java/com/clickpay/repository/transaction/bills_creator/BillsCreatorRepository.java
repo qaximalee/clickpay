@@ -1,14 +1,11 @@
-package com.clickpay.repository.bills_creator;
+package com.clickpay.repository.transaction.bills_creator;
 
-import com.clickpay.model.bills_creator.BillsCreator;
-import com.clickpay.model.user.User;
+import com.clickpay.model.transaction.BillsCreator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public interface BillsCreatorRepository extends JpaRepository<BillsCreator, Long> {
