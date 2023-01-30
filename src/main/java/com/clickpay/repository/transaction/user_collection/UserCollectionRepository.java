@@ -4,6 +4,8 @@ import com.clickpay.model.transaction.UserCollection;
 import com.clickpay.utils.enums.Months;
 import com.clickpay.utils.enums.PaymentType;
 import com.clickpay.utils.enums.UserCollectionStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -27,9 +29,7 @@ public interface UserCollectionRepository extends JpaRepository<UserCollection, 
 
     Optional<UserCollection> findByIdAndIsDeleted(Long collectionId, boolean isDeleted);
 
-    UserCollection findByCustomer_IdAndMonthAndYearAndIsDeleted(Long customerId, Months month, int year, boolean b);
-
-    boolean existsByMonthAndYearAndCustomer_IdAndIsDeleted(Months month, Integer year, Long customerId, boolean isDeleted);
+    Page<UserCollection> findByCustomer_IdAndIsDeleted(Long customerId, boolean b, Pageable paging);
 
 //    @Query(value = "",
 //    nativeQuery = true)

@@ -1,5 +1,6 @@
 package com.clickpay.controller.transaction;
 
+import com.clickpay.dto.transaction.user_collection.PaginatedUserCollectionsResponse;
 import com.clickpay.dto.transaction.user_collection.UserCollectionRequest;
 import com.clickpay.dto.transaction.user_collection.UserCollectionResponse;
 import com.clickpay.dto.transaction.user_collection.UserCollectionStatusUpdateAsPaidDTO;
@@ -22,7 +23,7 @@ import java.security.Principal;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(ControllerConstants.TRANSACTION)
+@RequestMapping(ControllerConstants.COLLECTIONS)
 public class UserCollectionController {
 
     @Value("${full.domain.name}")
@@ -42,7 +43,7 @@ public class UserCollectionController {
         Message m = new Message();
         return ResponseEntity
                 .created(
-                        URI.create(DOMAIN_URL + "/" + ControllerConstants.TRANSACTION + "/user-collect/" + 1 /*m.getData().getId()*/)
+                        URI.create(DOMAIN_URL + "/" + ControllerConstants.COLLECTIONS + "/user-collect/" + 1 /*m.getData().getId()*/)
                 ).body(m);
     }
 
@@ -53,6 +54,18 @@ public class UserCollectionController {
             throws PermissionException, EntityNotFoundException, BadRequestException, EntityNotSavedException, EntityAlreadyExistException {
         User user = authService.hasPermission(ControllerConstants.USERS_COLLECTIONS, principal);
         Message<UserCollectionResponse> m = transactionService.createUserCollection(request,user);
+        return ResponseEntity.status(m.getStatus()).body(m);
+    }
+
+    @GetMapping("/by-customer-id")
+    public ResponseEntity<Message<PaginatedUserCollectionsResponse>> getUserCollectionOfCustomer(
+            @Valid @NotNull @RequestParam Long customerId,
+            @Valid @NotNull @RequestParam int pageNo,
+            @Valid @NotNull @RequestParam int pageSize,
+            Principal principal)
+            throws PermissionException, EntityNotFoundException {
+        User user = authService.hasPermission(ControllerConstants.USERS_COLLECTIONS, principal);
+        Message<PaginatedUserCollectionsResponse> m = transactionService.getUserCollectionByCustomerId(customerId,pageNo,pageSize);
         return ResponseEntity.status(m.getStatus()).body(m);
     }
 
