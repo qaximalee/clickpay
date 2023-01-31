@@ -46,7 +46,7 @@ public class UserCollectionService implements IUserCollectionService {
         //validate customer existing
         Customer customer = customerService.findById(requestDto.getCustomerId());
 
-        UserCollectionStatus userCollectionStatus = UserCollectionStatus.of(requestDto.getCollectionStatus());
+        UserCollectionStatus userCollectionStatus = UserCollectionStatus.UNPAID;
         PaymentType paymentType = PaymentType.of(requestDto.getPaymentType());
         Months month = Months.of(requestDto.getMonth());
 
@@ -62,80 +62,82 @@ public class UserCollectionService implements IUserCollectionService {
                     requestDto.getCustomerId(),
                     false
             )){
-
-                UserCollection oldUserCollection =
-                        getUserCollectionByCustomerIdAndMonthAndYear(customer.getId(),month, requestDto.getYear());
-
-                deleteUserCollection(oldUserCollection.getId());
-
-                userCollection = UserCollection.mapInUserCollection(customer,
-                        userCollectionStatus,
-                        requestDto.getAmount(),
-                        paymentType,
-                        month,
-                        requestDto.getYear(),
-                        requestDto.getRemarks());
-                // set audits fields
-                userCollection.setCreatedBy(user.getId());
-                userCollection.setCreationDate(new Date());
-
-                save(userCollection);
-
-                 oldUserCollection = UserCollection.mapInUserCollection(customer,
-                         oldUserCollection.getCollectionStatus(),
-                        (oldUserCollection.getAmount()-requestDto.getAmount()),
-                        paymentType,
-                        month,
-                        requestDto.getYear(),
-                        requestDto.getRemarks());
-                // set audits fields
-                oldUserCollection.setCreatedBy(user.getId());
-                oldUserCollection.setCreationDate(new Date());
-
-                return save(oldUserCollection);
+                // create installment collection when monthly already created
+                return createMonthlyInstallmentIfAlreadyCreated(requestDto, user, customer, userCollectionStatus, paymentType, month);
             }else {
-                userCollection = UserCollection.mapInUserCollection(customer,
-                        userCollectionStatus,
-                        requestDto.getAmount(),
-                        paymentType,
-                        month,
-                        requestDto.getYear(),
-                        requestDto.getRemarks());
-                // set audits fields
-                userCollection.setCreatedBy(user.getId());
-                userCollection.setCreationDate(new Date());
-
-                save(userCollection);
-
-                UserCollection userCollection1 = UserCollection.mapInUserCollection(customer,
-                        userCollectionStatus,
-                        (customer.getAmount()-requestDto.getAmount()),
-                        paymentType,
-                        month,
-                        requestDto.getYear(),
-                        requestDto.getRemarks());
-                // set audits fields
-                userCollection1.setCreatedBy(user.getId());
-                userCollection1.setCreationDate(new Date());
-                return save(userCollection1);
+                // create installment collection when monthly not created
+                return createMonthlyInstallmentIfNotCreated(requestDto, user, customer, userCollectionStatus, paymentType, month);
             }
         }else {
+            // create monthly collection
             log.info("Populate user collection data.");
             userCollection = UserCollection.mapInUserCollection(customer,
                     userCollectionStatus,
-                    requestDto.getAmount(),
+                    customer.getAmount(),
                     paymentType,
                     month,
                     requestDto.getYear(),
-                    requestDto.getRemarks());
-
-            // set audits fields
-            userCollection.setCreatedBy(user.getId());
-            userCollection.setCreationDate(new Date());
+                    requestDto.getRemarks(),
+                    user.getId());
 
             return save(userCollection);
         }
+    }
 
+    private UserCollection createMonthlyInstallmentIfNotCreated(UserCollectionRequest requestDto, User user, Customer customer, UserCollectionStatus userCollectionStatus, PaymentType paymentType, Months month) throws BadRequestException, EntityNotSavedException {
+        UserCollection userCollection;
+        userCollection = UserCollection.mapInUserCollection(customer,
+                userCollectionStatus,
+                requestDto.getAmount(),
+                paymentType,
+                month,
+                requestDto.getYear(),
+                requestDto.getRemarks(),
+                user.getId());
+
+        save(userCollection);
+
+        UserCollection userCollection1 = UserCollection.mapInUserCollection(customer,
+                userCollectionStatus,
+                (customer.getAmount()- requestDto.getAmount()),
+                paymentType,
+                month,
+                requestDto.getYear(),
+                requestDto.getRemarks(),
+                user.getId());
+
+        return save(userCollection1);
+    }
+
+    private UserCollection createMonthlyInstallmentIfAlreadyCreated(UserCollectionRequest requestDto, User user, Customer customer, UserCollectionStatus userCollectionStatus, PaymentType paymentType, Months month) throws EntityNotFoundException, BadRequestException, EntityNotSavedException {
+        UserCollection userCollection;
+        UserCollection oldUserCollection =
+                getUserCollectionByCustomerIdAndMonthAndYear(customer.getId(), month, requestDto.getYear());
+
+        deleteUserCollection(oldUserCollection.getId());
+
+        userCollection = UserCollection.mapInUserCollection(customer,
+                userCollectionStatus,
+                requestDto.getAmount(),
+                paymentType,
+                month,
+                requestDto.getYear(),
+                requestDto.getRemarks(),
+                user.getId());
+
+        save(userCollection);
+
+        oldUserCollection = UserCollection.mapInUserCollection(customer,
+                oldUserCollection.getCollectionStatus(),
+               (oldUserCollection.getAmount()- requestDto.getAmount()),
+                paymentType,
+                month,
+               requestDto.getYear(),
+               requestDto.getRemarks(),
+                user.getId());
+
+
+        return save(oldUserCollection);
     }
 
     @Transactional

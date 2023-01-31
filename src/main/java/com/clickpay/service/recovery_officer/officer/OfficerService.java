@@ -126,10 +126,10 @@ public class OfficerService implements IOfficerService {
 
     @Transactional(readOnly = true)
     @Override
-    public Page<Officer> findAllOfficersByUserId(PaginatedOfficerRequest dto, Long userId) throws EntityNotFoundException, BadRequestException {
+    public Page<Officer> findAllOfficersByUserId(String status, Integer pageNo, Integer pageSize, Long userId) throws EntityNotFoundException, BadRequestException {
 
-        Pageable pageable = PageRequest.of(dto.getPageNo(),dto.getPageSize());
-        Page<Officer> officers = repo.findAllByCreatedByAndStatus(userId,dto.getStatus(),pageable);
+        Pageable pageable = PageRequest.of(pageNo,pageSize);
+        Page<Officer> officers = repo.findAllByCreatedByAndStatus(userId,status,pageable);
 
         if (officers == null || officers.isEmpty()) {
             log.error("No officer data found.");

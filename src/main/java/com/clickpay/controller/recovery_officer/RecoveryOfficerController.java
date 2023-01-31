@@ -65,12 +65,14 @@ public class RecoveryOfficerController {
 
     @PostMapping("/officer/getAll")
     public ResponseEntity<Message<PaginatedOfficerResponse>> getAllOfficer(
-            @Valid @RequestBody PaginatedOfficerRequest request,
+            @Valid @RequestParam(required = false) String status,
+            @Valid @RequestParam Integer pageNo,
+            @Valid @RequestParam Integer pageSize,
             Principal principal)
             throws EntityNotFoundException, PermissionException, BadRequestException {
         System.out.println();
         User user = authService.hasPermission(ControllerConstants.RECOVERY_OFFICER_SUB, principal);
-        Message<PaginatedOfficerResponse> m = recoveryOfficerService.findAllOfficerByUserId(request,user.getId());
+        Message<PaginatedOfficerResponse> m = recoveryOfficerService.findAllOfficerByUserId(status, pageNo, pageSize,user.getId());
         return ResponseEntity.ok().body(m);
     }
 

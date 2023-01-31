@@ -26,9 +26,6 @@ public class UserCollectionRequest {
     private double amount;
 
     @NotBlank
-    private String collectionStatus;
-
-    @NotBlank
     private String paymentType;
 
     private String remarks;

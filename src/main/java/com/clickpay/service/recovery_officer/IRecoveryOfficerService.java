@@ -23,7 +23,7 @@ public interface IRecoveryOfficerService {
 
   //  Message findAllOfficerByUserId(Long userId) throws EntityNotFoundException;
 
-    Message<PaginatedOfficerResponse> findAllOfficerByUserId(PaginatedOfficerRequest dto, Long userId) throws EntityNotFoundException, BadRequestException;
+    Message<PaginatedOfficerResponse> findAllOfficerByUserId(String status, Integer pageNo, Integer pageSize, Long userId) throws EntityNotFoundException, BadRequestException;
 
     Message updateOfficer(OfficerUpdateRequest request, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException;
 }

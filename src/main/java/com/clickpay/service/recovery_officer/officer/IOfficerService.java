@@ -26,7 +26,7 @@ public interface IOfficerService {
 //    List<OfficerResponse> findAllOfficersByUserId(Long userId) throws EntityNotFoundException;
 
     @Transactional(readOnly = true)
-    Page<Officer> findAllOfficersByUserId(PaginatedOfficerRequest dto, Long userId) throws EntityNotFoundException, BadRequestException;
+    Page<Officer> findAllOfficersByUserId(String status, Integer pageNo, Integer pageSize, Long userId) throws EntityNotFoundException, BadRequestException;
 
     @Transactional
     OfficerResponse updateOfficer(OfficerUpdateRequest request, User user)

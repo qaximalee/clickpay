@@ -53,14 +53,14 @@ public class RecoveryOfficerService implements IRecoveryOfficerService{
     }
 
     @Override
-    public Message<PaginatedOfficerResponse> findAllOfficerByUserId(PaginatedOfficerRequest dto, Long userId) throws EntityNotFoundException, BadRequestException {
+    public Message<PaginatedOfficerResponse> findAllOfficerByUserId(String status, Integer pageNo, Integer pageSize, Long userId) throws EntityNotFoundException, BadRequestException {
         log.info("Fetching list of officers.");
-        Page<Officer> officerResponses =  officerService.findAllOfficersByUserId(dto, userId);
+        Page<Officer> officerResponses =  officerService.findAllOfficersByUserId(status, pageNo, pageSize, userId);
 
         PaginatedOfficerResponse response = PaginatedOfficerResponse.builder()
                 .officers(OfficerResponse.fromListOfOfficer(officerResponses.getContent()))
-                .pageNo(dto.getPageNo())
-                .pageSize(dto.getPageSize())
+                .pageNo(pageNo)
+                .pageSize(pageSize)
                 .noOfPages(officerResponses.getTotalPages())
                 .totalRows(officerResponses.getTotalElements())
                 .build();

@@ -14,7 +14,6 @@ import javax.persistence.*;
 public class Bill extends Auditable<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "bill_number", nullable = false)
     private Long billNumber;
 
     @Enumerated(EnumType.STRING)

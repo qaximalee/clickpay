@@ -156,7 +156,6 @@ public class TransactionService implements ITransactionService{
             totalAmount = totalAmount + customer.getAmount();
             UserCollectionRequest userCollectionRequest = new UserCollectionRequest();
             userCollectionRequest.setCustomerId(customer.getId());
-            userCollectionRequest.setCollectionStatus(UserCollectionStatus.UNPAID.name());
             userCollectionRequest.setAmount(customer.getAmount());
             userCollectionRequest.setMonth(requestDto.getMonth());
             userCollectionRequest.setYear(requestDto.getYear());

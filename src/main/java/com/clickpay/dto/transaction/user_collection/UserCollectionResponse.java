@@ -26,6 +26,9 @@ public class UserCollectionResponse extends UserCollectionRequest {
     @NotBlank
     private String connectionType;
 
+    @NotBlank
+    private String collectionStatus;
+
     private String customerAddress;
     private Boolean isDeleted;
 
