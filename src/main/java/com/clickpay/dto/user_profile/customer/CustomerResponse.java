@@ -29,6 +29,7 @@ public class CustomerResponse {
     private String discount;
     private String address;
     private String mobile;
+    private double amount;
 
     public static List<CustomerResponse> mapListOfCustomerDetail(List<Object[]> data) {
         log.info("Data fetching from db is mapped to customer response.");
@@ -49,6 +50,7 @@ public class CustomerResponse {
             customerResponse.setPackageType(""+e[7]);
             customerResponse.setStatus(""+e[8]);
             customerResponse.setDiscount(""+e[9]);
+            customerResponse.setAmount(Double.parseDouble(""+e[10]));
             return customerResponse;
         }).collect(Collectors.toList());
     }
@@ -67,6 +69,7 @@ public class CustomerResponse {
             customerResponse.setDiscount(e.getDiscount().toString());
             customerResponse.setConnectionType(e.getConnectionType().getType());
             customerResponse.setPackageType(e.getPackages().getPackageName());
+            customerResponse.setAmount(e.getAmount());
             return customerResponse;
         }).collect(Collectors.toList());
     }
