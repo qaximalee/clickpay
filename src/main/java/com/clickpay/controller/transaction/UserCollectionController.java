@@ -80,7 +80,7 @@ public class UserCollectionController {
         return ResponseEntity.status(m.getStatus()).body(m);
     }
 
-    @PutMapping("/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<Message<UserCollectionResponse>> deleteUserCollection(
             @Valid @NotNull @RequestParam Long collectionId,
             @Valid @NotNull @RequestParam Long customerId,
