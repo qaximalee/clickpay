@@ -1,5 +1,6 @@
 package com.clickpay.service.area.sub_locality;
 
+import com.clickpay.dto.area.SubLocalityResponse;
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
@@ -70,12 +71,12 @@ public class SubLocalityService implements ISubLocalityService {
     }
 
     @Override
-    public List<SubLocality> findAllLocalityByUserId(Long userId) throws EntityNotFoundException {
+    public List<SubLocalityResponse> findAllSubLocalityByUserId(Long userId) throws EntityNotFoundException {
         List<SubLocality> subLocalities = repo.findAllByCreatedByAndIsDeleted(userId, false);
         if (subLocalities == null || subLocalities.isEmpty()) {
             log.debug("No sub locality data found.");
             throw new EntityNotFoundException("Sub locality list not found.");
         }
-        return subLocalities;
+        return SubLocalityResponse.mapFromSubLocality(subLocalities);
     }
 }

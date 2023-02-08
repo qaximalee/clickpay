@@ -8,6 +8,7 @@ import com.clickpay.service.auth.IAuthService;
 import com.clickpay.service.transaction.ITransactionService;
 import com.clickpay.utils.ControllerConstants;
 import com.clickpay.utils.Message;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,11 @@ public class BillsCreatorController {
     private final ITransactionService transactionService;
 
     @PostMapping("/")
+    @ApiOperation(
+            value = "Bill creator creation endpoint",
+            notes = "Creating collections for selected users.",
+            produces = "application/json",
+            response = ResponseEntity.class)
     public ResponseEntity<Message<BillsCreator>> createBillsCreator(
             @Valid @RequestBody BillsCreatorRequest request,
             Principal principal)

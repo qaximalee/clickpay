@@ -1,5 +1,6 @@
 package com.clickpay.service.area.sub_locality;
 
+import com.clickpay.dto.area.SubLocalityResponse;
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
@@ -13,5 +14,5 @@ public interface ISubLocalityService {
 
     SubLocality save(SubLocality subLocality) throws BadRequestException, EntityNotSavedException, EntityAlreadyExistException;
 
-    List<SubLocality> findAllLocalityByUserId(Long userId) throws EntityNotFoundException;
+    List<SubLocalityResponse> findAllSubLocalityByUserId(Long userId) throws EntityNotFoundException;
 }
