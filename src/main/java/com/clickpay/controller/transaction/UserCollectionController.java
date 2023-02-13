@@ -5,6 +5,7 @@ import com.clickpay.dto.transaction.user_collection.UserCollectionRequest;
 import com.clickpay.dto.transaction.user_collection.UserCollectionResponse;
 import com.clickpay.dto.transaction.user_collection.UserCollectionStatusUpdateAsPaidDTO;
 import com.clickpay.errors.general.*;
+import com.clickpay.model.transaction.UserCollection;
 import com.clickpay.model.user.User;
 import com.clickpay.service.auth.IAuthService;
 import com.clickpay.service.transaction.ITransactionService;
@@ -70,13 +71,13 @@ public class UserCollectionController {
     }
 
     @GetMapping("/id")
-    public ResponseEntity<Message<UserCollectionResponse>> getUserCollection(
+    public ResponseEntity<Message<UserCollection>> getUserCollection(
             @Valid @NotNull @RequestParam Long collectionId,
             @Valid @NotNull @RequestParam Long customerId,
             Principal principal)
             throws PermissionException, EntityNotFoundException {
         User user = authService.hasPermission(ControllerConstants.USERS_COLLECTIONS, principal);
-        Message<UserCollectionResponse> m = transactionService.getUserCollection(collectionId,customerId,user);
+        Message<UserCollection> m = transactionService.getUserCollection(collectionId,customerId,user);
         return ResponseEntity.status(m.getStatus()).body(m);
     }
 

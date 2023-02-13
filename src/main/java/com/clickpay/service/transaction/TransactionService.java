@@ -52,16 +52,16 @@ public class TransactionService implements ITransactionService{
     }
 
     @Override
-    public Message<UserCollectionResponse> getUserCollection(Long collectionId, Long customerId, User user) throws EntityNotFoundException {
+    public Message<UserCollection> getUserCollection(Long collectionId, Long customerId, User user) throws EntityNotFoundException {
         log.info("Fetching user collection by collection Id "+collectionId+" .");
-        UserCollectionResponse response =
-                UserCollectionResponse.fromUserCollection(
-                        userCollectionService.getUserCollectionById(collectionId,customerId,user));
-        return new Message<UserCollectionResponse>()
+//        UserCollectionResponse response =
+//                UserCollectionResponse.fromUserCollection(
+//                        userCollectionService.getUserCollectionById(collectionId,customerId,user));
+        return new Message<UserCollection>()
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
                 .setMessage("User Collection Fetched Successfully.")
-                .setData(response);
+                .setData(userCollectionService.getUserCollectionById(collectionId,customerId,user));
     }
 
     @Override

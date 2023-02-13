@@ -11,13 +11,14 @@ import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.general.EntityNotSavedException;
 import com.clickpay.model.transaction.BillsCreator;
+import com.clickpay.model.transaction.UserCollection;
 import com.clickpay.model.user.User;
 import com.clickpay.utils.Message;
 
 public interface ITransactionService {
     Message<UserCollectionResponse> createUserCollection(UserCollectionRequest requestDto, User user) throws EntityAlreadyExistException, BadRequestException, EntityNotFoundException, EntityNotSavedException;
 
-    Message<UserCollectionResponse> getUserCollection(Long collectionId, Long customerId, User user) throws EntityNotFoundException;
+    Message<UserCollection> getUserCollection(Long collectionId, Long customerId, User user) throws EntityNotFoundException;
 
     Message<PaginatedUserCollectionsResponse> getUserCollectionByCustomerId(Long customerId, int pageNo, int pageSize) throws EntityNotFoundException;
 
