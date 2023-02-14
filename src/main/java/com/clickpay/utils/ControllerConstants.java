@@ -10,6 +10,7 @@ public class ControllerConstants {
     public static final String COLLECTIONS = "api/v1/collections";
 
     public static final String BILLS_CREATOR = "api/v1/bills-creator";
+    public static final String BILL = "api/v1/bill";
 
     public static final String MESSAGE = "api/v1/message";
     public static final String RECHARGE_SYSTEM = "api/v1/recharge-system";

@@ -10,21 +10,23 @@ import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.general.EntityNotSavedException;
+import com.clickpay.model.transaction.Bill;
 import com.clickpay.model.transaction.BillsCreator;
 import com.clickpay.model.transaction.UserCollection;
 import com.clickpay.model.user.User;
 import com.clickpay.model.user_profile.Customer;
+import com.clickpay.service.transaction.bill.IBillService;
 import com.clickpay.service.transaction.bills_creator.IBillsCreatorService;
 import com.clickpay.service.transaction.user_collection.IUserCollectionService;
 import com.clickpay.service.user_profile.customer.ICustomerService;
 import com.clickpay.utils.Message;
 import com.clickpay.utils.enums.PaymentType;
-import com.clickpay.utils.enums.UserCollectionStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -139,6 +141,7 @@ public class TransactionService implements ITransactionService{
     /**
     * CRUD For Bills Creator
     * */
+    @Transactional
     @Override
     public Message<BillsCreator> createBillsCreator(BillsCreatorRequest requestDto, User user) throws EntityNotFoundException, EntityAlreadyExistException, BadRequestException, EntityNotSavedException {
         log.info("Creating bills creator by requested data.");

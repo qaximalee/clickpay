@@ -2,6 +2,7 @@ package com.clickpay.service.transaction.bills_creator;
 
 import com.clickpay.dto.transaction.bills_creator.BillsCreatorRequest;
 import com.clickpay.errors.general.BadRequestException;
+import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.model.area.SubLocality;
 import com.clickpay.model.transaction.BillsCreator;
@@ -33,7 +34,9 @@ public class BillsCreatorService implements IBillsCreatorService{
 
     @Transactional
     @Override
-    public BillsCreator createBillsCreator(BillsCreatorRequest request, User user) throws BadRequestException, EntityNotFoundException {
+    public BillsCreator createBillsCreator(BillsCreatorRequest request, User user) throws BadRequestException, EntityNotFoundException, EntityAlreadyExistException {
+        checkBillCreatorValid(request,user);
+
         ConnectionType connectionType = connectionTypeService.findById(request.getConnectionType());
 
         BillsCreator billsCreator = new BillsCreator();
@@ -72,8 +75,13 @@ public class BillsCreatorService implements IBillsCreatorService{
         return billsCreatorsList;
     }
 
-    private void checkBillCreatorValid(BillsCreatorRequest request, User user){
-        BillsCreator billsCreator = repo.existsBillCreator(user.getId(),request.getSubLocality(),request.getConnectionType(),request.getMonth(),request.getYear());
+    private void checkBillCreatorValid(BillsCreatorRequest request, User user) throws EntityAlreadyExistException {
+        BillsCreator billsCreator = repo.getBillCreator(user.getId(),request.getSubLocality(),request.getConnectionType(),request.getMonth(),request.getYear());
+        if (billsCreator!=null) {
+            log.error("Bill Creator Already Created.");
+            throw new EntityAlreadyExistException("Bill Creator Already Created.");
+        }
+        System.out.println("Bill Creator Is Valid.");
     }
 
     @Transactional
