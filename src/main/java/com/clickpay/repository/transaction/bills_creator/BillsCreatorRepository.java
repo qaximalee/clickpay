@@ -19,6 +19,5 @@ public interface BillsCreatorRepository extends JpaRepository<BillsCreator, Long
     nativeQuery = true)
     BillsCreator getIfExistsBillCreator(long userId, Long subLocalityId, Long connectionTypeId, String month, int year, boolean deleted);
 
-    Page<BillsCreator> findAllByCreatedBy(Long userId, Pageable pageable);
-
+    Page<BillsCreator> findAllByCreatedByAndIsDeleted(Long userId, Pageable paging, boolean b);
 }
