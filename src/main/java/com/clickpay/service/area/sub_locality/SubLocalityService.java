@@ -5,13 +5,13 @@ import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.general.EntityNotSavedException;
-import com.clickpay.model.area.Locality;
 import com.clickpay.model.area.SubLocality;
 import com.clickpay.repository.area.SubLocalityRepository;
 import com.clickpay.service.validation.IValidationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -72,11 +72,27 @@ public class SubLocalityService implements ISubLocalityService {
 
     @Override
     public List<SubLocalityResponse> findAllSubLocalityByUserId(Long userId) throws EntityNotFoundException {
+        return SubLocalityResponse.mapFromSubLocality(findAllSubLocalitiesByUserId(userId));
+    }
+
+    @Override
+    public List<SubLocality> findAllByIdInAndUserId(List<Long> subLocalitiesId, long id) throws EntityNotFoundException {
+        log.info("Fetching all sub localities with list of ids.");
+        List<SubLocality> subLocalities = repo.findAllByIdInAndCreatedBy(subLocalitiesId, id);
+        if (CollectionUtils.isEmpty(subLocalities)) {
+            log.error("Data not found with ids provided.");
+            throw new EntityNotFoundException("Data not found with ids provided.");
+        }
+        return subLocalities;
+    }
+
+    @Override
+    public List<SubLocality> findAllSubLocalitiesByUserId(Long userId) throws EntityNotFoundException {
         List<SubLocality> subLocalities = repo.findAllByCreatedByAndIsDeleted(userId, false);
         if (subLocalities == null || subLocalities.isEmpty()) {
             log.debug("No sub locality data found.");
             throw new EntityNotFoundException("Sub locality list not found.");
         }
-        return SubLocalityResponse.mapFromSubLocality(subLocalities);
+        return subLocalities;
     }
 }

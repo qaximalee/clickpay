@@ -15,4 +15,8 @@ public interface ISubLocalityService {
     SubLocality save(SubLocality subLocality) throws BadRequestException, EntityNotSavedException, EntityAlreadyExistException;
 
     List<SubLocalityResponse> findAllSubLocalityByUserId(Long userId) throws EntityNotFoundException;
+
+    List<SubLocality> findAllByIdInAndUserId(List<Long> subLocalitiesId, long id) throws EntityNotFoundException;
+
+    List<SubLocality> findAllSubLocalitiesByUserId(Long userId) throws EntityNotFoundException;
 }

@@ -1,5 +1,6 @@
 package com.clickpay.service.recovery_officer;
 
+import com.clickpay.dto.recovery_officer.area_allocation.AreaAllocationRequest;
 import com.clickpay.dto.recovery_officer.officer.OfficerRequest;
 import com.clickpay.dto.recovery_officer.officer.OfficerUpdateRequest;
 import com.clickpay.dto.recovery_officer.officer.PaginatedOfficerRequest;
@@ -21,9 +22,12 @@ public interface IRecoveryOfficerService {
 
     Message findOfficerById(Long id) throws BadRequestException, EntityNotFoundException;
 
-  //  Message findAllOfficerByUserId(Long userId) throws EntityNotFoundException;
-
     Message<PaginatedOfficerResponse> findAllOfficerByUserId(PaginatedOfficerRequest dto, Long userId) throws EntityNotFoundException, BadRequestException;
 
     Message updateOfficer(OfficerUpdateRequest request, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException;
+
+    Message findAreaAllocatedByUserId(Long userId, User user) throws EntityNotFoundException;
+
+    Message createOfficerArea(AreaAllocationRequest request, User loggedInUser)
+            throws EntityNotFoundException;
 }

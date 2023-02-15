@@ -14,4 +14,6 @@ public interface SubLocalityRepository extends JpaRepository<SubLocality, Long> 
     Optional<SubLocality> findByIdAndIsDeleted(Long id, boolean isDeleted);
 
     List<SubLocality> findAllByCreatedByAndIsDeleted(Long userId, boolean isDeleted);
+
+    List<SubLocality> findAllByIdInAndCreatedBy(List<Long> subLocalitiesId, long id);
 }
