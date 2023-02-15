@@ -1,5 +1,6 @@
 package com.clickpay.service.recovery_officer;
 
+import com.clickpay.dto.recovery_officer.area_allocation.AreaAllocationRequest;
 import com.clickpay.dto.recovery_officer.officer.*;
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
@@ -7,11 +8,12 @@ import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.general.EntityNotSavedException;
 import com.clickpay.model.recovery_officer.Officer;
 import com.clickpay.model.user.User;
+import com.clickpay.service.recovery_officer.area_allocation.IAreaAllocationService;
 import com.clickpay.service.recovery_officer.officer.IOfficerService;
 import com.clickpay.utils.Message;
 import com.clickpay.utils.ResponseMessage;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -19,14 +21,11 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class RecoveryOfficerService implements IRecoveryOfficerService{
 
     private final IOfficerService officerService;
-
-    @Autowired
-    public RecoveryOfficerService(IOfficerService officerService) {
-        this.officerService = officerService;
-    }
+    private final IAreaAllocationService areaAllocationService;
 
     /**
      * CRUD operations for officer
@@ -80,5 +79,26 @@ public class RecoveryOfficerService implements IRecoveryOfficerService{
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
                 .setMessage("Officer "+ ResponseMessage.UPDATED_MESSAGE_SUCCESS);
+    }
+
+    @Override
+    public Message findAreaAllocatedByUserId(Long userId, User user) throws EntityNotFoundException {
+        log.info("Fetching all officer's area allocation selected and unselected data.");
+        return new Message()
+                .setData(areaAllocationService.getAllAreaAllocationsByUserId(userId, user))
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("Area allocation: " + ResponseMessage.FETCHED_MESSAGE_SUCCESS);
+    }
+
+    @Override
+    public Message createOfficerArea(AreaAllocationRequest request, User loggedInUser)
+            throws EntityNotFoundException {
+        log.info("Officer area allocation process started.");
+        areaAllocationService.createOfficerArea(request, loggedInUser);
+        return new Message()
+                .setMessage("Area allocation for user id: " + request.getUserId() + ResponseMessage.CREATED_MESSAGE_SUCCESS)
+                .setCode(HttpStatus.CREATED.toString())
+                .setStatus(HttpStatus.CREATED.value());
     }
 }
