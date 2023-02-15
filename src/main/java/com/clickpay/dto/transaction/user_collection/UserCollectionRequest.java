@@ -1,11 +1,13 @@
 package com.clickpay.dto.transaction.user_collection;
 
+import com.clickpay.model.transaction.BillsCreator;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -29,5 +31,8 @@ public class UserCollectionRequest {
     private String paymentType;
 
     private String remarks;
+
+    private BillsCreator billCreator;
+
 
 }

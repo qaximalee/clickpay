@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +36,12 @@ public interface UserCollectionRepository extends JpaRepository<UserCollection, 
 
     boolean existsByMonthAndYearAndCustomer_IdAndIsDeleted(Months month, Integer year, Long customerId, boolean isDeleted);
 
-//    @Query(value = "",
-//    nativeQuery = true)
-//    List<Object[]> findCustomersWithFilter(String subLocality, String customerStatus, String userCollectionStatus, String connectionType, String searchInput, Long usrId);
+    boolean existsByMonthAndYearAndCollectionStatusAndPaymentTypeAndCustomer_ConnectionType_IdAndBillsCreator_Id(Months month, int year, UserCollectionStatus paid, PaymentType monthly, Long connectionTypeId, Long billCreatorId);
+
+    boolean existsByMonthAndYearAndCollectionStatusAndPaymentTypeAndCustomer_SubLocality_IdAndCustomer_ConnectionType_IdAndBillsCreator_Id(Months month, int year, UserCollectionStatus paid, PaymentType monthly, Long subLocalityId, Long connectionTypeId, Long billCreatorId);
+
+    List<UserCollection> findAllByMonthAndYearAndCollectionStatusAndPaymentTypeAndCustomer_ConnectionType_IdAndBillsCreator_Id(Months month, int year, UserCollectionStatus paid, PaymentType monthly, Long connectionTypeId, Long billCreatorId);
+
+    List<UserCollection> findAllByMonthAndYearAndCollectionStatusAndPaymentTypeAndCustomer_SubLocality_IdAndCustomer_ConnectionType_IdAndBillsCreator_Id(Months month, int year, UserCollectionStatus paid, PaymentType monthly, Long subLocalityId, Long connectionTypeId, Long billCreatorId);
+
 }

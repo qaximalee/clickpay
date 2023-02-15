@@ -1,6 +1,7 @@
 package com.clickpay.controller.transaction;
 
-import com.clickpay.dto.transaction.bills_creator.BillsCreatorRequest;
+import com.clickpay.dto.transaction.bills_creator.BillsCreatorCreateRequest;
+import com.clickpay.dto.transaction.bills_creator.BillsCreatorDeleteRequest;
 import com.clickpay.dto.transaction.bills_creator.PaginatedBillsCreatorResponse;
 import com.clickpay.errors.general.*;
 import com.clickpay.model.transaction.BillsCreator;
@@ -25,7 +26,7 @@ public class BillsCreatorController {
 
     @PostMapping("/")
     public ResponseEntity<Message<BillsCreator>> createBillsCreator(
-            @Valid @RequestBody BillsCreatorRequest request,
+            @Valid @RequestBody BillsCreatorCreateRequest request,
             Principal principal)
             throws PermissionException, EntityAlreadyExistException, BadRequestException, EntityNotFoundException, EntityNotSavedException {
         User user = authService.hasPermission(ControllerConstants.BILL_CREATOR, principal);
@@ -46,14 +47,14 @@ public class BillsCreatorController {
         return ResponseEntity.status(m.getStatus()).body(m);
     }
 
-    @DeleteMapping("/")
+    @PostMapping("/delete")
     public ResponseEntity<Message<BillsCreator>> deleteBillsCreator(
-            @Valid @RequestParam Long billsCreatorId,
+            @Valid @RequestBody BillsCreatorDeleteRequest request,
             Principal principal)
             throws PermissionException, BadRequestException, EntityNotFoundException, EntityNotSavedException {
         System.out.println();
         User user = authService.hasPermission(ControllerConstants.BILL_CREATOR, principal);
-        Message<BillsCreator> m = transactionService.deleteBillCreator(billsCreatorId,user);
+        Message<BillsCreator> m = transactionService.deleteBillCreator(request,user);
         return ResponseEntity.status(m.getStatus()).body(m);
     }
 }

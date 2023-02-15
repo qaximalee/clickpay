@@ -1,17 +1,24 @@
 package com.clickpay.service.transaction.bills_creator;
 
-import com.clickpay.dto.transaction.bills_creator.BillsCreatorRequest;
+import com.clickpay.dto.transaction.bills_creator.BillsCreatorCreateRequest;
+import com.clickpay.dto.transaction.user_collection.UserCollectionRequest;
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
+import com.clickpay.errors.general.EntityNotSavedException;
 import com.clickpay.model.area.SubLocality;
 import com.clickpay.model.transaction.BillsCreator;
 import com.clickpay.model.connection_type.ConnectionType;
 import com.clickpay.model.user.User;
+import com.clickpay.model.user_profile.Customer;
 import com.clickpay.repository.transaction.bills_creator.BillsCreatorRepository;
 import com.clickpay.service.area.sub_locality.ISubLocalityService;
 import com.clickpay.service.connection_type.IConnectionTypeService;
+import com.clickpay.service.transaction.ITransactionService;
+import com.clickpay.service.transaction.user_collection.IUserCollectionService;
+import com.clickpay.service.user_profile.customer.ICustomerService;
 import com.clickpay.utils.enums.Months;
+import com.clickpay.utils.enums.PaymentType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -22,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -31,17 +39,20 @@ public class BillsCreatorService implements IBillsCreatorService{
     private final BillsCreatorRepository repo;
     private final IConnectionTypeService connectionTypeService;
     private final ISubLocalityService subLocalityService;
+    private final ICustomerService customerService;
+    private final IUserCollectionService userCollectionService;
 
     @Transactional
     @Override
-    public BillsCreator createBillsCreator(BillsCreatorRequest request, User user) throws BadRequestException, EntityNotFoundException, EntityAlreadyExistException {
+    public BillsCreator createBillsCreator(BillsCreatorCreateRequest request, User user) throws BadRequestException, EntityNotFoundException, EntityAlreadyExistException, EntityNotSavedException {
+
+        // checking bill creator valid or not
         checkBillCreatorValid(request,user);
 
         ConnectionType connectionType = connectionTypeService.findById(request.getConnectionType());
 
         BillsCreator billsCreator = new BillsCreator();
 
-        billsCreator.setAmount(request.getAmount());
         billsCreator.setConnectionType(connectionType);
         if(request.getSubLocality()!=null){
             SubLocality subLocality = subLocalityService.findById(request.getSubLocality());
@@ -49,6 +60,37 @@ public class BillsCreatorService implements IBillsCreatorService{
         }
         billsCreator.setMonth(Months.of(request.getMonth()));
         billsCreator.setYear(request.getYear());
+        billsCreator = repo.save(billsCreator);
+
+        // get customers for create user collections
+        List<Customer> customers;
+        if (request.getSubLocality() == null){
+            customers = customerService.findAllCustomerByIdAndConnectionTypeId(user.getId(), request.getConnectionType());
+        }else {
+            customers = customerService.findAllCustomerByIdAndConnectionTypeIdAndSubLocalityId(user.getId(),
+                    request.getConnectionType(), request.getSubLocality());
+        }
+
+        double totalAmount = 0;
+
+        // creating user collections
+        for(Customer customer : customers){
+            totalAmount = totalAmount + customer.getAmount();
+            UserCollectionRequest userCollectionRequest = new UserCollectionRequest();
+            userCollectionRequest.setCustomerId(customer.getId());
+            userCollectionRequest.setAmount(customer.getAmount());
+            userCollectionRequest.setMonth(request.getMonth());
+            userCollectionRequest.setYear(request.getYear());
+            userCollectionRequest.setPaymentType(PaymentType.MONTHLY.name());
+            userCollectionRequest.setBillCreator(billsCreator);
+            userCollectionService.createUserCollection(userCollectionRequest,user);
+        }
+
+        request.setAmount(totalAmount);
+        request.setNoOfUsers(customers.size());
+
+        // remaining bill creator field save
+        billsCreator.setAmount(request.getAmount());
         billsCreator.setNoOfUsers(request.getNoOfUsers());
         billsCreator.setDeleted(false);
         billsCreator.setBy(user);
@@ -75,8 +117,9 @@ public class BillsCreatorService implements IBillsCreatorService{
         return billsCreatorsList;
     }
 
-    private void checkBillCreatorValid(BillsCreatorRequest request, User user) throws EntityAlreadyExistException {
-        BillsCreator billsCreator = repo.getBillCreator(user.getId(),request.getSubLocality(),request.getConnectionType(),request.getMonth(),request.getYear());
+    @Override
+    public void checkBillCreatorValid(BillsCreatorCreateRequest request, User user) throws EntityAlreadyExistException {
+        BillsCreator billsCreator = repo.getIfExistsBillCreator(user.getId(),request.getSubLocality(),request.getConnectionType(),request.getMonth(),request.getYear(),false);
         if (billsCreator!=null) {
             log.error("Bill Creator Already Created.");
             throw new EntityAlreadyExistException("Bill Creator Already Created.");

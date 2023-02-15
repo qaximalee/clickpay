@@ -12,6 +12,7 @@ import com.clickpay.utils.enums.Months;
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 public interface IUserCollectionService {
@@ -20,8 +21,6 @@ public interface IUserCollectionService {
 
     @Transactional
     String updateUserCollectionStatusAsPaid(UserCollectionStatusUpdateAsPaidDTO updateDTO, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException;
-
-//    List<CustomerResponse> getCustomersByFilter(PaginatedUserCollectionRequest request, User user);
 
     @Transactional
     String updateUserCollectionStatusAsUnPaid(Long billNo, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException;
@@ -43,4 +42,8 @@ public interface IUserCollectionService {
 
     @Transactional
     UserCollection delete(Long collectionId, Long customerId, User user) throws EntityNotFoundException, BadRequestException, EntityNotSavedException;
+
+    boolean checkBillCreatorCollectionPaid(Long billCreatorId, Long connectionTypeId, Long subLocalityId, String month, int year) throws BadRequestException;
+
+    void deleteBillCreatorUserCollections(Long billCreatorId, Long connectionTypeId, Long subLocalityId, String month, int year, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException;
 }

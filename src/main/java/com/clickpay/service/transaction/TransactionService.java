@@ -1,6 +1,7 @@
 package com.clickpay.service.transaction;
 
-import com.clickpay.dto.transaction.bills_creator.BillsCreatorRequest;
+import com.clickpay.dto.transaction.bills_creator.BillsCreatorCreateRequest;
+import com.clickpay.dto.transaction.bills_creator.BillsCreatorDeleteRequest;
 import com.clickpay.dto.transaction.bills_creator.PaginatedBillsCreatorResponse;
 import com.clickpay.dto.transaction.user_collection.PaginatedUserCollectionsResponse;
 import com.clickpay.dto.transaction.user_collection.UserCollectionRequest;
@@ -10,16 +11,15 @@ import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.general.EntityNotSavedException;
-import com.clickpay.model.transaction.Bill;
 import com.clickpay.model.transaction.BillsCreator;
 import com.clickpay.model.transaction.UserCollection;
 import com.clickpay.model.user.User;
 import com.clickpay.model.user_profile.Customer;
-import com.clickpay.service.transaction.bill.IBillService;
 import com.clickpay.service.transaction.bills_creator.IBillsCreatorService;
 import com.clickpay.service.transaction.user_collection.IUserCollectionService;
 import com.clickpay.service.user_profile.customer.ICustomerService;
 import com.clickpay.utils.Message;
+import com.clickpay.utils.enums.Months;
 import com.clickpay.utils.enums.PaymentType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +28,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -37,7 +38,6 @@ public class TransactionService implements ITransactionService{
 
     private final IUserCollectionService userCollectionService;
     private final IBillsCreatorService billsCreatorService;
-    private final ICustomerService customerService;
 
     @Override
     public Message<UserCollectionResponse> createUserCollection(UserCollectionRequest requestDto, User user)
@@ -119,55 +119,13 @@ public class TransactionService implements ITransactionService{
                 .setData(userCollectionService.updateUserCollectionStatusAsUnPaid(billNo,user));
     }
 
-    // find of customers in user collection
-//    @Override
-//    public Message<PaginatedUserCollectionResponse> getAllUserOfCollections(PaginatedUserCollectionRequest request, User user){
-//        log.info("Fetching customers by finding fields.");
-//
-//        List<CustomerResponse> customers = userCollectionService.getCustomersByFilter(request,user);
-//        PaginatedUserCollectionResponse response = PaginatedUserCollectionResponse.builder()
-//                .customersList(customers)
-//                .pageNo(request.getPageNo())
-//                .pageSize(request.getPageSize())
-//                .noOfPages().build();
-//
-//        return new Message<UserCollectionResponse>()
-//                .setStatus(HttpStatus.OK.value())
-//                .setCode(HttpStatus.OK.toString())
-//                .setMessage("Customers by User Collections Fetched Successfully.")
-//                .setData(response);
-//    }
-
     /**
     * CRUD For Bills Creator
     * */
     @Transactional
     @Override
-    public Message<BillsCreator> createBillsCreator(BillsCreatorRequest requestDto, User user) throws EntityNotFoundException, EntityAlreadyExistException, BadRequestException, EntityNotSavedException {
+    public Message<BillsCreator> createBillsCreator(BillsCreatorCreateRequest requestDto, User user) throws EntityNotFoundException, EntityAlreadyExistException, BadRequestException, EntityNotSavedException {
         log.info("Creating bills creator by requested data.");
-        List<Customer> customers;
-        if (requestDto.getSubLocality() == null){
-            customers = customerService.findAllCustomerByIdAndConnectionTypeId(user.getId(), requestDto.getConnectionType());
-        }else {
-            customers = customerService.findAllCustomerByIdAndConnectionTypeIdAndSubLocalityId(user.getId(),
-                    requestDto.getConnectionType(), requestDto.getSubLocality());
-        }
-
-        double totalAmount = 0;
-
-        for(Customer customer : customers){
-            totalAmount = totalAmount + customer.getAmount();
-            UserCollectionRequest userCollectionRequest = new UserCollectionRequest();
-            userCollectionRequest.setCustomerId(customer.getId());
-            userCollectionRequest.setAmount(customer.getAmount());
-            userCollectionRequest.setMonth(requestDto.getMonth());
-            userCollectionRequest.setYear(requestDto.getYear());
-            userCollectionRequest.setPaymentType(PaymentType.MONTHLY.name());
-            createUserCollection(userCollectionRequest,user);
-        }
-
-        requestDto.setAmount(totalAmount);
-        requestDto.setNoOfUsers(customers.size());
 
         BillsCreator response = billsCreatorService.createBillsCreator(requestDto,user);
         return new Message<BillsCreator>()
@@ -197,14 +155,36 @@ public class TransactionService implements ITransactionService{
     }
 
     @Override
-    public Message<BillsCreator> deleteBillCreator(Long billCreatorId, User user) throws EntityNotFoundException, EntityNotSavedException {
+    public Message<BillsCreator> deleteBillCreator(BillsCreatorDeleteRequest request, User user) throws EntityNotFoundException, BadRequestException, EntityNotSavedException {
         log.info("Deleting bills creator.");
+
+        // check any bill creator collection paid or not
+        if (userCollectionService.checkBillCreatorCollectionPaid(
+                request.getBillCreatorId(),
+                request.getConnectionType(),
+                request.getSubLocality(),
+                Months.of(request.getMonth()).name(),
+                request.getYear()
+        )){
+            log.info("Some User Collection Are Paid So Not Permit to Delete Bill Creator.");
+            throw new BadRequestException("Some User Collection Are Paid So Not Permit to Delete Bill Creator.");
+        }
+
+        // delete all user collections which created by bill creator
+        userCollectionService.deleteBillCreatorUserCollections(
+                request.getBillCreatorId(),
+                request.getConnectionType(),
+                request.getSubLocality(),
+                Months.of(request.getMonth()).name(),
+                request.getYear(),
+                user
+        );
 
         return new Message<BillsCreator>()
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
                 .setMessage("Bills Creator Deleted Successfully.")
-                .setData(billsCreatorService.deleteBillCreators(billCreatorId,user));
+                .setData(billsCreatorService.deleteBillCreators(request.getBillCreatorId(),user));
     }
 
 }

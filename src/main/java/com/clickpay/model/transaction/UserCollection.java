@@ -53,9 +53,13 @@ public class UserCollection extends Auditable<Long> {
     @Column(name = "is_deleted")
     private boolean isDeleted;
 
+    @ManyToOne
+    @JoinColumn(name = "bill_creator_id")
+    private BillsCreator billsCreator;
+
     public static UserCollection mapInUserCollection(Customer customer, UserCollectionStatus userCollectionStatus,
                                                      double amount, PaymentType paymentType, Months month, int year,
-                                                     String remarks, Long userId){
+                                                     String remarks, Long userId, Date createdDate, BillsCreator billCreator){
         System.out.println("Map user collection data.");
         UserCollection userCollection = new UserCollection();
         userCollection.setCustomer(customer);
@@ -66,14 +70,16 @@ public class UserCollection extends Auditable<Long> {
         userCollection.setYear(year);
         userCollection.setRemarks(remarks);
         userCollection.setDeleted(false);
+        if (billCreator!=null){
+            userCollection.setBillsCreator(billCreator);
+        }
         if (userCollection.getId()!=null){
             userCollection.setModifiedBy(userId);
             userCollection.setLastModifiedDate(new Date());
         }else {
             userCollection.setCreatedBy(userId);
-            userCollection.setCreationDate(new Date());
+            userCollection.setCreationDate(createdDate);
         }
-
 
         return userCollection;
     }

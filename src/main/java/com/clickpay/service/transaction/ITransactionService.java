@@ -1,6 +1,7 @@
 package com.clickpay.service.transaction;
 
-import com.clickpay.dto.transaction.bills_creator.BillsCreatorRequest;
+import com.clickpay.dto.transaction.bills_creator.BillsCreatorCreateRequest;
+import com.clickpay.dto.transaction.bills_creator.BillsCreatorDeleteRequest;
 import com.clickpay.dto.transaction.bills_creator.PaginatedBillsCreatorResponse;
 import com.clickpay.dto.transaction.user_collection.PaginatedUserCollectionsResponse;
 import com.clickpay.dto.transaction.user_collection.UserCollectionRequest;
@@ -10,7 +11,6 @@ import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.general.EntityNotSavedException;
-import com.clickpay.model.transaction.Bill;
 import com.clickpay.model.transaction.BillsCreator;
 import com.clickpay.model.transaction.UserCollection;
 import com.clickpay.model.user.User;
@@ -32,12 +32,10 @@ public interface ITransactionService {
     Message<String> updateUserCollectionStatusAsUnPaid(Long billNo, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException;
 
     @Transactional
-    Message<BillsCreator> createBillsCreator(BillsCreatorRequest requestDto, User user) throws EntityNotFoundException, EntityAlreadyExistException, BadRequestException, EntityNotSavedException;
+    Message<BillsCreator> createBillsCreator(BillsCreatorCreateRequest requestDto, User user) throws EntityNotFoundException, EntityAlreadyExistException, BadRequestException, EntityNotSavedException;
 
     Message<PaginatedBillsCreatorResponse> getAllBillCreatorsByUserId(Long userId, int pageNo, int pageSize) throws BadRequestException, EntityNotFoundException, EntityNotSavedException;
 
-    Message<BillsCreator> deleteBillCreator(Long billCreatorId, User user) throws EntityNotFoundException, EntityNotSavedException;
+    Message<BillsCreator> deleteBillCreator(BillsCreatorDeleteRequest request, User user) throws EntityNotFoundException, EntityNotSavedException, BadRequestException;
 
-    // find of customers in user collection
-    //Message<PaginatedUserCollectionResponse> getAllUserOfCollections(PaginatedUserCollectionRequest request, User user);
 }

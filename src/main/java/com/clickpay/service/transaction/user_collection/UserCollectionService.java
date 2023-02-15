@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -78,7 +79,9 @@ public class UserCollectionService implements IUserCollectionService {
                     month,
                     requestDto.getYear(),
                     requestDto.getRemarks(),
-                    user.getId());
+                    user.getId(),
+                    new Date(),
+                    requestDto.getBillCreator());
 
             return save(userCollection);
         }
@@ -93,7 +96,9 @@ public class UserCollectionService implements IUserCollectionService {
                 month,
                 requestDto.getYear(),
                 requestDto.getRemarks(),
-                user.getId());
+                user.getId(),
+                new Date(),
+                null);
 
         save(userCollection);
 
@@ -104,7 +109,9 @@ public class UserCollectionService implements IUserCollectionService {
                 month,
                 requestDto.getYear(),
                 requestDto.getRemarks(),
-                user.getId());
+                user.getId(),
+                new Date(),
+                null);
 
         return save(userCollection1);
     }
@@ -123,18 +130,22 @@ public class UserCollectionService implements IUserCollectionService {
                 month,
                 requestDto.getYear(),
                 requestDto.getRemarks(),
-                user.getId());
+                user.getId(),
+                new Date(),
+                null);
 
         save(userCollection);
 
         oldUserCollection = UserCollection.mapInUserCollection(customer,
                 oldUserCollection.getCollectionStatus(),
-               (oldUserCollection.getAmount()- requestDto.getAmount()),
+                (oldUserCollection.getAmount()- requestDto.getAmount()),
                 paymentType,
                 month,
-               requestDto.getYear(),
-               requestDto.getRemarks(),
-                user.getId());
+                requestDto.getYear(),
+                requestDto.getRemarks(),
+                user.getId(),
+                new Date(),
+                null);
 
 
         return save(oldUserCollection);
@@ -198,22 +209,6 @@ public class UserCollectionService implements IUserCollectionService {
         return "User Collections UnPaid Successfully.";
 
     }
-
-//    @Override
-//    public List<CustomerResponse> getCustomersByFilter(PaginatedUserCollectionRequest request, User user){
-//
-//        log.info("Fetching User collection by collection Id ");
-//
-//        List<Object[]> customersFiltered = repo.findCustomersWithFilter(request.getSubLocality(),
-//                request.getCustomerStatus(),
-//                request.getUserCollectionStatus(),
-//                request.getConnectionType(),
-//                request.getSearchInput(),
-//                user.getId());
-//
-//        return CustomerResponse.mapListOfCustomerDetail(customersFiltered);
-//
-//    }
 
 
     @Transactional
@@ -386,6 +381,64 @@ public class UserCollectionService implements IUserCollectionService {
             throw new EntityAlreadyExistException("User collection already paid.");
         }
 
+    }
+
+    @Override
+    public boolean checkBillCreatorCollectionPaid(Long billCreatorId, Long connectionTypeId, Long subLocalityId, String month, int year) throws BadRequestException {
+        log.info("Checking any bill creator collection paid or not.");
+        if (subLocalityId!=null){
+            return repo.existsByMonthAndYearAndCollectionStatusAndPaymentTypeAndCustomer_SubLocality_IdAndCustomer_ConnectionType_IdAndBillsCreator_Id(
+                    Months.of(month),
+                    year,
+                    UserCollectionStatus.PAID,
+                    PaymentType.MONTHLY,
+                    subLocalityId,
+                    connectionTypeId,
+                    billCreatorId
+            );
+        }else {
+            return repo.existsByMonthAndYearAndCollectionStatusAndPaymentTypeAndCustomer_ConnectionType_IdAndBillsCreator_Id(
+                    Months.of(month),
+                    year,
+                    UserCollectionStatus.PAID,
+                    PaymentType.MONTHLY,
+                    connectionTypeId,
+                    billCreatorId
+            );
+        }
+
+    }
+
+    @Override
+    public void deleteBillCreatorUserCollections(Long billCreatorId, Long connectionTypeId, Long subLocalityId, String month, int year, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+        log.info("All Bill Creator's User Collections Deletion Started.");
+
+        List<UserCollection> userCollections = new ArrayList<>();
+        if (subLocalityId!=null){
+            userCollections = repo.findAllByMonthAndYearAndCollectionStatusAndPaymentTypeAndCustomer_SubLocality_IdAndCustomer_ConnectionType_IdAndBillsCreator_Id(
+                    Months.of(month),
+                    year,
+                    UserCollectionStatus.UNPAID,
+                    PaymentType.MONTHLY,
+                    subLocalityId,
+                    connectionTypeId,
+                    billCreatorId
+            );
+        }else {
+            userCollections = repo.findAllByMonthAndYearAndCollectionStatusAndPaymentTypeAndCustomer_ConnectionType_IdAndBillsCreator_Id(
+                    Months.of(month),
+                    year,
+                    UserCollectionStatus.UNPAID,
+                    PaymentType.MONTHLY,
+                    connectionTypeId,
+                    billCreatorId
+            );
+        }
+
+        for(UserCollection userCollection : userCollections){
+            delete(userCollection.getId(),userCollection.getCustomer().getId(),user);
+        }
+        log.info("All Bill Creator User Collections Deleted Successfully.");
     }
 
 }

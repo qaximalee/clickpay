@@ -1,21 +1,17 @@
 package com.clickpay.dto.transaction.bills_creator;
 
-import com.clickpay.utils.enums.Months;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-
+import java.util.Date;
 
 @Getter
 @Setter
-public class BillsCreatorRequest {
-
+public class BillsCreatorDeleteRequest {
+    private Long billCreatorId;
     private String month;
     private int year;
     private Long connectionType;
     private Long subLocality;
-    private double amount;
     private int noOfUsers;
-
 }
