@@ -109,7 +109,7 @@ public class BillsCreatorService implements IBillsCreatorService{
     public Page<BillsCreator> getAllBillCreatorsByUserId(Long userId, int pageNo, int pageSize) throws EntityNotFoundException {
         log.info("Fetching bills creator list by user id: "+userId);
         Pageable paging = PageRequest.of(pageNo,pageSize);
-        Page<BillsCreator> billsCreatorsList = repo.findAllByCreatedByAndIsDeleted(userId,paging,false);
+        Page<BillsCreator> billsCreatorsList = repo.findAllByCreatedBy(userId,paging);
         if (CollectionUtils.isEmpty(billsCreatorsList.getContent())) {
             log.error("No Bills Creator data found.");
             throw new EntityNotFoundException("Bills Creator list not found.");

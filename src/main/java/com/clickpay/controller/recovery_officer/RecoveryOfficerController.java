@@ -1,5 +1,6 @@
 package com.clickpay.controller.recovery_officer;
 
+import com.clickpay.dto.recovery_officer.area_allocation.AreaAllocationRequest;
 import com.clickpay.dto.recovery_officer.officer.*;
 import com.clickpay.errors.general.*;
 import com.clickpay.model.area.City;
@@ -82,6 +83,32 @@ public class RecoveryOfficerController {
             throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
         User user = authService.hasPermission(ControllerConstants.RECOVERY_OFFICER_SUB, principal);
         Message m = recoveryOfficerService.updateOfficer(request, user);
+        return ResponseEntity.ok().body(m);
+    }
+
+    @PostMapping("/officer-area")
+    @ApiOperation(
+            value = "Allocate area (sub-localities) to the officer.",
+            produces = "application/json",
+            response = ResponseEntity.class)
+    public ResponseEntity createOfficerArea(
+            @Valid @RequestBody AreaAllocationRequest request,
+            Principal principal)
+            throws EntityNotFoundException, PermissionException {
+        User user = authService.hasPermission(ControllerConstants.AREA_ALLOCATION, principal);
+        Message m = recoveryOfficerService.createOfficerArea(request, user);
+        return ResponseEntity
+                .created(
+                        URI.create(DOMAIN_URL + "/" + ControllerConstants.RECOVERY_OFFICER + "/officer-area/" + request.getUserId())
+                ).body(m);
+    }
+
+    @GetMapping("/officer-area/{id}")
+    public ResponseEntity getOfficerArea(@NotNull @PathVariable("id") Long userId,
+                                     Principal principal)
+            throws EntityNotFoundException, PermissionException {
+        User user = authService.hasPermission(ControllerConstants.AREA_ALLOCATION, principal);
+        Message m = recoveryOfficerService.findAreaAllocatedByUserId(userId, user);
         return ResponseEntity.ok().body(m);
     }
 }
