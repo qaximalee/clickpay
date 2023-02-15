@@ -257,7 +257,7 @@ public class AreaService implements IAreaService{
     public Message findAllSubLocalityByUserId(Long userId) throws EntityNotFoundException {
         log.info("Sub locality list is fetching.");
         return new Message()
-                .setData(subLocalityService.findAllLocalityByUserId(userId))
+                .setData(subLocalityService.findAllSubLocalityByUserId(userId))
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
                 .setMessage("Sub locality list "+ ResponseMessage.FETCHED_MESSAGE_SUCCESS);

@@ -11,4 +11,6 @@ public interface IUserService {
     User save(User user) throws BadRequestException, EntityNotSavedException;
 
     boolean existsByUsernameOREmail(String internetId, String email);
+
+    User findById(Long id) throws EntityNotFoundException;
 }

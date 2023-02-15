@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.function.Function;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -99,5 +99,14 @@ public class UserService implements IUserService, UserDetailsService {
     @Override
     public boolean existsByUsernameOREmail(String username, String email) {
         return repo.existsByUsernameOrEmail(username, email);
+    }
+
+    @Override
+    public User findById(Long id) throws EntityNotFoundException {
+        log.info("Fetching the user with userId.");
+        return repo.findById(id).orElseThrow(() -> {
+            log.error("User not found with id: "+id);
+            return new EntityNotFoundException("User not found with provided id.");
+        });
     }
 }
