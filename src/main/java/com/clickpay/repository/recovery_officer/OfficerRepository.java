@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OfficerRepository extends JpaRepository<Officer, Long> {
@@ -17,4 +18,10 @@ public interface OfficerRepository extends JpaRepository<Officer, Long> {
             " where (status = :status OR :status is null) AND created_by = :userId ",
     nativeQuery = true)
     Page<Officer> findAllByCreatedByAndStatus(Long userId, String status, Pageable pageable);
+
+    Page<Officer> findAllByCreatedBy(Long userId, Pageable pageable);
+
+    List<Officer> findAllByCreatedBy(Long userId);
+
+    Optional<Officer> findByUserIdAndActive(long id, boolean isActive);
 }

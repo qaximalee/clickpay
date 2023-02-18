@@ -30,4 +30,12 @@ public interface IRecoveryOfficerService {
 
     Message createOfficerArea(AreaAllocationRequest request, User loggedInUser)
             throws EntityNotFoundException;
+
+    Message getAllCustomerDropdownForCollectionHistory(User user) throws EntityNotFoundException;
+
+    Message getUserCollectionByCustomerId(Long customerId, Integer pageNo, Integer pageSize, User user) throws EntityNotFoundException;
+
+    Message getAllOfficerByOfficerIdOrAdmin(User user) throws EntityNotFoundException;
+
+    Message getUserCollectionByRecoveryOfficer(int pageNo, int pageSize, User user) throws EntityNotFoundException;
 }

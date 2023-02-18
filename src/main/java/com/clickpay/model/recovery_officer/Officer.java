@@ -14,6 +14,9 @@ import java.util.Date;
 @Table(name = "officer")
 public class Officer extends Auditable<Long> {
 
+    @Transient
+    public static final String OFFICER = "OFFICER";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

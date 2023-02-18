@@ -156,6 +156,14 @@ public class UserProfileController extends CompanyController {
         return ResponseEntity.ok().body(m);
     }
 
+    @GetMapping("/package/by-company")
+    public ResponseEntity getAllPackage(@Valid @RequestParam Long companyId, Principal principal)
+            throws BadRequestException, EntityNotFoundException, PermissionException {
+        User user = authService.hasPermission(ControllerConstants.PACKAGE, principal);
+        Message m = userProfileService.findAllPackageByCompanyIdAndUserId(companyId, user.getId());
+        return ResponseEntity.ok().body(m);
+    }
+
     @PutMapping("/package")
     public ResponseEntity updatePackage(@Valid @RequestBody PackageRequest dto,
                                         Principal principal)

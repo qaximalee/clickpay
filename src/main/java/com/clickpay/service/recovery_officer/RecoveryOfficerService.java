@@ -10,6 +10,8 @@ import com.clickpay.model.recovery_officer.Officer;
 import com.clickpay.model.user.User;
 import com.clickpay.service.recovery_officer.area_allocation.IAreaAllocationService;
 import com.clickpay.service.recovery_officer.officer.IOfficerService;
+import com.clickpay.service.transaction.ITransactionService;
+import com.clickpay.service.user_profile.customer.ICustomerService;
 import com.clickpay.utils.Message;
 import com.clickpay.utils.ResponseMessage;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,8 @@ public class RecoveryOfficerService implements IRecoveryOfficerService{
 
     private final IOfficerService officerService;
     private final IAreaAllocationService areaAllocationService;
+    private final ICustomerService customerService;
+    private final ITransactionService transactionService;
 
     /**
      * CRUD operations for officer
@@ -100,5 +104,37 @@ public class RecoveryOfficerService implements IRecoveryOfficerService{
                 .setMessage("Area allocation for user id: " + request.getUserId() + ResponseMessage.CREATED_MESSAGE_SUCCESS)
                 .setCode(HttpStatus.CREATED.toString())
                 .setStatus(HttpStatus.CREATED.value());
+    }
+
+    @Override
+    public Message getAllCustomerDropdownForCollectionHistory(User user) throws EntityNotFoundException {
+        log.info("Customer dropdown data from recovery officer by officer allocation data.");
+        return new Message()
+                .setMessage("Customer dropdown data for user: "+ user.getUsername() + ResponseMessage.FETCHED_MESSAGE_SUCCESS)
+                .setData(customerService.getAllUsersWithRespectToTheRecoveryOfficer(user))
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString());
+    }
+
+    @Override
+    public Message getUserCollectionByCustomerId(Long customerId, Integer pageNo, Integer pageSize, User user) throws EntityNotFoundException {
+        log.info("Fetching all user collection for a customer.");
+        return transactionService.getUserCollectionByCustomerId(customerId, pageNo, pageSize);
+    }
+
+    @Override
+    public Message getAllOfficerByOfficerIdOrAdmin(User user) throws EntityNotFoundException {
+        log.info("Fetching officer(s) by logged in user.");
+        return new Message()
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("Officer data for user: "+ user.getUsername() + ResponseMessage.FETCHED_MESSAGE_SUCCESS)
+                .setData(officerService.getAllUsersWithRespectToTheAdminOrARecoveryOfficerId(user));
+    }
+
+    @Override
+    public Message getUserCollectionByRecoveryOfficer(int pageNo, int pageSize, User user) throws EntityNotFoundException {
+        log.info("Fetching all user collection for a customer.");
+        return transactionService.getUserCollectionByReceivingUser(pageNo, pageSize, user);
     }
 }

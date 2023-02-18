@@ -5,6 +5,7 @@ import com.clickpay.dto.recovery_officer.area_allocation.AreaAllocationRequest;
 import com.clickpay.dto.recovery_officer.area_allocation.AreaAllocationResponse;
 import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.model.area.SubLocality;
+import com.clickpay.model.recovery_officer.Officer;
 import com.clickpay.model.recovery_officer.OfficerArea;
 import com.clickpay.model.user.User;
 import com.clickpay.repository.recovery_officer.AreaAllocationRepository;
@@ -23,8 +24,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AreaAllocationService implements IAreaAllocationService{
 
-    private final String OFFICER = "OFFICER";
-
     private final AreaAllocationRepository repo;
     private final IUserService userService;
     private final ISubLocalityService subLocalityService;
@@ -32,7 +31,7 @@ public class AreaAllocationService implements IAreaAllocationService{
     @Override
     public void createOfficerArea(AreaAllocationRequest request, User loggedInUser) throws EntityNotFoundException {
         User user = userService.findById(request.getUserId());
-        if(!user.getUserType().getType().equalsIgnoreCase(OFFICER)){
+        if(!user.getUserType().getType().equalsIgnoreCase(Officer.OFFICER)){
             log.error("User fetched by id provided is not a recovery officer type.");
             throw new EntityNotFoundException("User is not a recovery officer type.");
         }

@@ -11,7 +11,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -96,5 +99,6 @@ public class Customer extends Auditable<Long> {
 
     @Column(name = "active")
     private boolean active = true;
+
 
 }

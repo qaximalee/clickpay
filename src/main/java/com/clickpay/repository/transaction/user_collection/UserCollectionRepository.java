@@ -44,4 +44,5 @@ public interface UserCollectionRepository extends JpaRepository<UserCollection, 
 
     List<UserCollection> findAllByMonthAndYearAndCollectionStatusAndPaymentTypeAndCustomer_SubLocality_IdAndCustomer_ConnectionType_IdAndBillsCreator_Id(Months month, int year, UserCollectionStatus paid, PaymentType monthly, Long subLocalityId, Long connectionTypeId, Long billCreatorId);
 
+    Page<UserCollection> findByModifiedByAndIsDeleted(long officerId, boolean b, Pageable paging);
 }

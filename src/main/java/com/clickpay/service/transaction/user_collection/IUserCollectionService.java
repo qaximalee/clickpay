@@ -46,4 +46,6 @@ public interface IUserCollectionService {
     boolean checkBillCreatorCollectionPaid(Long billCreatorId, Long connectionTypeId, Long subLocalityId, String month, int year) throws BadRequestException;
 
     void deleteBillCreatorUserCollections(Long billCreatorId, Long connectionTypeId, Long subLocalityId, String month, int year, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException;
+
+    Page<UserCollection> getUserCollectionByOfficerId(long officerId, int pageNo, int pageSize) throws EntityNotFoundException;
 }

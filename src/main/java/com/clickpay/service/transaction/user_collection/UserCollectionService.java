@@ -246,8 +246,8 @@ public class UserCollectionService implements IUserCollectionService {
         Page<UserCollection> userCollection = repo.findByCustomer_IdAndIsDeleted(customerId,false,paging);
 
         if (userCollection.isEmpty()) {
-            log.error("User collection not found or may be deleted.");
-            throw new EntityNotFoundException("User collection not found or may be deleted.");
+            log.error("User collection not found.");
+            throw new EntityNotFoundException("User collection not found.");
         }
         return userCollection;
     }
@@ -441,4 +441,17 @@ public class UserCollectionService implements IUserCollectionService {
         log.info("All Bill Creator User Collections Deleted Successfully.");
     }
 
+    @Override
+    public Page<UserCollection> getUserCollectionByOfficerId(long officerId, int pageNo, int pageSize) throws EntityNotFoundException {
+        log.info("Fetching user collection by officer id " + officerId + " .");
+
+        Pageable paging = PageRequest.of(pageNo,pageSize);
+        Page<UserCollection> userCollection = repo.findByModifiedByAndIsDeleted(officerId,false,paging);
+
+        if (userCollection.isEmpty()) {
+            log.error("User collection not found or may be deleted.");
+            throw new EntityNotFoundException("User collection not found.");
+        }
+        return userCollection;
+    }
 }

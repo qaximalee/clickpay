@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.xml.ws.Response;
 import java.net.URI;
 import java.security.Principal;
 
@@ -109,6 +110,39 @@ public class RecoveryOfficerController {
             throws EntityNotFoundException, PermissionException {
         User user = authService.hasPermission(ControllerConstants.AREA_ALLOCATION, principal);
         Message m = recoveryOfficerService.findAreaAllocatedByUserId(userId, user);
+        return ResponseEntity.ok().body(m);
+    }
+
+    @GetMapping("/recovery-officer-collection/customer-dropdown")
+    public ResponseEntity getCustomerOfRecoveryOfficer(Principal principal) throws PermissionException, EntityNotFoundException {
+        User user = authService.hasPermission(ControllerConstants.RECOVERY_OFFICER_COLLECTION, principal);
+        Message m = recoveryOfficerService.getAllCustomerDropdownForCollectionHistory(user);
+        return ResponseEntity.ok().body(m);
+    }
+
+    @GetMapping("/recovery-officer-collection")
+    public ResponseEntity getUserCollectionByCustomerid(Long customerId,
+                                                        @Valid @RequestParam Integer pageNo,
+                                                        @Valid @RequestParam Integer pageSize,
+                                                        Principal principal) throws PermissionException, EntityNotFoundException {
+        User user = authService.hasPermission(ControllerConstants.RECOVERY_OFFICER_COLLECTION, principal);
+        Message m = recoveryOfficerService.getUserCollectionByCustomerId(customerId, pageNo, pageSize, user);
+        return ResponseEntity.ok().body(m);
+    }
+
+    @GetMapping("/recovery-officer-collection/by-officer-id")
+    public ResponseEntity getUserCollectionByRecoveryOfficer(@Valid @RequestParam Integer pageNo,
+                                                        @Valid @RequestParam Integer pageSize,
+                                                        Principal principal) throws PermissionException, EntityNotFoundException {
+        User user = authService.hasPermission(ControllerConstants.RECOVERY_OFFICER_COLLECTION, principal);
+        Message m = recoveryOfficerService.getUserCollectionByRecoveryOfficer(pageNo, pageSize, user);
+        return ResponseEntity.ok().body(m);
+    }
+
+    @GetMapping("/recovery-officer-collection/officer-dropdown")
+    public ResponseEntity getOfficerDropdownListByLoggedInUser(Principal principal) throws PermissionException, EntityNotFoundException {
+        User user = authService.hasPermission(ControllerConstants.RECOVERY_OFFICER_COLLECTION, principal);
+        Message m = recoveryOfficerService.getAllOfficerByOfficerIdOrAdmin(user);
         return ResponseEntity.ok().body(m);
     }
 }

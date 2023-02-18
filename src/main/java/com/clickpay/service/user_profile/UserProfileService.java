@@ -343,6 +343,15 @@ public class UserProfileService implements IUserProfileService {
     }
 
     @Override
+    public Message findAllPackageByCompanyIdAndUserId(Long companyId, Long userId) throws EntityNotFoundException {
+        return new Message()
+                .setData(packageService.findAllPackageByCompanyIdAndUserId(companyId, userId))
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("Package list " + ResponseMessage.FETCHED_MESSAGE_SUCCESS);
+    }
+
+    @Override
     public Message updatePackage(PackageRequest packageRequest, User user)
             throws BadRequestException, EntityNotSavedException, EntityNotFoundException, EntityAlreadyExistException {
         log.info("Package updating with package name: " + packageRequest.getPackageName());

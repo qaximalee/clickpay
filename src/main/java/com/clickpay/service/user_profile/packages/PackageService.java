@@ -4,7 +4,6 @@ import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.general.EntityNotSavedException;
-import com.clickpay.model.area.SubLocality;
 import com.clickpay.repository.user_profile.PackageRepository;
 import com.clickpay.model.user_profile.Package;
 import com.clickpay.service.user.IUserService;
@@ -82,4 +81,17 @@ public class PackageService implements IPackageService{
         }
         return packageDataList;
     }
+
+    @Override
+    public List<Package> findAllPackageByCompanyIdAndUserId(Long companyId, Long userId) throws EntityNotFoundException {
+        log.info("Fetching all package for company id: "+companyId+" user id: "+userId);
+        List<Package> packageDataList = repo.findAllByCompanyIdAndCreatedByAndIsDeleted(companyId, userId,false);
+        if (packageDataList == null || packageDataList.isEmpty()) {
+            log.error("No package data found.");
+            throw new EntityNotFoundException("Package not found.");
+        }
+        return packageDataList;
+    }
+
+
 }
