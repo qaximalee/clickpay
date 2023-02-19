@@ -55,7 +55,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
             "(uc.collection_status =:userCollectionStatus or :userCollectionStatus is NULL) AND \n" +
             " ( :searchInput is NULL OR c.internet_id like :searchInput OR c.name like :searchInput OR c.address like :searchInput OR c.mobile like :searchInput)) ",
     nativeQuery = true)
-    Page<Object[]> findCustomersByUserCollectionsWithFilter(Long subLocalityId, String customerStatus, String userCollectionStatus, Long connectionTypeId, String searchInput, Long userId, Pageable pageable);
+    List<Object[]> findCustomersByUserCollectionsWithFilter(Long subLocalityId, String customerStatus, String userCollectionStatus, Long connectionTypeId, String searchInput, Long userId);
 
     List<Customer> findAllByCreatedByAndConnectionType_Id(Long userId, Long connectionTypeId);
 

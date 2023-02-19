@@ -5,12 +5,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PaginatedCustomersInUserCollectionRequest {
+public class CustomersInUserCollectionRequest {
     private Long subLocalityId;
     private String customerStatus;
     private String userCollectionStatus;
     private Long connectionTypeId;
     private String searchInput;
-    private int pageNo;
-    private int pageSize;
 }

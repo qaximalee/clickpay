@@ -1,9 +1,6 @@
 package com.clickpay.controller.user_profile;
 
-import com.clickpay.dto.user_profile.customer.PaginatedCustomersInUserCollectionRequest;
-import com.clickpay.dto.user_profile.customer.CustomerFilterAndPaginationRequest;
-import com.clickpay.dto.user_profile.customer.CustomerFilterAndPaginationResponse;
-import com.clickpay.dto.user_profile.customer.CustomerRequest;
+import com.clickpay.dto.user_profile.customer.*;
 import com.clickpay.dto.user_profile.packages.PackageRequest;
 import com.clickpay.errors.general.*;
 import com.clickpay.model.user.User;
@@ -28,6 +25,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.net.URI;
 import java.security.Principal;
+import java.util.List;
 
 
 @RestController("USER_PROFILE")
@@ -216,12 +214,12 @@ public class UserProfileController extends CompanyController {
 
 
     @PostMapping("/customer-details/filter")
-    public ResponseEntity<Message<CustomerFilterAndPaginationResponse>> getAllCustomerByFiltrationWithUserCollection(
-            @RequestBody PaginatedCustomersInUserCollectionRequest request,
+    public ResponseEntity<Message<List<CustomerResponse>>> getAllCustomerByFiltrationWithUserCollection(
+            @RequestBody CustomersInUserCollectionRequest request,
             Principal principal)
             throws PermissionException, EntityNotFoundException {
         User user = authService.hasPermission(ControllerConstants.USER_DETAILS, principal);
-        Message<CustomerFilterAndPaginationResponse> m = userProfileService.getAllCustomersByUserCollections(request, user);
+        Message<List<CustomerResponse>> m = userProfileService.getAllCustomersByUserCollections(request, user);
         return ResponseEntity.ok().body(m);
     }
 }

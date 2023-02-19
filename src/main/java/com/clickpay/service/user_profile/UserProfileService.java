@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import com.clickpay.model.user_profile.Package;
 
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -436,9 +437,9 @@ public class UserProfileService implements IUserProfileService {
     }
 
     @Override
-    public Message<CustomerFilterAndPaginationResponse> getAllCustomersByUserCollections(PaginatedCustomersInUserCollectionRequest request, User user) throws EntityNotFoundException {
+    public Message<List<CustomerResponse>> getAllCustomersByUserCollections(CustomersInUserCollectionRequest request, User user) throws EntityNotFoundException {
         log.info("Fetching customers by finding fields.");
-        return new Message<CustomerFilterAndPaginationResponse>()
+        return new Message<List<CustomerResponse>>()
                 .setStatus(HttpStatus.OK.value())
                 .setCode(HttpStatus.OK.toString())
                 .setMessage("Customers by User Collections Fetched Successfully.")

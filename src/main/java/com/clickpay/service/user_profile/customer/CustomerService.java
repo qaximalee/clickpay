@@ -1,6 +1,6 @@
 package com.clickpay.service.user_profile.customer;
 
-import com.clickpay.dto.user_profile.customer.PaginatedCustomersInUserCollectionRequest;
+import com.clickpay.dto.user_profile.customer.CustomersInUserCollectionRequest;
 import com.clickpay.dto.user_profile.customer.CustomerFilterAndPaginationRequest;
 import com.clickpay.dto.user_profile.customer.CustomerFilterAndPaginationResponse;
 import com.clickpay.dto.user_profile.customer.CustomerRequest;
@@ -291,36 +291,27 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
-    public CustomerFilterAndPaginationResponse getCustomersByFilter(PaginatedCustomersInUserCollectionRequest request, User user) throws EntityNotFoundException {
+    public List<CustomerResponse> getCustomersByFilter(CustomersInUserCollectionRequest request, User user) throws EntityNotFoundException {
 
         log.info("Fetching User collection by collection Id ");
-
-        Pageable pageable = PageRequest.of(request.getPageNo(), request.getPageSize());
 
         if (request.getSearchInput() != null){
             request.setSearchInput("%"+request.getSearchInput()+"%");
         }
 
-        Page<Object[]> customersFiltered = repo.findCustomersByUserCollectionsWithFilter(request.getSubLocalityId(),
+        List<Object[]> customersFiltered = repo.findCustomersByUserCollectionsWithFilter(request.getSubLocalityId(),
                 request.getCustomerStatus(),
                 request.getUserCollectionStatus(),
                 request.getConnectionTypeId(),
                 request.getSearchInput(),
-                user.getId(),
-                pageable);
+                user.getId() );
 
         if (customersFiltered == null || customersFiltered.isEmpty()) {
             log.info("No customers found in user collection with and without filtration.");
             throw new EntityNotFoundException("No customers found in user collection with and without filtration data.");
         }
 
-        return CustomerFilterAndPaginationResponse.builder()
-                .customers(CustomerResponse.mapListOfCustomerDetail(customersFiltered.getContent()))
-                .pageNo(request.getPageNo())
-                .pageSize(request.getPageSize())
-                .noOfPages(customersFiltered.getTotalPages())
-                .totalRows(customersFiltered.getTotalElements())
-                .build();
+        return CustomerResponse.mapListOfCustomerDetail(customersFiltered);
     }
 
 

@@ -1,9 +1,6 @@
 package com.clickpay.service.user_profile;
 
-import com.clickpay.dto.user_profile.customer.PaginatedCustomersInUserCollectionRequest;
-import com.clickpay.dto.user_profile.customer.CustomerFilterAndPaginationRequest;
-import com.clickpay.dto.user_profile.customer.CustomerFilterAndPaginationResponse;
-import com.clickpay.dto.user_profile.customer.CustomerRequest;
+import com.clickpay.dto.user_profile.customer.*;
 import com.clickpay.dto.user_profile.packages.PackageRequest;
 import com.clickpay.errors.general.*;
 import com.clickpay.model.company.Company;
@@ -11,6 +8,8 @@ import com.clickpay.model.user.User;
 import com.clickpay.model.user_profile.BoxMedia;
 import com.clickpay.model.user_profile.Package;
 import com.clickpay.utils.Message;
+
+import java.util.List;
 
 public interface IUserProfileService {
 
@@ -76,5 +75,5 @@ public interface IUserProfileService {
 
     Message findCustomerByFilter(CustomerFilterAndPaginationRequest customerFilterDTO, User user) throws EntityNotFoundException;
 
-    Message<CustomerFilterAndPaginationResponse> getAllCustomersByUserCollections(PaginatedCustomersInUserCollectionRequest request, User user) throws EntityNotFoundException;
+    Message<List<CustomerResponse>> getAllCustomersByUserCollections(CustomersInUserCollectionRequest request, User user) throws EntityNotFoundException;
 }
