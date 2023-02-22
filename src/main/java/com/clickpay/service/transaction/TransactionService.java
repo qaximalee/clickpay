@@ -11,25 +11,20 @@ import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.general.EntityNotSavedException;
+import com.clickpay.model.recovery_officer.Officer;
 import com.clickpay.model.transaction.BillsCreator;
 import com.clickpay.model.transaction.UserCollection;
 import com.clickpay.model.user.User;
-import com.clickpay.model.user_profile.Customer;
 import com.clickpay.service.transaction.bills_creator.IBillsCreatorService;
 import com.clickpay.service.transaction.user_collection.IUserCollectionService;
-import com.clickpay.service.user_profile.customer.ICustomerService;
 import com.clickpay.utils.Message;
 import com.clickpay.utils.enums.Months;
-import com.clickpay.utils.enums.PaymentType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
-import java.util.List;
 
 @Service
 @Slf4j
@@ -185,6 +180,29 @@ public class TransactionService implements ITransactionService{
                 .setCode(HttpStatus.OK.toString())
                 .setMessage("Bills Creator Deleted Successfully.")
                 .setData(billsCreatorService.deleteBillCreators(request.getBillCreatorId(),user));
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Message<PaginatedUserCollectionsResponse> getUserCollectionByReceivingUser(int pageNo, int pageSize, User user) throws EntityNotFoundException {
+        log.info("Fetching user collection by officer Id : "+user.getId()+" .");
+        if (!user.getUserType().getType().equalsIgnoreCase(Officer.OFFICER)) {
+            log.error("Logged in user is not an officer.");
+            throw new EntityNotFoundException("Logged in user is not an officer.");
+        }
+        Page<UserCollection> userCollections = userCollectionService.getUserCollectionByOfficerId(user.getId(),pageNo,pageSize);
+        PaginatedUserCollectionsResponse response = new PaginatedUserCollectionsResponse();
+        response.setUserCollections(UserCollectionResponse.fromUserCollectionList(userCollections.getContent()));
+        response.setPageNo(pageNo);
+        response.setPageSize(pageSize);
+        response.setTotalRows(userCollections.getTotalElements());
+        response.setNoOfPages(userCollections.getTotalPages());
+
+        return new Message<PaginatedUserCollectionsResponse>()
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("User Collections By Customer Id Fetched Successfully.")
+                .setData(response);
     }
 
 }

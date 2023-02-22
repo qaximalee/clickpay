@@ -31,20 +31,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     Customer findByUser_Id(Long userId);
 
-//    @Query(value = "SELECT c.id,c.internet_id,c.name,c.address,c.mobile,c.connection_type_id,c.installation_date,c.packages_id,c.status,c.discount,c.user_id " +
-//            "  FROM customer AS c " +
-//            "  INNER JOIN user_collection AS uc ON uc.customer_id = c.id " +
-//            "  WHERE ( (c.created_by =:userId ) AND " +
-//            "  (c.sub_locality_id =:subLocality or :subLocality is NULL) AND " +
-//            "  (c.connection_type_id =:connectionType or :connectionType is NULL) AND " +
-//            "  (c.status =:customerStatus or :customerStatus is NULL) AND " +
-//            "  (uc.collection_status =:userCollectionStatus or :userCollectionStatus is NULL) AND " +
-//            "  ( (:searchInput is NULL) OR " +
-//            "  ( c.internet_id like '%'+:searchInput+'%' ) OR " +/*or :searchInput is NULL*/
-//            "  ( c.name like '%'+:searchInput+'%' ) OR " +/*or :searchInput is NULL*/
-//            "  ( c.address like '%'+:searchInput+'%' ) OR " +/*or :searchInput is NULL*/
-//            "  ( c.mobile like '%'+:searchInput+'%' )  ) ) ",/*or :searchInput is NULL*/
-//            nativeQuery = true)
     @Query(value = "SELECT DISTINCT c.id,c.internet_id,c.name,c.address,c.mobile,c.connection_type_id,c.installation_date,c.packages_id,c.status,c.discount,c.user_id \n" +
             "FROM customer AS c\n" +
             "INNER JOIN user_collection AS uc ON uc.customer_id = c.id\n" +
@@ -60,4 +46,11 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     List<Customer> findAllByCreatedByAndConnectionType_Id(Long userId, Long connectionTypeId);
 
     List<Customer> findAllByCreatedByAndConnectionType_IdAndSubLocality_Id(Long userId, Long connectionTypeId, Long subLocalityId);
+
+    // TODO fetch customer with admin or recovery officer id
+    @Query(value = "SELECT c.id, c.name, c.sub_locality_id FROM customer as c" +
+            "  INNER JOIN officer_area oa ON oa.sub_locality_id = c.sub_locality_id" +
+            "  INNER JOIN officer o ON o.user_id = oa.user_id AND oa.created_by = o.created_by" +
+            "  where oa.user_id = :userId AND o.status = 'ACTIVE'", nativeQuery = true)
+    List<Object[]> findAllUsersWithRespectToTheRecoveryOfficer(long userId);
 }

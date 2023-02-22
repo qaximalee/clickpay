@@ -38,4 +38,6 @@ public interface ITransactionService {
 
     Message<BillsCreator> deleteBillCreator(BillsCreatorDeleteRequest request, User user) throws EntityNotFoundException, EntityNotSavedException, BadRequestException;
 
+    @Transactional(readOnly = true)
+    Message<PaginatedUserCollectionsResponse> getUserCollectionByReceivingUser(int pageNo, int pageSize, User user) throws EntityNotFoundException;
 }

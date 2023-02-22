@@ -14,4 +14,6 @@ public interface IPackageService {
     Package save(Package packageData) throws EntityNotSavedException, BadRequestException, EntityAlreadyExistException;
 
     List<Package> findAllPackageByUserId(Long userId) throws EntityNotFoundException;
+
+    List<Package> findAllPackageByCompanyIdAndUserId(Long companyId, Long userId) throws EntityNotFoundException;
 }

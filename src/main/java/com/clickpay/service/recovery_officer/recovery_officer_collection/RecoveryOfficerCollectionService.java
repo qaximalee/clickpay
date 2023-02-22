@@ -1,0 +1,13 @@
+package com.clickpay.service.recovery_officer.recovery_officer_collection;
+
+import com.clickpay.model.transaction.UserCollection;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class RecoveryOfficerCollectionService implements IRecoveryOfficerCollectionService{
+
+}

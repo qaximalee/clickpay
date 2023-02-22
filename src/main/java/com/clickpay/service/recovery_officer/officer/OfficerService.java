@@ -1,6 +1,7 @@
 package com.clickpay.service.recovery_officer.officer;
 
 import com.clickpay.dto.recovery_officer.officer.*;
+import com.clickpay.dto.recovery_officer.recovery_officer_collection.RecoveryOfficerCustomerDropdownDto;
 import com.clickpay.errors.general.BadRequestException;
 import com.clickpay.errors.general.EntityAlreadyExistException;
 import com.clickpay.errors.general.EntityNotFoundException;
@@ -21,8 +22,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -129,7 +133,12 @@ public class OfficerService implements IOfficerService {
     public Page<Officer> findAllOfficersByUserId(String status, Integer pageNo, Integer pageSize, Long userId) throws EntityNotFoundException, BadRequestException {
 
         Pageable pageable = PageRequest.of(pageNo,pageSize);
-        Page<Officer> officers = repo.findAllByCreatedByAndStatus(userId,status,pageable);
+        Page<Officer> officers = null;
+        if(status == null)
+            officers = repo.findAllByCreatedByAndStatus(userId,status,pageable);
+        else
+            officers = repo.findAllByCreatedBy(userId, pageable);
+
 
         if (officers == null || officers.isEmpty()) {
             log.error("No officer data found.");
@@ -181,5 +190,27 @@ public class OfficerService implements IOfficerService {
         updatingOfficer = repo.save(updatingOfficer);
 
         return OfficerResponse.fromOfficer(updatingOfficer);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Officer> getAllUsersWithRespectToTheAdminOrARecoveryOfficerId(User user) throws EntityNotFoundException {
+        log.info("Fetching all customer data by logged in user or recovery officer id.");
+        List<Officer> officers = new ArrayList<>();
+        if (user.getUserType().getType().equalsIgnoreCase(Officer.OFFICER)) {
+            Optional<Officer> officer = repo.findByUserIdAndActive(user.getId(), true);
+            if (!officer.isPresent()) {
+                log.error("Officer not found with id: "+user.getId());
+                throw new EntityNotFoundException("Officer not found with id: "+user.getId());
+            }
+            officers.add(officer.get());
+        }else{
+            officers = repo.findAllByCreatedBy(user.getId());
+            if (CollectionUtils.isEmpty(officers)) {
+                log.error("Officer not found for the logged in user.");
+                throw new EntityNotFoundException("Officer not found with id: "+user.getId());
+            }
+        }
+        return officers;
     }
 }

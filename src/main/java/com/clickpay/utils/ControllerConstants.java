@@ -34,6 +34,7 @@ public class ControllerConstants {
     public static final String DEALER_DETAILS = "DEALER_DETAILS";
     public static final String RECOVERY_OFFICER_SUB = "RECOVERY_OFFICER";
     public static final String AREA_ALLOCATION = "AREA_ALLOCATION";
+    public static final String RECOVERY_OFFICER_COLLECTION = "RECOVERY_OFFICER_COLLECTION";
     public static final String BILL_CREATOR = "BILL_CREATOR";
     public static final String USERS_COLLECTIONS = "USERS_COLLECTIONS";
     public static final String DEALER_COLLECTIONS = "DEALER_COLLECTIONS";

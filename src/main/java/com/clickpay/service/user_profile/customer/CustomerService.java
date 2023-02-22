@@ -1,6 +1,7 @@
 package com.clickpay.service.user_profile.customer;
 
 import com.clickpay.dto.user_profile.customer.CustomersInUserCollectionRequest;
+import com.clickpay.dto.recovery_officer.recovery_officer_collection.RecoveryOfficerCustomerDropdownDto;
 import com.clickpay.dto.user_profile.customer.CustomerFilterAndPaginationRequest;
 import com.clickpay.dto.user_profile.customer.CustomerFilterAndPaginationResponse;
 import com.clickpay.dto.user_profile.customer.CustomerRequest;
@@ -35,7 +36,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 
 @Slf4j
 @Service
@@ -220,8 +220,8 @@ public class CustomerService implements ICustomerService {
     @Transactional(readOnly = true)
     @Override
     public List<Customer> findAllCustomerByIdAndConnectionTypeId(Long userId, Long connectionTypeId) throws EntityNotFoundException {
-        log.info("Fetching all customer for user id: " + userId + " and connection Type Id : "+connectionTypeId);
-        List<Customer> data = repo.findAllByCreatedByAndConnectionType_Id(userId,connectionTypeId);
+        log.info("Fetching all customer for user id: " + userId + " and connection Type Id : " + connectionTypeId);
+        List<Customer> data = repo.findAllByCreatedByAndConnectionType_Id(userId, connectionTypeId);
         if (data == null || data.isEmpty()) {
             log.error("No customer data found.");
             throw new EntityNotFoundException("Customer not found.");
@@ -234,8 +234,8 @@ public class CustomerService implements ICustomerService {
     @Transactional(readOnly = true)
     @Override
     public List<Customer> findAllCustomerByIdAndConnectionTypeIdAndSubLocalityId(Long userId, Long connectionTypeId, Long subLocalityId) throws EntityNotFoundException {
-        log.info("Fetching all customer for user id : " + userId + " and connection Type Id : "+connectionTypeId+ " and subLocality id : " + subLocalityId);
-        List<Customer> data = repo.findAllByCreatedByAndConnectionType_IdAndSubLocality_Id(userId,connectionTypeId,subLocalityId);
+        log.info("Fetching all customer for user id : " + userId + " and connection Type Id : " + connectionTypeId + " and subLocality id : " + subLocalityId);
+        List<Customer> data = repo.findAllByCreatedByAndConnectionType_IdAndSubLocality_Id(userId, connectionTypeId, subLocalityId);
         if (data == null || data.isEmpty()) {
             log.error("No customer data found.");
             throw new EntityNotFoundException("Customer not found.");
@@ -312,6 +312,17 @@ public class CustomerService implements ICustomerService {
         }
 
         return CustomerResponse.mapListOfCustomerDetail(customersFiltered);
+    }
+
+    /**
+     * Fetch all customers for a recovery officer assigned into the area allocation.
+     *
+     * */
+    @Transactional(readOnly = true)
+    @Override
+    public List<RecoveryOfficerCustomerDropdownDto> getAllUsersWithRespectToTheRecoveryOfficer(User user) throws EntityNotFoundException {
+        log.info("Fetching all customer data by logged in recovery officer.");
+        return RecoveryOfficerCustomerDropdownDto.fromCustomerOfRecoveryOfficer(repo.findAllUsersWithRespectToTheRecoveryOfficer(user.getId()));
     }
 
 

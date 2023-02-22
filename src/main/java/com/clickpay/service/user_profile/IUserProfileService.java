@@ -60,6 +60,8 @@ public interface IUserProfileService {
 
     Message findAllPackageByUserId(Long userId) throws EntityNotFoundException;
 
+    Message findAllPackageByCompanyIdAndUserId(Long companyId, Long userId) throws EntityNotFoundException;
+
     Message updatePackage(PackageRequest packageRequest, User user)
             throws BadRequestException, EntityNotSavedException, EntityNotFoundException, EntityAlreadyExistException;
 

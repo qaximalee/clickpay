@@ -71,6 +71,7 @@ INSERT INTO feature (name, main_menu_name, main_url, active, value)  VALUES ('Ne
 INSERT INTO feature (name, main_menu_name, main_url, active, value)  VALUES ('Dealer Details', 'Dealers', 'api/v1/dealers', 1, 'DEALER_DETAILS')
 INSERT INTO feature (name, main_menu_name, main_url, active, value)  VALUES ('Recovery Officer', 'Recovery Officer', 'api/v1/recovery-officer', 1, 'RECOVERY_OFFICER')
 INSERT INTO feature (name, main_menu_name, main_url, active, value)  VALUES ('Area Allocation', 'Recovery Officer', 'api/v1/recovery-officer', 1, 'AREA_ALLOCATION')
+INSERT INTO feature (name, main_menu_name, main_url, active, value)  VALUES ('Recovery Officer Collection', 'Recovery Officer', 'api/v1/recovery-officer', 1, 'RECOVERY_OFFICER_COLLECTION')
 INSERT INTO feature (name, main_menu_name, main_url, active, value)  VALUES ('Bill Creator', 'Transactions', 'api/v1/transactions', 1, 'BILL_CREATOR')
 INSERT INTO feature (name, main_menu_name, main_url, active, value)  VALUES ('Users Collections', 'Transactions', 'api/v1/transactions', 1, 'USERS_COLLECTIONS')
 INSERT INTO feature (name, main_menu_name, main_url, active, value)  VALUES ('Dealer Collections', 'Transactions', 'api/v1/transactions', 1, 'DEALER_COLLECTIONS')
@@ -155,6 +156,7 @@ INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 42);
 INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 43);
 INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 44);
 INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 44);
+INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (2, 45);
 
 -- FOR OFFICER
 INSERT INTO user_type_feature (user_type_id, feature_id) VALUES (3, 13);

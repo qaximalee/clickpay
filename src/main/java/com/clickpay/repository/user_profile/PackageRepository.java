@@ -13,5 +13,7 @@ public interface PackageRepository extends JpaRepository<Package, Long> {
 
     List<Package> findAllByCreatedByAndIsDeleted(Long userId, boolean isDeleted);
 
+    List<Package> findAllByCompanyIdAndCreatedByAndIsDeleted(Long companyId, Long userId, boolean isDeleted);
+
     Optional<Package> findByIdAndIsDeleted(Long id, boolean isDeleted);
 }

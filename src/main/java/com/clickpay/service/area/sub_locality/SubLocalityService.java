@@ -7,7 +7,9 @@ import com.clickpay.errors.general.EntityNotFoundException;
 import com.clickpay.errors.general.EntityNotSavedException;
 import com.clickpay.model.area.SubLocality;
 import com.clickpay.repository.area.SubLocalityRepository;
+import com.clickpay.service.user.IUserService;
 import com.clickpay.service.validation.IValidationService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,16 +20,11 @@ import java.util.Optional;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class SubLocalityService implements ISubLocalityService {
 
     private final SubLocalityRepository repo;
     private final IValidationService<SubLocality> validationService;
-
-    @Autowired
-    public SubLocalityService(final SubLocalityRepository repo, IValidationService<SubLocality> validationService) {
-        this.repo = repo;
-        this.validationService = validationService;
-    }
 
     @Override
     public SubLocality findById(Long id) throws BadRequestException, EntityNotFoundException {
