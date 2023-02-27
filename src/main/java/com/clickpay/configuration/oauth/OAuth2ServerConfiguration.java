@@ -57,6 +57,7 @@ public class OAuth2ServerConfiguration {
                     .authorizeRequests()
                     .antMatchers("/api/v1/test/").permitAll()
                     .antMatchers("/"+ ControllerConstants.CNIC_FILE +"/upload").permitAll()
+                    .antMatchers("/"+ ControllerConstants.CNIC_FILE +"/download").permitAll()
                     .antMatchers("/oauth/**").permitAll()
                     .antMatchers("/**")
                     .authenticated();
