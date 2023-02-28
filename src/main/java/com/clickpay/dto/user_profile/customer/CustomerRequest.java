@@ -54,4 +54,8 @@ public class CustomerRequest {
     private Long packagesId;
 
     private boolean isCardCharge;
+
+    private String cnicImageFront;
+    private String cnicImageBack;
+
 }

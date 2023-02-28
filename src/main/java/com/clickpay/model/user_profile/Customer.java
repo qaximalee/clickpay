@@ -100,5 +100,10 @@ public class Customer extends Auditable<Long> {
     @Column(name = "active")
     private boolean active = true;
 
+    @Column(name = "CNIC_image_front")
+    private String cnicImageFront;
+
+    @Column(name = "CNIC_image_back")
+    private String cnicImageBack;
 
 }

@@ -90,7 +90,6 @@ public class CustomerService implements ICustomerService {
 
         Discount discount = Discount.of(dto.getDiscount());
 
-
         String internetId = createInternetId(user.getId());
 
         // Register user first
@@ -110,6 +109,8 @@ public class CustomerService implements ICustomerService {
         customer.setRechargeDate(dto.getRechargeDate());
         customer.setDiscount(discount);
         customer.setAmount(dto.getAmount());
+        customer.setCnicImageFront(dto.getCnicImageFront());
+        customer.setCnicImageBack(dto.getCnicImageBack());
 
         // Relational entities
         customer.setSubLocality(subLocality);
