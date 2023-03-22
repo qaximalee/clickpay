@@ -60,7 +60,7 @@ public class AreaService implements IAreaService{
         city.setCreationDate(new Date());
         city.setCreatedBy(user.getId());
 
-        city = cityService.save(city);
+        city = cityService.save(city, true);
 
         log.debug("City: " + name + " is successfully created for user id: " + user.getId());
         return new Message<City>()
@@ -99,7 +99,7 @@ public class AreaService implements IAreaService{
         city.setLastModifiedDate(new Date());
         city.setName(name);
 
-        city = cityService.save(city);
+        city = cityService.save(city, city.getName().trim().equalsIgnoreCase(name.trim()));
 
         log.debug("City: " + name + " is successfully updated for user id: "+user.getId());
         return new Message()
@@ -118,7 +118,7 @@ public class AreaService implements IAreaService{
 
         city.setModifiedBy(user.getId());
         city.setLastModifiedDate(new Date());
-        city = cityService.save(city);
+        city = cityService.save(city, true);
 
         log.debug("City: " + city.getName() + " is successfully deleted by user id: "+user.getId());
         return new Message<City>()

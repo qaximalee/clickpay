@@ -50,13 +50,23 @@ public class LocalityService implements ILocalityService{
             throw new BadRequestException("Locality should not be null.");
         }
 
+        if(locality.getId() != null) {
+            validationService.getRecords(
+                    Locality.class,
+                    "name",
+                    "createdBy",
+                    locality.getName(),
+                    locality.getCreatedBy(),
+                    "Locality name: " + locality.getName() + " already exists."
+            );
+        }
         validationService.getRecords(
                 Locality.class,
                 "name",
                 "createdBy",
                 locality.getName(),
                 locality.getCreatedBy(),
-                "Locality name: "+locality.getName()+" already exists."
+                "Locality name: " + locality.getName() + " already exists."
         );
 
         try {
