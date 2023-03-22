@@ -19,6 +19,9 @@ public interface ICustomerService {
     Customer createCustomer(CustomerRequest dto, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException, PermissionException, EntityAlreadyExistException;
 
     @Transactional
+    Customer updateCustomerStatus(Long customerId, boolean status, User modifiedByUser) throws BadRequestException, EntityNotFoundException, EntityNotSavedException;
+
+    @Transactional
     Customer save(Customer save) throws BadRequestException, EntityNotSavedException;
 
     @Transactional(readOnly = true)

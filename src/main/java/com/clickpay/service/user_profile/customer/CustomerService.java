@@ -122,7 +122,8 @@ public class CustomerService implements ICustomerService {
 
         // Audits and checks
         customer.setCardCharge(dto.isCardCharge());
-        customer.setStatus(Status.ACTIVE);
+        //customer.setActive(Status.ACTIVE);
+        customer.setActive(true);
         customer.setCreatedBy(user.getId());
         customer.setCreationDate(new Date());
 
@@ -167,6 +168,27 @@ public class CustomerService implements ICustomerService {
         user.setVerified(true);
 
         return userService.save(user);
+    }
+
+    @Transactional
+    @Override
+    public Customer updateCustomerStatus(Long customerId, boolean status, User modifiedByUser) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+        log.info("Updating customer's status.");
+
+        Customer customer = findById(customerId);
+
+        if (status){
+            customer.setActive(true);
+        }else {
+            customer.setActive(false);
+        }
+
+        customer.setLastModifiedDate(new Date());
+        customer.setModifiedBy(modifiedByUser.getId());
+        save(customer);
+
+        log.info("Customer's status Updated Successfully.");
+        return customer;
     }
 
 

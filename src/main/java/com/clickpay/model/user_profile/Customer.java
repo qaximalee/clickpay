@@ -86,10 +86,6 @@ public class Customer extends Auditable<Long> {
     @Column(name = "amount")
     private double amount;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    private Status status;
-
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;

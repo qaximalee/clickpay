@@ -13,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -33,8 +32,7 @@ public class CNICController {
     private static final String C_PNG = "PNG";
 
     @PostMapping("/upload")
-    public ResponseEntity uploadCNIC(@RequestParam("files") MultipartFile[] files, @RequestParam("id") Long id) throws BadRequestException {
-        System.out.println("User id: "+id);
+    public ResponseEntity uploadCNIC(@RequestParam("files") MultipartFile[] files) throws BadRequestException {
         System.out.println(files[0].getName());
 
         List<String> urlsOfCNICImages = new ArrayList<>();
@@ -48,9 +46,10 @@ public class CNICController {
                 System.out.println("Please remove special character from the file name (i.e Simple Name.pdf can have . '-_ special characters).");
                 throw new BadRequestException("Please remove special character from the file name (i.e Simple Name.pdf can have . '-_ special characters).");
             }
-            long timestamp = System.currentTimeMillis();
 
+            long timestamp = System.currentTimeMillis();
             File savingFile = new File("D://ss//"+timestamp + file.getOriginalFilename());
+
             try {
                 file.transferTo(savingFile);
             } catch (IOException e) {

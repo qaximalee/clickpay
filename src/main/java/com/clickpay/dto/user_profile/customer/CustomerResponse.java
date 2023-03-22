@@ -65,7 +65,7 @@ public class CustomerResponse {
             customerResponse.setAddress(e.getAddress());
             customerResponse.setMobile(e.getMobile());
             customerResponse.setInstallationDate(e.getInstallationDate());
-            customerResponse.setStatus(e.getStatus().toString());
+            //customerResponse.setStatus(e.getStatus().toString());
             customerResponse.setDiscount(e.getDiscount().toString());
             customerResponse.setConnectionType(e.getConnectionType().getType());
             customerResponse.setPackageType(e.getPackages().getPackageName());
