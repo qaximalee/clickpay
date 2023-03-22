@@ -48,22 +48,32 @@ public class CityService implements ICityService{
 
     @Transactional
     @Override
-    public City save(City city) throws EntityNotSavedException, BadRequestException, EntityAlreadyExistException {
+    public City save(City city, boolean sameName) throws EntityNotSavedException, BadRequestException, EntityAlreadyExistException {
         log.info("Saving city.");
         if (city == null) {
             log.error("City should not be null.");
             throw new BadRequestException("City should not be null.");
         }
 
-        validationService.getRecords(
-                City.class,
-                "name",
-                "createdBy",
-                city.getName(),
-                city.getCreatedBy(),
-                "City name: "+city.getName()+" already exists."
-        );
-
+        if (city.getId() != null && !sameName) {
+            validationService.getRecords(
+                    City.class,
+                    "name",
+                    "createdBy",
+                    city.getName(),
+                    city.getCreatedBy(),
+                    "City name: "+city.getName()+" already exists."
+            );
+        }if(city.getId() == null ){
+            validationService.getRecords(
+                    City.class,
+                    "name",
+                    "createdBy",
+                    city.getName(),
+                    city.getCreatedBy(),
+                    "City name: "+city.getName()+" already exists."
+            );
+        }
         try {
             city = repo.save(city);
             log.debug("City with city id: "+city.getId()+ " created successfully.");
