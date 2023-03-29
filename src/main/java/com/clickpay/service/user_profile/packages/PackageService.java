@@ -45,22 +45,32 @@ public class PackageService implements IPackageService{
     }
 
     @Override
-    public Package save(Package packageData) throws EntityNotSavedException, BadRequestException, EntityAlreadyExistException {
+    public Package save(Package packageData, boolean isUpdating) throws EntityNotSavedException, BadRequestException, EntityAlreadyExistException {
         log.info("Creating package.");
         if (packageData == null) {
             log.error("Package should not be null.");
             throw new BadRequestException("Package should not be null.");
         }
 
-        validationService.getRecords(
-                Package.class,
-                "packageName",
-                "createdBy",
-                packageData.getPackageName(),
-                packageData.getCreatedBy(),
-                "Package name: "+packageData.getPackageName()+" already exists."
-        );
-
+        if(packageData.getId() == null || (packageData.getId() != null && isUpdating)){
+            validationService.getRecords(
+                    Package.class,
+                    "packageName",
+                    "createdBy",
+                    packageData.getPackageName(),
+                    packageData.getCreatedBy(),
+                    "Package name: "+packageData.getPackageName()+" already exists.", false
+            );
+        }else{
+            validationService.getRecords(
+                    Package.class,
+                    "id",
+                    "createdBy",
+                    ""+packageData.getId(),
+                    packageData.getCreatedBy(),
+                    "Package name: "+packageData.getPackageName()+" is not found.", true
+            );
+        }
         try {
             packageData = repo.save(packageData);
             log.debug("Package with city id: "+packageData.getId()+ " created successfully.");

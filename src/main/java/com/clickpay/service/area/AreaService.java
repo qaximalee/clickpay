@@ -60,7 +60,7 @@ public class AreaService implements IAreaService{
         city.setCreationDate(new Date());
         city.setCreatedBy(user.getId());
 
-        city = cityService.save(city, true);
+        city = cityService.save(city, false);
 
         log.debug("City: " + name + " is successfully created for user id: " + user.getId());
         return new Message<City>()
@@ -99,7 +99,7 @@ public class AreaService implements IAreaService{
         city.setLastModifiedDate(new Date());
         city.setName(name);
 
-        city = cityService.save(city, city.getName().trim().equalsIgnoreCase(name.trim()));
+        city = cityService.save(city, true);
 
         log.debug("City: " + name + " is successfully updated for user id: "+user.getId());
         return new Message()
@@ -118,7 +118,7 @@ public class AreaService implements IAreaService{
 
         city.setModifiedBy(user.getId());
         city.setLastModifiedDate(new Date());
-        city = cityService.save(city, true);
+        city = cityService.save(city, false);
 
         log.debug("City: " + city.getName() + " is successfully deleted by user id: "+user.getId());
         return new Message<City>()
@@ -146,7 +146,7 @@ public class AreaService implements IAreaService{
         locality.setCreationDate(new Date());
         locality.setCreatedBy(user.getId());
 
-        locality = localityService.save(locality);
+        locality = localityService.save(locality, false);
 
         log.debug("Locality: " + name + " is successfully created for user id: " + user.getId());
         return new Message<Locality>()
@@ -186,7 +186,7 @@ public class AreaService implements IAreaService{
         locality.setModifiedBy(user.getId());
         locality.setLastModifiedDate(new Date());
 
-        locality = localityService.save(locality);
+        locality = localityService.save(locality, true);
 
         log.debug("Locality: " + name + " is successfully updated for user id: "+user.getId());
         return new Message()
@@ -205,7 +205,7 @@ public class AreaService implements IAreaService{
 
         locality.setModifiedBy(user.getId());
         locality.setLastModifiedDate(new Date());
-        locality = localityService.save(locality);
+        locality = localityService.save(locality, false);
 
         log.debug("Locality: " + locality.getName() + " is successfully deleted by user id: "+user.getId());
         return new Message<Locality>()
@@ -233,7 +233,7 @@ public class AreaService implements IAreaService{
         subLocality.setCreationDate(new Date());
         subLocality.setCreatedBy(user.getId());
 
-        subLocality = subLocalityService.save(subLocality);
+        subLocality = subLocalityService.save(subLocality, false);
 
         log.debug("Sub locality: " + name + " is successfully created for user id: " + user.getId());
         return new Message<SubLocality>()
@@ -273,7 +273,7 @@ public class AreaService implements IAreaService{
         subLocality.setModifiedBy(user.getId());
         subLocality.setLastModifiedDate(new Date());
 
-        subLocality = subLocalityService.save(subLocality);
+        subLocality = subLocalityService.save(subLocality, true);
 
         log.debug("Sub locality: " + name + " is successfully updated for user id: "+user.getId());
         return new Message()
@@ -291,7 +291,7 @@ public class AreaService implements IAreaService{
         subLocality.setDeleted(true);
         subLocality.setModifiedBy(user.getId());
         subLocality.setLastModifiedDate(new Date());
-        subLocality = subLocalityService.save(subLocality);
+        subLocality = subLocalityService.save(subLocality, false);
 
         log.debug("SubLocality: " + subLocality.getName() + " is successfully deleted by user id: "+user.getId());
         return new Message<SubLocality>()

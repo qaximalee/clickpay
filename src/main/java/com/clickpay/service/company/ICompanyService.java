@@ -11,7 +11,7 @@ import java.util.List;
 public interface ICompanyService {
     Company findById(Long id) throws EntityNotFoundException, BadRequestException;
 
-    Company save(Company company) throws EntityNotSavedException, BadRequestException, EntityAlreadyExistException;
+    Company save(Company company, boolean isUpdating) throws EntityNotSavedException, BadRequestException, EntityAlreadyExistException;
 
     List<Company> findAllCompanyByUserId(Long userId) throws EntityNotFoundException;
 }

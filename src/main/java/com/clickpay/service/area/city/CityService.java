@@ -46,32 +46,43 @@ public class CityService implements ICityService{
         });
     }
 
+
+    /**
+     * FOR UPDATE: Name of city can't be an existing city name of a createdBy user and is not deleted yet
+     * FOR CREATE: Check with the city name already city is not present and is not deleted for created by user
+     * FOR DELETE: user deleting the city should be the creator of the object
+     * */
     @Transactional
     @Override
-    public City save(City city, boolean sameName) throws EntityNotSavedException, BadRequestException, EntityAlreadyExistException {
+    public City save(City city, boolean isUpdating) throws EntityNotSavedException, BadRequestException, EntityAlreadyExistException {
         log.info("Saving city.");
         if (city == null) {
             log.error("City should not be null.");
             throw new BadRequestException("City should not be null.");
         }
+        // CREATE: ID will not be present, Name not be already exists, Creation user should be same.
+        // UPDATE: ID will be present, NAME not be already exists, Creation user should be same. 
+        // DELETE: ID will be present, DELETION User should be same as creation user. 
 
-        if (city.getId() != null && !sameName) {
+        // For creation
+        if (city.getId() == null || (city.getId() != null && isUpdating)) {
             validationService.getRecords(
                     City.class,
                     "name",
                     "createdBy",
                     city.getName(),
                     city.getCreatedBy(),
-                    "City name: "+city.getName()+" already exists."
+                    "City name: "+city.getName()+" already exists.", false
             );
-        }if(city.getId() == null ){
+        } else { // for deletion so forUpdation present false
+            // Check if the user created this city is deleting this object
             validationService.getRecords(
                     City.class,
-                    "name",
+                    "id",
                     "createdBy",
-                    city.getName(),
+                    ""+city.getId(),
                     city.getCreatedBy(),
-                    "City name: "+city.getName()+" already exists."
+                    "City name: "+city.getName()+" not found for this user.", true
             );
         }
         try {

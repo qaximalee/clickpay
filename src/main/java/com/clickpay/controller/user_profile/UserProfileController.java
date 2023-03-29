@@ -189,10 +189,25 @@ public class UserProfileController extends CompanyController {
     public ResponseEntity createCustomer(@Valid @RequestBody CustomerRequest dto, Principal principal)
             throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException, EntityAlreadyExistException {
         User user = authService.hasPermission(ControllerConstants.USER_DETAILS, principal);
-        Message<Customer> m = userProfileService.createCustomer(dto, user);
+        Message m = userProfileService.createCustomer(dto, user);
         return ResponseEntity.created(
                 URI.create(DOMAIN_URL + "/" + ControllerConstants.USER_PROFILE + "/user-details/" + m.getData().getId())
         ).body(m);
+    }
+
+    @PutMapping("/user-details")
+    public ResponseEntity updateCustomer(@Valid @RequestBody CustomerRequest dto, Principal principal)
+            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException, EntityAlreadyExistException {
+        User user = authService.hasPermission(ControllerConstants.USER_DETAILS, principal);
+        Message m = userProfileService.updateCustomer(dto, user);
+        return ResponseEntity.ok().body(m);
+    }
+
+    @PutMapping("/user-details/{id}")
+    public ResponseEntity updateCustomerStatus(@NotNull @PathVariable("id") Long id, @RequestParam boolean status, Principal principal) throws PermissionException, BadRequestException, EntityNotFoundException, EntityNotSavedException {
+        User user = authService.hasPermission(ControllerConstants.USER_DETAILS, principal);
+        Message m = userProfileService.updateCustomerStatus(id, status, user);
+        return ResponseEntity.ok().body(m);
     }
 
     @GetMapping("/user-details/{id}")

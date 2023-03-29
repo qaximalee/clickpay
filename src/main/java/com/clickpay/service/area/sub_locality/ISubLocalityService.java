@@ -12,7 +12,7 @@ import java.util.List;
 public interface ISubLocalityService {
     SubLocality findById(Long id) throws BadRequestException, EntityNotFoundException;
 
-    SubLocality save(SubLocality subLocality) throws BadRequestException, EntityNotSavedException, EntityAlreadyExistException;
+    SubLocality save(SubLocality subLocality, boolean isUpdating) throws BadRequestException, EntityNotSavedException, EntityAlreadyExistException;
 
     List<SubLocalityResponse> findAllSubLocalityByUserId(Long userId) throws EntityNotFoundException;
 

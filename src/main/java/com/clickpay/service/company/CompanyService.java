@@ -41,21 +41,31 @@ public class CompanyService implements ICompanyService {
     }
 
     @Override
-    public Company save(Company company) throws EntityNotSavedException, BadRequestException, EntityAlreadyExistException {
+    public Company save(Company company, boolean isUpdating) throws EntityNotSavedException, BadRequestException, EntityAlreadyExistException {
         log.info("Creating company.");
         if (company == null) {
             log.error("Company should not be null.");
             throw new BadRequestException("Company should not be null.");
         }
-
-        validationService.getRecords(
-                Company.class,
-                "name",
-                "createdBy",
-                company.getName(),
-                company.getCreatedBy(),
-                "Company name"+company.getName()+" already exists."
-        );
+        if (company.getId() == null || (company.getId() != null && isUpdating)) {
+            validationService.getRecords(
+                    Company.class,
+                    "name",
+                    "createdBy",
+                    company.getName(),
+                    company.getCreatedBy(),
+                    "Company name"+company.getName()+" already exists.", false
+            );
+        }else {
+            validationService.getRecords(
+                    Company.class,
+                    "id",
+                    "createdBy",
+                    ""+company.getId(),
+                    company.getCreatedBy(),
+                    "Company name"+company.getName()+" is not found.", true
+            );
+        }
 
         try {
             company = repo.save(company);

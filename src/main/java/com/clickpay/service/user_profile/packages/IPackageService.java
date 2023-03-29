@@ -11,7 +11,7 @@ import java.util.List;
 public interface IPackageService {
     Package findById(Long id) throws EntityNotFoundException, BadRequestException;
 
-    Package save(Package packageData) throws EntityNotSavedException, BadRequestException, EntityAlreadyExistException;
+    Package save(Package packageData, boolean isUpdating) throws EntityNotSavedException, BadRequestException, EntityAlreadyExistException;
 
     List<Package> findAllPackageByUserId(Long userId) throws EntityNotFoundException;
 

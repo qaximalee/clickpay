@@ -75,7 +75,7 @@ public class UserProfileService implements IUserProfileService {
         company.setCreationDate(new Date());
         company.setCreatedBy(user.getId());
 
-        company = companyService.save(company);
+        company = companyService.save(company, false);
 
         log.debug("Company: " + name + " is successfully created for user id: " + user.getId());
         return new Message<Company>()
@@ -105,7 +105,7 @@ public class UserProfileService implements IUserProfileService {
         company.setModifiedBy(user.getId());
         company.setLastModifiedDate(new Date());
 
-        company = companyService.save(company);
+        company = companyService.save(company, true);
 
         log.debug("Company: " + name + " is successfully updated for user id: " + user.getId());
         return new Message()
@@ -127,7 +127,7 @@ public class UserProfileService implements IUserProfileService {
         company.setModifiedBy(user.getId());
         company.setLastModifiedDate(new Date());
 
-        company = companyService.save(company);
+        company = companyService.save(company, false);
 
         log.debug("Company : " + company.getName() + " is successfully deleted for user id: " + user.getId());
         return new Message<Company>()
@@ -164,7 +164,7 @@ public class UserProfileService implements IUserProfileService {
         boxMedia.setCreationDate(new Date());
         boxMedia.setCreatedBy(user.getId());
 
-        boxMedia = boxMediaService.save(boxMedia);
+        boxMedia = boxMediaService.save(boxMedia, false);
 
         log.debug("Box media: " + boxNumber + " is successfully created for user id: " + user.getId());
         return new Message<BoxMedia>()
@@ -195,7 +195,7 @@ public class UserProfileService implements IUserProfileService {
         boxMedia.setModifiedBy(user.getId());
         boxMedia.setLastModifiedDate(new Date());
 
-        boxMedia = boxMediaService.save(boxMedia);
+        boxMedia = boxMediaService.save(boxMedia, true);
 
         log.debug("Box media: " + boxNumber + " is successfully updated for user id: " + user.getId());
         return new Message()
@@ -216,7 +216,7 @@ public class UserProfileService implements IUserProfileService {
         boxMedia.setModifiedBy(user.getId());
         boxMedia.setLastModifiedDate(new Date());
 
-        boxMedia = boxMediaService.save(boxMedia);
+        boxMedia = boxMediaService.save(boxMedia, false);
 
         log.debug("Box media Id : " + id + " is successfully deleted for user id: " + user.getId());
         return new Message<BoxMedia>()
@@ -324,7 +324,7 @@ public class UserProfileService implements IUserProfileService {
         pack.setCreationDate(new Date());
         pack.setCreatedBy(user.getId());
 
-        pack = packageService.save(pack);
+        pack = packageService.save(pack, false);
 
         log.debug("Package: " + packageRequest.getPackageName() + " is successfully created for user id: " + user.getId());
         return new Message<Package>()
@@ -371,7 +371,7 @@ public class UserProfileService implements IUserProfileService {
         packageData.setModifiedBy(user.getId());
         packageData.setLastModifiedDate(new Date());
 
-        packageData = packageService.save(packageData);
+        packageData = packageService.save(packageData, true);
 
         log.debug("Package : " + packageRequest.getPackageName() + " is successfully updated for user id: " + user.getId());
         return new Message()
@@ -392,7 +392,7 @@ public class UserProfileService implements IUserProfileService {
         packageData.setModifiedBy(user.getId());
         packageData.setLastModifiedDate(new Date());
 
-        packageData = packageService.save(packageData);
+        packageData = packageService.save(packageData, false);
 
         log.debug("Package : " + packageData.getPackageName() + " is successfully deleted for user id: " + user.getId());
         return new Message<Package>()
@@ -416,6 +416,27 @@ public class UserProfileService implements IUserProfileService {
                 .setCode(HttpStatus.CREATED.toString())
                 .setMessage("Customer: " + dto.getName() + " " + ResponseMessage.CREATED_MESSAGE_SUCCESS)
                 .setData(customerService.createCustomer(dto, user));
+    }
+
+    @Override
+    public Message updateCustomer(CustomerRequest dto, User user)
+            throws PermissionException, BadRequestException, EntityNotFoundException, EntityNotSavedException, EntityAlreadyExistException {
+        log.debug("Customer: " + dto.getName() + " is successfully created");
+        return new Message<Customer>()
+                .setStatus(HttpStatus.CREATED.value())
+                .setCode(HttpStatus.CREATED.toString())
+                .setMessage("Customer: " + dto.getName() + " " + ResponseMessage.CREATED_MESSAGE_SUCCESS)
+                .setData(customerService.updateCustomer(dto, user));
+    }
+
+    @Override
+    public Message updateCustomerStatus(Long customerId, boolean status, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+        log.debug("Customer: " + customerId + "is updating.");
+        return new Message<Customer>()
+                .setStatus(HttpStatus.OK.value())
+                .setCode(HttpStatus.OK.toString())
+                .setMessage("Customer status is changed.")
+                .setData(customerService.updateCustomerStatus(customerId, status, user));
     }
 
     @Override

@@ -48,4 +48,6 @@ public interface ICustomerService {
 
     @Transactional(readOnly = true)
     List<RecoveryOfficerCustomerDropdownDto> getAllUsersWithRespectToTheRecoveryOfficer(User user) throws EntityNotFoundException;
+
+    Customer updateCustomer(CustomerRequest dto, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException;
 }

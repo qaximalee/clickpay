@@ -18,7 +18,7 @@ public class Company extends Auditable<Long> {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "name", unique = true)
+    @Column(name = "name")
     private String name;
 
     @Column(name = "active")

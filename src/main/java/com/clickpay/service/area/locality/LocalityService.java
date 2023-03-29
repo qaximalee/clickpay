@@ -44,31 +44,31 @@ public class LocalityService implements ILocalityService{
     }
 
     @Override
-    public Locality save(Locality locality) throws BadRequestException, EntityNotSavedException, EntityAlreadyExistException {
+    public Locality save(Locality locality, boolean isUpdating) throws BadRequestException, EntityNotSavedException, EntityAlreadyExistException {
         if (locality == null) {
             log.error("Locality should not be null.");
             throw new BadRequestException("Locality should not be null.");
         }
 
-        if(locality.getId() != null) {
+        if(locality.getId() == null || (locality.getId() != null && isUpdating)) {
             validationService.getRecords(
                     Locality.class,
                     "name",
                     "createdBy",
                     locality.getName(),
                     locality.getCreatedBy(),
-                    "Locality name: " + locality.getName() + " already exists."
+                    "Locality name: " + locality.getName() + " already exists.", false
+            );
+        }else {
+            validationService.getRecords(
+                    Locality.class,
+                    "id",
+                    "createdBy",
+                    ""+locality.getId(),
+                    locality.getCreatedBy(),
+                    "Locality name: " + locality.getName() + " is not found.", true
             );
         }
-        validationService.getRecords(
-                Locality.class,
-                "name",
-                "createdBy",
-                locality.getName(),
-                locality.getCreatedBy(),
-                "Locality name: " + locality.getName() + " already exists."
-        );
-
         try {
             locality = repo.save(locality);
             log.debug("Locality with locality id: "+locality.getId()+ " created successfully.");

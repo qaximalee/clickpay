@@ -11,7 +11,7 @@ import java.util.List;
 public interface IBoxMediaService {
     BoxMedia findById(Long id) throws EntityNotFoundException, BadRequestException;
 
-    BoxMedia save(BoxMedia boxMedia) throws EntityNotSavedException, BadRequestException, EntityAlreadyExistException;
+    BoxMedia save(BoxMedia boxMedia, boolean isUpdating) throws EntityNotSavedException, BadRequestException, EntityAlreadyExistException;
 
     List<BoxMedia> findAllBoxMediaByUserId(Long userId) throws EntityNotFoundException;
 }

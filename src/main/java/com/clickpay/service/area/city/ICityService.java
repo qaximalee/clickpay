@@ -11,7 +11,7 @@ import java.util.List;
 public interface ICityService {
     City findById(Long id) throws BadRequestException, EntityNotFoundException;
 
-    City save(City city, boolean sameName) throws EntityNotSavedException, BadRequestException, EntityAlreadyExistException;
+    City save(City city, boolean isUpdating) throws EntityNotSavedException, BadRequestException, EntityAlreadyExistException;
 
     List<City> findAllCityByUserId(Long userId) throws EntityNotFoundException;
 }

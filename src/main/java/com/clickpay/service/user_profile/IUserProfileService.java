@@ -71,6 +71,11 @@ public interface IUserProfileService {
     // Customer CRUD
     Message createCustomer(CustomerRequest dto, User user) throws PermissionException, BadRequestException, EntityNotFoundException, EntityNotSavedException, EntityAlreadyExistException;
 
+    Message updateCustomer(CustomerRequest dto, User user)
+            throws PermissionException, BadRequestException, EntityNotFoundException, EntityNotSavedException, EntityAlreadyExistException;
+
+    Message updateCustomerStatus(Long customerId, boolean status, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException;
+
     Message findCustomerById(Long id) throws BadRequestException, EntityNotFoundException;
 
     Message findAllCustomerByUserId(Long userId) throws EntityNotFoundException;

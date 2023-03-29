@@ -42,20 +42,31 @@ public class SubLocalityService implements ISubLocalityService {
     }
 
     @Override
-    public SubLocality save(SubLocality subLocality) throws BadRequestException, EntityNotSavedException, EntityAlreadyExistException {
+    public SubLocality save(SubLocality subLocality, boolean isUpdating) throws BadRequestException, EntityNotSavedException, EntityAlreadyExistException {
         if (subLocality == null) {
             log.error("Sub locality should not be null.");
             throw new BadRequestException("Sub locality should not be null.");
         }
 
-        validationService.getRecords(
-                SubLocality.class,
-                "name",
-                "createdBy",
-                subLocality.getName(),
-                subLocality.getCreatedBy(),
-                "Sub Locality name: "+subLocality.getName()+" already exists."
-        );
+        if(subLocality.getId() == null || (subLocality.getId() != null && isUpdating)) {
+            validationService.getRecords(
+                    SubLocality.class,
+                    "name",
+                    "createdBy",
+                    subLocality.getName(),
+                    subLocality.getCreatedBy(),
+                    "Sub Locality name: " + subLocality.getName() + " already exists.", false
+            );
+        }else{
+            validationService.getRecords(
+                    SubLocality.class,
+                    "id",
+                    "createdBy",
+                    ""+subLocality.getId(),
+                    subLocality.getCreatedBy(),
+                    "Sub Locality name: " + subLocality.getName() + " is not found.", true
+            );
+        }
 
         try {
             subLocality = repo.save(subLocality);

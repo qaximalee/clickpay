@@ -46,22 +46,31 @@ public class BoxMediaService implements IBoxMediaService{
     }
 
     @Override
-    public BoxMedia save(BoxMedia boxMedia) throws EntityNotSavedException, BadRequestException, EntityAlreadyExistException {
+    public BoxMedia save(BoxMedia boxMedia, boolean isUpdating) throws EntityNotSavedException, BadRequestException, EntityAlreadyExistException {
         log.info("Creating box media.");
         if (boxMedia == null) {
             log.error("Box media should not be null.");
             throw new BadRequestException("Box media should not be null.");
         }
-
-        validationService.getRecords(
-                BoxMedia.class,
-                "boxNumber",
-                "createdBy",
-                boxMedia.getBoxNumber(),
-                boxMedia.getCreatedBy(),
-                "Box media number: "+boxMedia.getBoxNumber()+" already exists."
-        );
-
+        if (boxMedia.getId() == null || (boxMedia.getId() != null && isUpdating)) {
+            validationService.getRecords(
+                    BoxMedia.class,
+                    "boxNumber",
+                    "createdBy",
+                    boxMedia.getBoxNumber(),
+                    boxMedia.getCreatedBy(),
+                    "Box media number: "+boxMedia.getBoxNumber()+" already exists.", false
+            );
+        }else{
+            validationService.getRecords(
+                    BoxMedia.class,
+                    "id",
+                    "createdBy",
+                    ""+boxMedia.getId(),
+                    boxMedia.getCreatedBy(),
+                    "Box media number: "+boxMedia.getBoxNumber()+" is not found.", true
+            );
+        }
         try {
             boxMedia = repo.save(boxMedia);
             log.debug("Box media with city id: "+boxMedia.getId()+ " created successfully.");

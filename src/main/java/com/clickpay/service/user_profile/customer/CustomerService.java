@@ -172,25 +172,65 @@ public class CustomerService implements ICustomerService {
 
     @Transactional
     @Override
+    public Customer updateCustomer(CustomerRequest dto, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+        log.info("Updation of customer started.");
+        // Validate all IDs of existing entities
+        Customer customer = findById(dto.getCustomerId());
+        Company company = companyService.findById(dto.getCompanyId());
+        SubLocality subLocality = subLocalityService.findById(dto.getSubLocalityId());
+        BoxMedia boxMedia = boxMediaService.findById(dto.getBoxMediaId());
+        ConnectionType connectionType = connectionTypeService.findById(dto.getConnectionTypeId());
+        Package packageData = packageService.findById(dto.getPackagesId());
+
+        Discount discount = Discount.of(dto.getDiscount());
+
+        UserType userType = userTypeService.findByUserTypeName(UserType.USER_TYPE);
+
+        User customerUser = userService.findById(customer.getId());
+        customerUser.setModifiedBy(user.getId());
+        customerUser.setLastModifiedDate(new Date());
+        customerUser.setUserType(userType);
+
+        // Setting customer
+        customer.setAddress(dto.getAddress());
+        customer.setPhone(dto.getPhone());
+        customer.setMobile(dto.getMobile());
+        customer.setRechargeDate(dto.getRechargeDate());
+        customer.setDiscount(discount);
+        customer.setAmount(dto.getAmount());
+        customer.setCnicImageFront(dto.getCnicImageFront());
+        customer.setCnicImageBack(dto.getCnicImageBack());
+
+        customer.setCompany(company);
+        customer.setSubLocality(subLocality);
+        customer.setBoxMedia(boxMedia);
+        customer.setConnectionType(connectionType);
+        customer.setPackages(packageData);
+
+        customer.setModifiedBy(user.getId());
+        customer.setLastModifiedDate(new Date());
+
+        return save(customer);
+    }
+
+    @Transactional
+    @Override
     public Customer updateCustomerStatus(Long customerId, boolean status, User modifiedByUser) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
         log.info("Updating customer's status.");
 
         Customer customer = findById(customerId);
-
-        if (status){
-            customer.setActive(true);
-        }else {
-            customer.setActive(false);
-        }
-
+        customer.setActive(status);
         customer.setLastModifiedDate(new Date());
         customer.setModifiedBy(modifiedByUser.getId());
         save(customer);
 
+        User user = userService.findById(customer.getUser().getId());
+        user.setActive(status);
+        userService.save(user);
+
         log.info("Customer's status Updated Successfully.");
         return customer;
     }
-
 
     @Transactional
     @Override
