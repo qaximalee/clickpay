@@ -218,14 +218,18 @@ public class CustomerService implements ICustomerService {
     public Customer updateCustomerStatus(Long customerId, boolean status, User modifiedByUser) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
         log.info("Updating customer's status.");
 
+        Date date = new Date();
+
         Customer customer = findById(customerId);
         customer.setActive(status);
-        customer.setLastModifiedDate(new Date());
+        customer.setLastModifiedDate(date);
         customer.setModifiedBy(modifiedByUser.getId());
         save(customer);
 
         User user = userService.findById(customer.getUser().getId());
         user.setActive(status);
+        user.setLastModifiedDate(date);
+        user.setModifiedBy(modifiedByUser.getId());
         userService.save(user);
 
         log.info("Customer's status Updated Successfully.");

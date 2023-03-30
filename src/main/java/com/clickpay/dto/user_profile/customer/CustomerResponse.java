@@ -25,7 +25,7 @@ public class CustomerResponse {
     private String connectionType;
     private Date installationDate;
     private String packageType;
-    private String status;
+    private boolean active;
     private String discount;
     private String address;
     private String mobile;
@@ -48,7 +48,7 @@ public class CustomerResponse {
                 log.error("Date parsing error occurred.");
             }
             customerResponse.setPackageType(""+e[7]);
-            customerResponse.setStatus(""+e[8]);
+            customerResponse.setActive(Boolean.parseBoolean(""+e[8]));
             customerResponse.setDiscount(""+e[9]);
             customerResponse.setAmount(Double.parseDouble(""+e[10]));
             return customerResponse;
@@ -65,7 +65,7 @@ public class CustomerResponse {
             customerResponse.setAddress(e.getAddress());
             customerResponse.setMobile(e.getMobile());
             customerResponse.setInstallationDate(e.getInstallationDate());
-            //customerResponse.setStatus(e.getStatus().toString());
+            customerResponse.setActive(e.isActive());
             customerResponse.setDiscount(e.getDiscount().toString());
             customerResponse.setConnectionType(e.getConnectionType().getType());
             customerResponse.setPackageType(e.getPackages().getPackageName());
