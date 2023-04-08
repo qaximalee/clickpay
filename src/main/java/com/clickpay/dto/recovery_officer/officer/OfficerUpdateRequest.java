@@ -27,5 +27,5 @@ public class OfficerUpdateRequest {
     @Range(min = 0, message = "Salary should not be minimum.")
     private double salary = 0;
     private Date leavingDate;
-    private String updatingStatus;
+    private String status;
 }

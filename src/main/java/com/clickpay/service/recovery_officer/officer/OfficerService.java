@@ -182,7 +182,7 @@ public class OfficerService implements IOfficerService {
         updatingOfficer.setCellNo(request.getCellNo());
         updatingOfficer.setAddress(request.getAddress());
         updatingOfficer.setLeavingDate(request.getLeavingDate());
-        updatingOfficer.setStatus(Status.of(request.getUpdatingStatus()));
+        updatingOfficer.setStatus(Status.of(request.getStatus()));
 
         updatingOfficer.setModifiedBy(user.getId());
         updatingOfficer.setLastModifiedDate(new Date());
