@@ -38,11 +38,11 @@ public class Officer extends Auditable<Long> {
     private String cellNo;
 
     @Column(name = "joining_date")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date joiningDate;
 
     @Column(name = "leaving_date")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date leavingDate;
 
     @Column(name = "salary")

@@ -1,14 +1,19 @@
 package com.clickpay.dto.recovery_officer.officer;
 
 import com.clickpay.model.recovery_officer.Officer;
+import com.clickpay.utils.DateTimeUtil;
 import com.clickpay.utils.enums.Status;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Getter
 @Setter
+@Slf4j
 public class OfficerResponse extends OfficerRequest{
     private Status status;
 
