@@ -150,7 +150,7 @@ public class OfficerService implements IOfficerService {
     @Transactional
     @Override
     public OfficerResponse updateOfficer(OfficerUpdateRequest request, User user)
-            throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+            throws BadRequestException, EntityNotFoundException, EntityNotSavedException, EntityAlreadyExistException {
         if (request.getId() == null || request.getId() < 1) {
             log.error("Officer id " + request.getId() + " is invalid.");
             throw new BadRequestException("Provided officer id should be a valid and non null value.");
@@ -161,13 +161,29 @@ public class OfficerService implements IOfficerService {
             log.error("No officer found with officer id: " + request.getId());
             throw new EntityNotFoundException("No officer found with provided officer id.");
         }
+        if(officer.get().getEmail() != request.getEmail() ) {
+            // Check if email already exists
+            if (userService.existsByEmail(request.getEmail())) {
+                log.error("User already exists with email.");
+                throw new EntityAlreadyExistException("User already exists with email.");
+            }
+        }
+        if (officer.get().getUserName() != request.getUsername()) {
+            // Check if username already exists
+            if (userService.existsByUsername(request.getUsername())) {
+                log.error("User already exists with username.");
+                throw new EntityAlreadyExistException("User already exists with username.");
+            }
+        }
 
         String firstAndLastName[] = StringUtil.extractFirstNameAndLastNameFromNameField(request.getName());
 
         User savingUser = officer.get().getUser();
         savingUser.setFirstName(firstAndLastName[0]);
+        savingUser.setUsername(request.getUsername());
         savingUser.setLastName(firstAndLastName[1]);
         savingUser.setEmail(request.getEmail());
+        savingUser.setPassword(passwordEncoder.encode(request.getPassword()));
 
         savingUser.setModifiedBy(user.getId());
         savingUser.setLastModifiedDate(new Date());
@@ -183,6 +199,8 @@ public class OfficerService implements IOfficerService {
         updatingOfficer.setAddress(request.getAddress());
         updatingOfficer.setLeavingDate(request.getLeavingDate());
         updatingOfficer.setStatus(Status.of(request.getStatus()));
+        updatingOfficer.setPassword(request.getPassword());
+        updatingOfficer.setUserName(request.getUsername());
 
         updatingOfficer.setModifiedBy(user.getId());
         updatingOfficer.setLastModifiedDate(new Date());

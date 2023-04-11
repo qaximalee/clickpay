@@ -28,7 +28,7 @@ public interface IOfficerService {
 
     @Transactional
     OfficerResponse updateOfficer(OfficerUpdateRequest request, User user)
-            throws BadRequestException, EntityNotFoundException, EntityNotSavedException;
+            throws BadRequestException, EntityNotFoundException, EntityNotSavedException, EntityAlreadyExistException;
 
     @Transactional(readOnly = true)
     List<Officer> getAllUsersWithRespectToTheAdminOrARecoveryOfficerId(User user) throws EntityNotFoundException;

@@ -24,7 +24,7 @@ public interface IRecoveryOfficerService {
 
     Message<PaginatedOfficerResponse> findAllOfficerByUserId(String status, Integer pageNo, Integer pageSize, Long userId) throws EntityNotFoundException, BadRequestException;
 
-    Message updateOfficer(OfficerUpdateRequest request, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException;
+    Message updateOfficer(OfficerUpdateRequest request, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException, EntityAlreadyExistException;
 
     Message findAreaAllocatedByUserId(Long userId, User user) throws EntityNotFoundException;
 

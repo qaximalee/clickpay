@@ -28,4 +28,6 @@ public class OfficerUpdateRequest {
     private double salary = 0;
     private Date leavingDate;
     private String status;
+    private String password;
+    private String username;
 }

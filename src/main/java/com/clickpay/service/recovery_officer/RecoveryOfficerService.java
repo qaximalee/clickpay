@@ -76,7 +76,7 @@ public class RecoveryOfficerService implements IRecoveryOfficerService{
     }
 
     @Override
-    public Message updateOfficer(OfficerUpdateRequest request, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
+    public Message updateOfficer(OfficerUpdateRequest request, User user) throws BadRequestException, EntityNotFoundException, EntityNotSavedException, EntityAlreadyExistException {
         log.info("Updating officer with provided request data.");
         return new Message()
                 .setData(officerService.updateOfficer(request, user))

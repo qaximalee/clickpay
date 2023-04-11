@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -99,6 +98,16 @@ public class UserService implements IUserService, UserDetailsService {
     @Override
     public boolean existsByUsernameOREmail(String username, String email) {
         return repo.existsByUsernameOrEmail(username, email);
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return repo.existsByEmail(email);
+    }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        return repo.existsByUsername(username);
     }
 
     @Override
