@@ -189,7 +189,7 @@ public class UserProfileController extends CompanyController {
     public ResponseEntity createCustomer(@Valid @RequestBody CustomerRequest dto, Principal principal)
             throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException, EntityAlreadyExistException {
         User user = authService.hasPermission(ControllerConstants.USER_DETAILS, principal);
-        Message m = userProfileService.createCustomer(dto, user);
+        Message<Customer> m = userProfileService.createCustomer(dto, user);
         return ResponseEntity.created(
                 URI.create(DOMAIN_URL + "/" + ControllerConstants.USER_PROFILE + "/user-details/" + m.getData().getId())
         ).body(m);
