@@ -1,8 +1,11 @@
 package com.clickpay;
+import com.clickpay.utils.CryptoUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.core.Ordered;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -11,12 +14,23 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.io.File;
+
 @SpringBootApplication
 @EnableJpaAuditing
 public class ClickPayApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ClickPayApplication.class, args);
+		// Decrypt the app file and convert into plain text file with extension of .properties
+		//CryptoUtil.start(args);
+		SpringApplication springApp = new SpringApplication(ClickPayApplication.class);
+		/*springApp.addListeners((ApplicationListener<ContextClosedEvent>) event -> {
+			System.out.println("Shutdown process initiated...");
+			File file = new File(CryptoUtil.CLASSPATH+ "application-qasim.properties");
+			file.delete();
+			System.out.println("Graceful Shutdown is processed successfully");
+		});*/
+		springApp.run(args);
 	}
 
 	@Bean
