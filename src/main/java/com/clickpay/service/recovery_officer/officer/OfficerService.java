@@ -168,9 +168,9 @@ public class OfficerService implements IOfficerService {
                 throw new EntityAlreadyExistException("User already exists with email.");
             }
         }
-        if (officer.get().getUserName() != request.getUsername()) {
+        if (officer.get().getUserName() != request.getUserName()) {
             // Check if username already exists
-            if (userService.existsByUsername(request.getUsername())) {
+            if (userService.existsByUsername(request.getUserName())) {
                 log.error("User already exists with username.");
                 throw new EntityAlreadyExistException("User already exists with username.");
             }
@@ -180,7 +180,7 @@ public class OfficerService implements IOfficerService {
 
         User savingUser = officer.get().getUser();
         savingUser.setFirstName(firstAndLastName[0]);
-        savingUser.setUsername(request.getUsername());
+        savingUser.setUsername(request.getUserName());
         savingUser.setLastName(firstAndLastName[1]);
         savingUser.setEmail(request.getEmail());
         savingUser.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -200,7 +200,7 @@ public class OfficerService implements IOfficerService {
         updatingOfficer.setLeavingDate(request.getLeavingDate());
         updatingOfficer.setStatus(Status.of(request.getStatus()));
         updatingOfficer.setPassword(request.getPassword());
-        updatingOfficer.setUserName(request.getUsername());
+        updatingOfficer.setUserName(request.getUserName());
 
         updatingOfficer.setModifiedBy(user.getId());
         updatingOfficer.setLastModifiedDate(new Date());

@@ -29,5 +29,5 @@ public class OfficerUpdateRequest {
     private Date leavingDate;
     private String status;
     private String password;
-    private String username;
+    private String userName;
 }
