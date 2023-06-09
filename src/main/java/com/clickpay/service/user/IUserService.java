@@ -12,5 +12,7 @@ public interface IUserService {
 
     boolean existsByUsernameOREmail(String internetId, String email);
 
+    boolean existsByUsernameOrEmailAndNotId(String internetId, String email,  Long id);
+
     User findById(Long id) throws EntityNotFoundException;
 }

@@ -81,7 +81,7 @@ public class RecoveryOfficerController {
     @PutMapping("/officer")
     public ResponseEntity updateOfficer(@Valid @RequestBody OfficerUpdateRequest request,
                                      Principal principal)
-            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException {
+            throws BadRequestException, EntityNotFoundException, PermissionException, EntityNotSavedException, EntityAlreadyExistException {
         User user = authService.hasPermission(ControllerConstants.RECOVERY_OFFICER_SUB, principal);
         Message m = recoveryOfficerService.updateOfficer(request, user);
         return ResponseEntity.ok().body(m);

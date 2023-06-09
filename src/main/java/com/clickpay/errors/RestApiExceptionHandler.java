@@ -36,7 +36,7 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
         Message m = new Message();
         log.info("ERROR: " + ex.getMessage());
         m.setMessage(ex.getMessage()).setStatus(HttpStatus.NOT_FOUND.value()).setCode(HttpStatus.NOT_FOUND.toString());
-        return ResponseEntity.status(HttpStatus.OK).body(m);
+        return ResponseEntity.status(m.getStatus()).body(m);
     }
 
     @ExceptionHandler(EntityAlreadyExistException.class)
@@ -44,7 +44,7 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
         Message m = new Message();
         log.info("ERROR: " + ex.getMessage());
         m.setMessage(ex.getMessage()).setStatus(HttpStatus.FOUND.value()).setCode(HttpStatus.FOUND.toString());
-        return ResponseEntity.status(HttpStatus.OK).body(m);
+        return ResponseEntity.status(m.getStatus()).body(m);
     }
 
     @ExceptionHandler(EntityNotSavedException.class)

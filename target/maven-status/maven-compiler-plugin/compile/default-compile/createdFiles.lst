@@ -38,10 +38,10 @@ com\clickpay\controller\dealer_profile\DealerProfileController.class
 com\clickpay\utils\Test.class
 com\clickpay\service\recovery_officer\recovery_officer_collection\IRecoveryOfficerCollectionService.class
 com\clickpay\dto\dealer_profile\dealer_detail\PaginatedDealerResponse.class
-com\clickpay\dto\user_profile\customer\PaginatedCustomersInUserCollectionRequest.class
 com\clickpay\repository\feature\FeatureRepository.class
 com\clickpay\repository\user_profile\BoxMediaRepository.class
 com\clickpay\utils\enums\Status.class
+com\clickpay\dto\user_profile\customer\CustomersInUserCollectionRequest.class
 com\clickpay\dto\area\SubLocalityResponse.class
 com\clickpay\errors\general\EntityNotUpdateException.class
 com\clickpay\model\recovery_officer\OfficerArea.class

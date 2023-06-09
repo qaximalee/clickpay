@@ -150,11 +150,7 @@ public class OfficerService implements IOfficerService {
     @Transactional
     @Override
     public OfficerResponse updateOfficer(OfficerUpdateRequest request, User user)
-            throws BadRequestException, EntityNotFoundException, EntityNotSavedException {
-        if (request.getId() == null || request.getId() < 1) {
-            log.error("Officer id " + request.getId() + " is invalid.");
-            throw new BadRequestException("Provided officer id should be a valid and non null value.");
-        }
+            throws BadRequestException, EntityNotFoundException, EntityNotSavedException, EntityAlreadyExistException {
 
         Optional<Officer> officer = repo.findById(request.getId());
         if (officer == null || !officer.isPresent()) {
@@ -165,9 +161,18 @@ public class OfficerService implements IOfficerService {
         String firstAndLastName[] = StringUtil.extractFirstNameAndLastNameFromNameField(request.getName());
 
         User savingUser = officer.get().getUser();
+
+        // Check if username or email already exists
+        if (userService.existsByUsernameOrEmailAndNotId(request.getUserName(), request.getEmail(), savingUser.getId())) {
+            log.error("User already exists with username or email.");
+            throw new EntityAlreadyExistException("User already exists with username or email.");
+        }
+
         savingUser.setFirstName(firstAndLastName[0]);
         savingUser.setLastName(firstAndLastName[1]);
         savingUser.setEmail(request.getEmail());
+        savingUser.setUsername(request.getUserName());
+        savingUser.setPassword(passwordEncoder.encode(request.getPassword()));
 
         savingUser.setModifiedBy(user.getId());
         savingUser.setLastModifiedDate(new Date());
@@ -175,6 +180,9 @@ public class OfficerService implements IOfficerService {
         userService.save(savingUser);
 
         Officer updatingOfficer = officer.get();
+        updatingOfficer.setUserName(request.getUserName());
+        updatingOfficer.setEmail(request.getEmail());
+        updatingOfficer.setPassword(request.getPassword());
         updatingOfficer.setName(request.getName());
         updatingOfficer.setSalary(request.getSalary());
         updatingOfficer.setCnic(request.getCnic());

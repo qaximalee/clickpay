@@ -56,6 +56,7 @@ public class OAuth2ServerConfiguration {
                     .and()
                     .authorizeRequests()
                     .antMatchers("/api/v1/test/").permitAll()
+                    .antMatchers("/swagger-ui/**").permitAll()
                     .antMatchers("/"+ ControllerConstants.CNIC_FILE +"/upload").permitAll()
                     .antMatchers("/"+ ControllerConstants.CNIC_FILE +"/download").permitAll()
                     .antMatchers("/oauth/**").permitAll()

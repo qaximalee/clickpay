@@ -102,6 +102,11 @@ public class UserService implements IUserService, UserDetailsService {
     }
 
     @Override
+    public boolean existsByUsernameOrEmailAndNotId(String internetId, String email, Long id) {
+        return repo.existsByUsernameOrEmailAndNotId(internetId, email, id);
+    }
+
+    @Override
     public User findById(Long id) throws EntityNotFoundException {
         log.info("Fetching the user with userId.");
         return repo.findById(id).orElseThrow(() -> {
